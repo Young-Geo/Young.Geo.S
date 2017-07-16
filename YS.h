@@ -13,6 +13,10 @@
 #include <errno.h>
 
 #define WORK_THREAD 4
+#define SER_ADDR INADDR_ANY
+#define SER_PORT 8080
+#define MAX_LISTEN 128
+#define MAX_INT 1024*1024
 
 typedef struct _thread_entity_t
 {
@@ -21,11 +25,16 @@ typedef struct _thread_entity_t
 		struct event notify_event;	/* listen event for notify pipe */
 		int notify_receive_fd;		/* receiving end of notify pipe */
 		int notify_send_fd; 		/* sending end of notify pipe */
+		int conn_num;
 } thread_entity_t;
 
 
 typedef struct _global_t
 {
+	pthread_t master_thread_id;
+	struct event_base *master_main_base;
+	struct event master_main_notify_event;
+	int conn_receive_fd;
 	int num_threads;
 	pthread_t *threads;
 	thread_entity_t *thread_entitys;
@@ -36,4 +45,5 @@ int YS_INIT(global_t *master);
 int YS_thread_init(global_t *master);
 int setup_thread(thread_entity_t *thread_entity);
 int create_worker(void* (*func)(void *), void *arg);
+void thread_libevent_process(int fd, short which, void *arg);
 

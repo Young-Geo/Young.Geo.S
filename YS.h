@@ -58,6 +58,8 @@ struct event_base *master_main_base;
 int sigignore(int sig);
 int YS_INIT(global_t *master);
 int YS_thread_init(global_t *master);
+int YS_master_thread_init(global_t *master);
+void YS_master_thread_loop(global_t *master);
 int setup_thread(thread_entity_t *thread_entity);
 int create_worker(void* (*func)(void *), void *arg);
 void thread_libevent_process(int fd, short which, void *arg);

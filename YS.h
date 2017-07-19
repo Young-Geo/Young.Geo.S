@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
+#include <ctype.h>
 #include <arpa/inet.h>
 #include <sys/time.h>
 #include <sys/types.h>

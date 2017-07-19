@@ -189,7 +189,7 @@ void master_libevent_work(int fd, short which, void *arg)
 
 	cfd = accept(master->conn_receive_fd, (struct sockaddr *)&caddr, &slen);
 	if (cfd < 0) {
-		fprintf(stderr, "master_work socket error %d\n", lfd);
+		fprintf(stderr, "master_libevent_work socket error %d\n", cfd );
 		return;
 	}
 	

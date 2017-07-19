@@ -22,6 +22,12 @@
 #define MAX_LISTEN 128
 #define MAX_INT 1024*1024
 
+
+
+
+global_t master_thread;
+struct event_base *master_main_base;
+
 typedef struct _thread_entity_t
 {
 		pthread_t thread_id;		/* unique ID of this thread */

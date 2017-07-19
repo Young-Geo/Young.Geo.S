@@ -1,9 +1,5 @@
 #include "YS.h"
 
-global_t master_thread;
-struct event_base *master_main_base;
-
-
 int sigignore(int sig)
 {
     struct sigaction sa = { .sa_handler = SIG_IGN, .sa_flags = 0 };
@@ -292,30 +288,3 @@ void YS_master_thread_loop(global_t *master)
 	pthread_exit(NULL);// 继续封装
 }
 
-
-int main(int argc, const char **argv)
-{
-	int ret = EXIT_SUCCESS;
-	
-	sigignore(SIGPIPE);
-	YS_INIT(&master_thread);
-
-	
-	main_base = event_init();
-	assert(main_base);
-
-	YS_thread_init(&master_thread);
-	YS_master_thread_init(&master_thread);
-
-	YS_master_thread_loop(&master_thread);
-	//pthread_exit(NULL);// 继续封装
-
-
-	#if 0
-	 if (event_base_loop(main_base, 0) != 0) {
-	 	ret = EXIT_FAILURE;
-	}
-	 #endif
-	
-	return 0;
-}

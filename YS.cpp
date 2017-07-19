@@ -97,7 +97,7 @@ void thread_libevent_process(int fd, short which, void *arg)
 		case 'C':
 			{
 				struct bufferevent *bev = NULL;
-				if ((4 != read(fd, &cfd, sizeof(cfd))) || cfd < 0) {
+				if ((read(fd, &cfd, sizeof(cfd)) < 0 ) || cfd < 0) {
 					fprintf(stderr, "Can't read conn fd \n");
 					return;
 				}

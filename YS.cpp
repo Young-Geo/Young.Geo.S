@@ -21,6 +21,36 @@ int YS_INIT(global_t *master)
 	master->num_threads = WORK_THREAD;
 	return 0;
 }
+
+//读取玩数据之后执行
+void read_cb(struct bufferevent *bev, void *arg)
+{
+	assert(arg);
+	thread_entity_t *thread_entity = (thread_entity_t *)arg;
+}
+
+
+//写完之后执行
+void write_cb(struct bufferevent *bev, void *arg)
+{
+	assert(arg);
+	thread_entity_t *thread_entity = (thread_entity_t *)arg;
+}
+
+
+//异常处理
+void bufferevent_event_cb(struct bufferevent *bev, short what, void *arg)
+{
+	assert(arg);
+	thread_entity_t *thread_entity = (thread_entity_t *)arg;
+
+	if (what & BEV_EVENT_ERROR)
+        perror("Error from bufferevent");
+    if (what & (BEV_EVENT_EOF | BEV_EVENT_ERROR)) {
+        bufferevent_free(bev);
+    }
+}
+
 void thread_libevent_process(int fd, short which, void *arg)
 {
 	char type = '0', cfd = 0;
@@ -45,7 +75,7 @@ void thread_libevent_process(int fd, short which, void *arg)
 				bev = bufferevent_socket_new(thread_entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);
 
 			    //当前刚创建好的bufferevent事件 注册一些回调函数
-			    bufferevent_setcb(bev, echo_read_cb, NULL, echo_event_cb, NULL);
+			    bufferevent_setcb(bev, echo_read_cb, NULL, echo_event_cb, arg);
 
 			    //启动监听bufferevnet的 读事件 和 写事件
 			    bufferevent_enable(bev, EV_READ|EV_WRITE);

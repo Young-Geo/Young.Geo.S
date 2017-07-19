@@ -11,6 +11,10 @@
 #include <sys/stat.h>
 #include <assert.h>
 #include <errno.h>
+#include <event2/listener.h>
+#include <event2/bufferevent.h>
+#include <event2/buffer.h>
+
 
 #define WORK_THREAD 4
 #define SER_ADDR INADDR_ANY

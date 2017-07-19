@@ -1,5 +1,9 @@
 #include "YS.h"
 
+global_t master_thread;
+struct event_base *master_main_base;
+
+
 int sigignore(int sig)
 {
     struct sigaction sa;

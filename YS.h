@@ -11,9 +11,11 @@
 #include <sys/stat.h>
 #include <assert.h>
 #include <errno.h>
+
 #include <event2/listener.h>
 #include <event2/bufferevent.h>
 #include <event2/buffer.h>
+#include <event2/event.h>
 
 
 #define WORK_THREAD 4
@@ -25,8 +27,6 @@
 
 
 
-global_t master_thread;
-struct event_base *master_main_base;
 
 typedef struct _thread_entity_t
 {
@@ -49,6 +49,11 @@ typedef struct _global_t
 	pthread_t *threads;
 	thread_entity_t *thread_entitys;
 } global_t;
+
+
+global_t master_thread;
+struct event_base *master_main_base;
+
 
 int sigignore(int sig);
 int YS_INIT(global_t *master);

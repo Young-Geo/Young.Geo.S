@@ -56,8 +56,8 @@ typedef struct _global_t
 } global_t;
 
 
-global_t master_thread;
-struct event_base *master_main_base;
+extern global_t master_thread;
+extern struct event_base *master_main_base;
 
 
 int sigignore(int sig);

@@ -28,6 +28,35 @@ void read_cb(struct bufferevent *bev, void *arg)
 {
 	assert(arg);
 	thread_entity_t *thread_entity = (thread_entity_t *)arg;
+
+	char *data = NULL;
+	int len = 0, i = 0;
+
+	    /* This callback is invoked when there is data to read on bev. */
+    struct evbuffer *input = bufferevent_get_input(bev);
+    //input 就是当前bufferevent的输入缓冲区地址，如果想得到用户端数据
+    //就从input中去获取
+
+    struct evbuffer *output = bufferevent_get_output(bev);
+    //output 就是当前bufferevent的输出缓冲区地址，如果想向客户端写数据
+    //就将数据写到output中就可以了
+
+	len =  evbuffer_get_length(input);
+    //input 拿出来， 
+    data = (char *)malloc(len + 1);
+
+	evbuffer_copyout(input, (void *)data, len);
+
+    //小->大
+    for (i = 0; i < len; ++i)
+		data[i] = toupper(data[i]);
+
+
+
+    /* Copy all the data from the input buffer to the output buffer. */
+    evbuffer_add_buffer(output, input);
+	evbuffer_add(output, (void *)data, len);
+	free(data);
 }
 
 

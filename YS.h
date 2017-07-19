@@ -17,6 +17,7 @@
 #include <event2/buffer.h>
 #include <event2/event.h>
 #include <event2/event_struct.h>
+#include <event2/event_compat.h>
 
 
 #define WORK_THREAD 4

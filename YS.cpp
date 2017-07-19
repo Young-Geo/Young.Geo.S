@@ -2,8 +2,9 @@
 
 int sigignore(int sig)
 {
-    struct sigaction sa = { .sa_handler = SIG_IGN, .sa_flags = 0 };
-
+    struct sigaction sa;
+	memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = SIG_IGN, sa.sa_flags = 0;
     if (sigemptyset(&sa.sa_mask) == -1 || sigaction(sig, &sa, 0) == -1) {
         return -1;
     }
@@ -13,7 +14,7 @@ int sigignore(int sig)
 int YS_INIT(global_t *master)
 {
 	assert(master);
-	memset(master, 0, sizeof(global_t))
+	memset(master, 0, sizeof(global_t));
 	master->num_threads = WORK_THREAD;
 	return 0;
 }
@@ -35,7 +36,7 @@ void write_cb(struct bufferevent *bev, void *arg)
 
 
 //异常处理
-void bufferevent_event_cb(struct bufferevent *bev, short what, void *arg)
+void event_cb(struct bufferevent *bev, short what, void *arg)
 {
 	assert(arg);
 	thread_entity_t *thread_entity = (thread_entity_t *)arg;
@@ -71,7 +72,7 @@ void thread_libevent_process(int fd, short which, void *arg)
 				bev = bufferevent_socket_new(thread_entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);
 
 			    //当前刚创建好的bufferevent事件 注册一些回调函数
-			    bufferevent_setcb(bev, echo_read_cb, NULL, echo_event_cb, arg);
+			    bufferevent_setcb(bev, read_cb, write_cb, event_cb, arg);
 
 			    //启动监听bufferevnet的 读事件 和 写事件
 			    bufferevent_enable(bev, EV_READ|EV_WRITE);

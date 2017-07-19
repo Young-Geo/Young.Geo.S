@@ -110,13 +110,14 @@ int setup_thread(thread_entity_t *thread_entity)
 	return 0;
 }
 
-int create_worker(void* (*func)(void *), void *arg)
+typedef void * (*func_t)(void *arg);
+int create_worker(func_t func, void *arg)
 {
     int             ret;	
 	thread_entity_t *thread_entitys;
 
 	assert(arg);
-	thread_entity_t *thread_entitys = (thread_entity_t *)arg;
+	thread_entitys = (thread_entity_t *)arg;
 
 	
     if ((ret = pthread_create(&thread_entitys->thread_id, NULL, func, arg)) != 0) {

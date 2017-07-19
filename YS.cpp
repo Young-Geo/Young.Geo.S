@@ -203,7 +203,7 @@ void master_libevent_work(int fd, short which, void *arg)
 	}
 
 	//write 'c'
-	if (1 != write(master->thread_entitys[inx].notify_send_fd, 'C', strlen('C'))) {
+	if (1 != write(master->thread_entitys[inx].notify_send_fd, "C", strlen("C"))) {
 		close(cfd);
 		return;
 	}

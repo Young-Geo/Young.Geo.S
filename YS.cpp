@@ -150,10 +150,10 @@ int YS_thread_init(global_t *master)
 
 	for (i = 0; i < nthreads; i++)
 	{
-		master->threads = (pthread_t *)cmalloc(nthreads, sizeof(pthread_t));
+		master->threads = (pthread_t *)calloc(nthreads, sizeof(pthread_t));
 		assert(master->threads);
 
-		master->thread_entitys = (thread_entity_t *)cmalloc(nthreads, sizeof(thread_entity_t));
+		master->thread_entitys = (thread_entity_t *)calloc(nthreads, sizeof(thread_entity_t));
 		assert(master->thread_entitys);
 		
         if (pipe(pfd)) {
@@ -203,7 +203,7 @@ void master_libevent_work(int fd, short which, void *arg)
 	}
 
 	//write 'c'
-	if (1 != write(master->thread_entitys[inx].notify_send_fd, 'C', 1)) {
+	if (1 != write(master->thread_entitys[inx].notify_send_fd, 'C', strlen('C'))) {
 		close(cfd);
 		return;
 	}

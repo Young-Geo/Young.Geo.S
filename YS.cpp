@@ -150,16 +150,16 @@ int YS_thread_init(global_t *master)
 	assert(master);
 	
 	nthreads = master->num_threads;
-	
+
+	master->threads = (pthread_t *)calloc(nthreads, sizeof(pthread_t));
+	assert(master->threads);
+
+	master->thread_entitys = (thread_entity_t *)calloc(nthreads, sizeof(thread_entity_t));
+	assert(master->thread_entitys);
+		
 
 	for (i = 0; i < nthreads; i++)
 	{
-		master->threads = (pthread_t *)calloc(nthreads, sizeof(pthread_t));
-		assert(master->threads);
-
-		master->thread_entitys = (thread_entity_t *)calloc(nthreads, sizeof(thread_entity_t));
-		assert(master->thread_entitys);
-		
         if (pipe(pfd)) {
             perror("Can't create notify pipe");
             exit(1);

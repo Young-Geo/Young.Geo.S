@@ -266,7 +266,7 @@ void master_libevent_work(int fd, short which, void *arg)
 	if (strlen(buf) != write(master->thread_entitys[inx].notify_send_fd, buf, strlen(buf))) {
 		pthread_mutex_unlock(&master->thread_entitys[inx].mutex_sen);		
 		pthread_mutex_unlock(&master->thread_entitys[inx].mutex_rec);
-		xerror("send cfd error\n");
+		fprintf(stderr, "send cfd error\n");
 		close(cfd);
 		return;
 	}

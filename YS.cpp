@@ -225,7 +225,12 @@ void master_libevent_work(int fd, short which, void *arg)
 		fprintf(stderr, "master_libevent_work socket error %d\n", cfd );
 		return;
 	}
-	
+
+	printf("conn num %d, %d, %d, %d,\n", master->thread_entitys[0].conn_num, 
+										master->thread_entitys[1].conn_num,
+										master->thread_entitys[2].conn_num,
+										master->thread_entitys[3].conn_num
+										);
 	// 计算出接受任务的线程
 	for (i = 0; i < master->num_threads; ++i)
 	{

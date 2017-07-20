@@ -22,7 +22,7 @@
 #include <event2/event_struct.h>
 #include <event2/event_compat.h>
 
-#include "afx/Xlog.h"
+#include "afx/xlog.h"
 
 
 #define WORK_THREAD 4

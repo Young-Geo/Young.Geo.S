@@ -245,7 +245,7 @@ void master_libevent_work(int fd, short which, void *arg)
 		return;
 	}
 
-	xmessage("conn num %d, %d, %d, %d,\n", master->thread_entitys[0].conn_num, 
+	printf("conn num %d, %d, %d, %d,\n", master->thread_entitys[0].conn_num, 
 										master->thread_entitys[1].conn_num,
 										master->thread_entitys[2].conn_num,
 										master->thread_entitys[3].conn_num

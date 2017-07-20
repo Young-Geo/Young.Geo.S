@@ -12,7 +12,6 @@
 #include <sys/stat.h>
 #include <assert.h>
 #include <errno.h>
-
 #include <pthread.h>
 
 
@@ -22,6 +21,8 @@
 #include <event2/event.h>
 #include <event2/event_struct.h>
 #include <event2/event_compat.h>
+
+#include "Xlog.h"
 
 
 #define WORK_THREAD 4
@@ -40,7 +41,9 @@ typedef struct _thread_entity_t
 		struct event_base *base;	/* libevent handle this thread uses */
 		struct event notify_event;	/* listen event for notify pipe */
 		int notify_receive_fd;		/* receiving end of notify pipe */
+		pthread_mutex_t mutex_rec;
 		int notify_send_fd; 		/* sending end of notify pipe */
+		pthread_mutex_t mutex_sen;
 		int conn_num;
 } thread_entity_t;
 

@@ -83,22 +83,37 @@ void event_cb(struct bufferevent *bev, short what, void *arg)
 
 void thread_libevent_process(int fd, short which, void *arg)
 {
-	char type = '0', cfd = 0;
+	char buf[512], type = '0', cfd = 0, i = 0;
 	// rec conn
 	assert(arg);
 	thread_entity_t *thread_entity = (thread_entity_t *)arg;
-	if (1 != read(fd, &type, 1)) {
+
+	pthread_mutex_lock(&thread_entity->mutex_rec);
+	if (read(fd, buf, sizeof(buf)) < 0) {
+		pthread_mutex_unlock(&thread_entity->mutex_sen);		
+		pthread_mutex_unlock(&thread_entity->mutex_rec);
 		fprintf(stderr, "Can't read conn type \n");
 		return;
 	}
+	pthread_mutex_unlock(&thread_entity->mutex_sen);
+
+	type = buf[i];
+	++i;
 
 	switch (type)
 	{
 		case 'C':
 			{
 				struct bufferevent *bev = NULL;
+				/*
 				if ((read(fd, &cfd, sizeof(cfd)) < 0 ) || cfd < 0) {
 					fprintf(stderr, "Can't read conn fd \n");
+					return;
+				}
+				*/
+				sscanf(&buf[i], ":%d", &cfd);
+				if (cfd < 0) {
+					fprintf(stderr, "sscanf Can't read conn fd \n");
 					return;
 				}
 				//加入到 base中
@@ -198,6 +213,9 @@ int YS_thread_init(global_t *master)
         master->thread_entitys[i].notify_send_fd = pfd[1];
 
         setup_thread(&master->thread_entitys[i]);
+		
+  		pthread_mutex_init(&master->thread_entitys[i].mutex_rec, NULL);
+  		pthread_mutex_init(&master->thread_entitys[i].mutex_sen, NULL);
     }
 
     /* Create threads after we've done all the libevent setup. */
@@ -213,6 +231,7 @@ int YS_thread_init(global_t *master)
 void master_libevent_work(int fd, short which, void *arg)
 {
 	int cfd = 0, i = 0, num = MAX_INT, inx = 0;
+	char buf[512];
 	struct sockaddr_in caddr;
 	socklen_t slen;
 	// accept
@@ -226,7 +245,7 @@ void master_libevent_work(int fd, short which, void *arg)
 		return;
 	}
 
-	printf("conn num %d, %d, %d, %d,\n", master->thread_entitys[0].conn_num, 
+	xmessage("conn num %d, %d, %d, %d,\n", master->thread_entitys[0].conn_num, 
 										master->thread_entitys[1].conn_num,
 										master->thread_entitys[2].conn_num,
 										master->thread_entitys[3].conn_num
@@ -240,6 +259,19 @@ void master_libevent_work(int fd, short which, void *arg)
 		}
 	}
 
+	memset(buf, 0, sizeof(buf));
+	sprintf(buf, "C:%d", cfd);
+
+	pthread_mutex_lock(&master->thread_entitys[inx].mutex_sen);
+	if (strlen(buf) != write(master->thread_entitys[inx].notify_send_fd, buf, strlen(buf))) {
+		pthread_mutex_unlock(&master->thread_entitys[inx].mutex_sen);		
+		pthread_mutex_unlock(&master->thread_entitys[inx].mutex_rec);
+		xerror("send cfd error\n");
+		close(cfd);
+		return;
+	}
+	pthread_mutex_unlock(&master->thread_entitys[inx].mutex_rec);
+	/*
 	//write 'c'
 	if (1 != write(master->thread_entitys[inx].notify_send_fd, "C", strlen("C"))) {
 		close(cfd);
@@ -250,6 +282,7 @@ void master_libevent_work(int fd, short which, void *arg)
 		close(cfd);
 		return;
 	}
+	*/
 }
 
 

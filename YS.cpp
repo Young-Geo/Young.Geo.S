@@ -88,14 +88,14 @@ void thread_libevent_process(int fd, short which, void *arg)
 	assert(arg);
 	thread_entity_t *thread_entity = (thread_entity_t *)arg;
 
-	pthread_mutex_lock(&thread_entity->mutex_rec);
+	//pthread_mutex_lock(&thread_entity->mutex_rec);
 	if (read(fd, buf, sizeof(buf)) < 0) {
-		pthread_mutex_unlock(&thread_entity->mutex_sen);		
-		pthread_mutex_unlock(&thread_entity->mutex_rec);
+		//pthread_mutex_unlock(&thread_entity->mutex_sen);		
+		//pthread_mutex_unlock(&thread_entity->mutex_rec);
 		fprintf(stderr, "Can't read conn type \n");
 		return;
 	}
-	pthread_mutex_unlock(&thread_entity->mutex_sen);
+	//pthread_mutex_unlock(&thread_entity->mutex_sen);
 
 	type = buf[i];
 	++i;
@@ -262,15 +262,15 @@ void master_libevent_work(int fd, short which, void *arg)
 	memset(buf, 0, sizeof(buf));
 	sprintf(buf, "C:%d", cfd);
 
-	pthread_mutex_lock(&master->thread_entitys[inx].mutex_sen);
+	//pthread_mutex_lock(&master->thread_entitys[inx].mutex_sen);
 	if (strlen(buf) != write(master->thread_entitys[inx].notify_send_fd, buf, strlen(buf))) {
-		pthread_mutex_unlock(&master->thread_entitys[inx].mutex_sen);		
-		pthread_mutex_unlock(&master->thread_entitys[inx].mutex_rec);
+		//pthread_mutex_unlock(&master->thread_entitys[inx].mutex_sen);		
+		//pthread_mutex_unlock(&master->thread_entitys[inx].mutex_rec);
 		fprintf(stderr, "send cfd error\n");
 		close(cfd);
 		return;
 	}
-	pthread_mutex_unlock(&master->thread_entitys[inx].mutex_rec);
+	//pthread_mutex_unlock(&master->thread_entitys[inx].mutex_rec);
 	/*
 	//write 'c'
 	if (1 != write(master->thread_entitys[inx].notify_send_fd, "C", strlen("C"))) {

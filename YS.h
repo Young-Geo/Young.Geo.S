@@ -41,9 +41,9 @@ typedef struct _thread_entity_t
 		struct event_base *base;	/* libevent handle this thread uses */
 		struct event notify_event;	/* listen event for notify pipe */
 		int notify_receive_fd;		/* receiving end of notify pipe */
-		pthread_mutex_t mutex_rec;
+		//pthread_mutex_t mutex_rec;
 		int notify_send_fd; 		/* sending end of notify pipe */
-		pthread_mutex_t mutex_sen;
+		//pthread_mutex_t mutex_sen;
 		int conn_num;
 } thread_entity_t;
 

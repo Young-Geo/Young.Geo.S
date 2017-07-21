@@ -52,6 +52,7 @@ typedef struct _global_t
 	struct event master_main_notify_event;
 	int conn_receive_fd;
 	int num_threads;
+	int last_thread;
 	pthread_t *threads;
 	thread_entity_t *thread_entitys;
 	xlist *conn_queue;

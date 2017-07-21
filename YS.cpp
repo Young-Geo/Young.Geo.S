@@ -70,6 +70,7 @@ int YS_INIT(global_t *master)
 	assert(master);
 	memset(master, 0, sizeof(global_t));
 	master->num_threads = WORK_THREAD;
+	master->last_thread = -1;
 	conn_queue = master->conn_queue = xlist_init();
 	if (!conn_queue) {
 		xerror("conn_queue init error\n");
@@ -289,13 +290,16 @@ void master_libevent_work(int fd, short which, void *arg)
 										master->thread_entitys[2].conn_num,
 										master->thread_entitys[3].conn_num);
 	// 计算出接受任务的线程
-	for (i = 0; i < master->num_threads; ++i)
+	/*for (i = 0; i < master->num_threads; ++i)
 	{
 		if (num > master->thread_entitys[i].conn_num) {
 			num = master->thread_entitys[i].conn_num;
 			inx = i;
 		}
-	}
+	}*/
+	inx = (master->last_thread + 1) % master->num_threads;
+	
+	master->last_thread = inx;
 	
 	cq_push(conn_queue, cfd);	
 

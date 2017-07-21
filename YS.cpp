@@ -3,6 +3,56 @@
 global_t master_thread;
 struct event_base *master_main_base;
 
+xlist *conn_queue = NULL;
+pthread_mutex_t mutex_connqueue = PTHREAD_MUTEX_INITIALIZER;
+
+
+
+int setup_thread(thread_entity_t *thread_entity);
+int create_worker(void* (*func)(void *), void *arg);
+void thread_libevent_process(int fd, short which, void *arg);
+static int cq_pop(xlist *conn_queue)
+{
+    xlist *_conn_queue = conn_queue;
+	int fd = 0, *pfd;
+
+	if (!conn_queue) {
+		xerror("cq_pop conn_queue NULL error\n");
+		return -1;
+	}
+	
+    pthread_mutex_lock(&cq->lock);
+	if (!(pfd = (int *)xlist_popv(conn_queue))) {
+		xerror("cq_pop conn_queue pop error\n");
+		return -1;
+	}
+    pthread_mutex_unlock(&cq->lock);
+	fd = *pfd;
+	free(pfd);
+    return fd;
+}
+
+/*
+ * Adds an item to a connection queue.
+ */
+static void cq_push(xlist *conn_queue, int fd)
+{
+	int *cfd = NULL;
+	if (!conn_queue || fd < 0) {
+		xerror("cq_push conn_queue NULL error || fd error\n");
+		return;
+	}
+	if (!(cfd = (int *)malloc(sizeof(int)))) {
+		xerror("cq_push error\n");
+		return;
+	}
+	*cfd = fd;
+    pthread_mutex_lock(&mutex_connqueue);
+	xlist_cat(conn_queue, NULL, XLIST_STRING, (char *)cfd);
+    pthread_mutex_unlock(&mutex_connqueue);
+}
+
+
 
 int sigignore(int sig)
 {
@@ -20,6 +70,11 @@ int YS_INIT(global_t *master)
 	assert(master);
 	memset(master, 0, sizeof(global_t));
 	master->num_threads = WORK_THREAD;
+	conn_queue = master->conn_queue = xlist_init();
+	if (!conn_queue) {
+		xerror("conn_queue init error\n");
+		exit(-1);
+	}
 	return 0;
 }
 
@@ -97,10 +152,13 @@ void thread_libevent_process(int fd, short which, void *arg)
 		case 'C':
 			{
 				struct bufferevent *bev = NULL;
+				/*
 				if ((read(fd, &cfd, sizeof(cfd)) < 0 ) || cfd < 0) {
 					fprintf(stderr, "Can't read conn fd \n");
 					return;
 				}
+				*/
+				cfd = cq_pop(conn_queue);
 				//加入到 base中
 				bev = bufferevent_socket_new(thread_entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);
 
@@ -226,7 +284,7 @@ void master_libevent_work(int fd, short which, void *arg)
 		return;
 	}
 
-	printf("conn num %d, %d, %d, %d,\n", master->thread_entitys[0].conn_num, 
+	xmessage("conn num %d, %d, %d, %d,\n", master->thread_entitys[0].conn_num, 
 										master->thread_entitys[1].conn_num,
 										master->thread_entitys[2].conn_num,
 										master->thread_entitys[3].conn_num);
@@ -238,17 +296,21 @@ void master_libevent_work(int fd, short which, void *arg)
 			inx = i;
 		}
 	}
+	
+	cq_push(conn_queue, cfd);	
 
 	//write 'c'
-	if (1 != write(master->thread_entitys[inx].notify_send_fd, "C", strlen("C"))) {
+	if (strlen("C") != write(master->thread_entitys[inx].notify_send_fd, "C", strlen("C"))) {
 		close(cfd);
 		return;
 	}
+	/*
 	// 把文件描述符发送给相应的线程
 	if (sizeof(cfd) != write(master->thread_entitys[inx].notify_send_fd, &cfd, sizeof(cfd))) {
 		close(cfd);
 		return;
 	}
+	*/
 }
 
 
@@ -306,7 +368,7 @@ static void *master_work(void *arg)
 
 
 	
-    event_base_loop(master->master_main_base, 0);
+    event_base_loop(master->master_main_base, 0);//重复循环
 	return NULL;
 }
 

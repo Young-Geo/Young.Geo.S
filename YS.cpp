@@ -182,7 +182,7 @@ void thread_libevent_process(int fd, short which, void *arg)
 				bev = bufferevent_socket_new(thread_entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);
 
 			    //当前刚创建好的bufferevent事件 注册一些回调函数
-			    bufferevent_setcb(bev, read_cb, write_cb, event_cb, arg);
+			    bufferevent_setcb(bev, read_cb, write_cb, NULL, arg);
 
 			    //启动监听bufferevnet的 读事件 和 写事件
 			    bufferevent_enable(bev, EV_READ|EV_WRITE);

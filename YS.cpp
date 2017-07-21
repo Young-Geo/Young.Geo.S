@@ -21,12 +21,12 @@ static int cq_pop(xlist *conn_queue)
 		return -1;
 	}
 	
-    pthread_mutex_lock(&cq->lock);
+    pthread_mutex_lock(&mutex_connqueue);
 	if (!(pfd = (int *)xlist_popv(conn_queue))) {
 		xerror("cq_pop conn_queue pop error\n");
 		return -1;
 	}
-    pthread_mutex_unlock(&cq->lock);
+    pthread_mutex_unlock(&mutex_connqueue);
 	fd = *pfd;
 	free(pfd);
     return fd;

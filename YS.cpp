@@ -18,7 +18,7 @@ static void cq_init(conn_queue_t *conn_queue)
 		xerror("conn_queue NULL error");
         exit(1);
 	}
-	if (pthread_mutex_init(&conn_queue->mutex_connqueue)) {
+	if (pthread_mutex_init(&conn_queue->mutex_connqueue, NULL)) {
 		xerror("Can't init mutex_conn_queue");
         exit(1);
 	}

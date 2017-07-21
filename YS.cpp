@@ -11,22 +11,40 @@ pthread_mutex_t mutex_connqueue = PTHREAD_MUTEX_INITIALIZER;
 int setup_thread(thread_entity_t *thread_entity);
 int create_worker(void* (*func)(void *), void *arg);
 void thread_libevent_process(int fd, short which, void *arg);
-static int cq_pop(xlist *conn_queue)
+
+static void cq_init(conn_queue_t *conn_queue)
 {
-    xlist *_conn_queue = conn_queue;
+	if (!conn_queue) {
+		xerror("conn_queue NULL error");
+        exit(1);
+	}
+	if (pthread_mutex_init(&conn_queue->mutex_connqueue)) {
+		xerror("Can't init mutex_conn_queue");
+        exit(1);
+	}
+	if (!(conn_queue->conn_queue = xlist_init())) {
+		xerror("Can't init conn_queue");
+        exit(1);
+	}
+}
+
+static int cq_pop(conn_queue_t *conn_queue)
+{
+    xlist *_conn_queue = NULL;
 	int fd = 0, *pfd;
 
-	if (!conn_queue) {
+	if (!conn_queue || !conn_queue->conn_queue) {
 		xerror("cq_pop conn_queue NULL error\n");
 		return -1;
 	}
+	_conn_queue = conn_queue->conn_queue;
 	
-    pthread_mutex_lock(&mutex_connqueue);
-	if (!(pfd = (int *)xlist_popv(conn_queue))) {
+    pthread_mutex_lock(&conn_queue->mutex_connqueue);
+	if (!(pfd = (int *)xlist_popv(_conn_queue))) {
 		xerror("cq_pop conn_queue pop error\n");
 		return -1;
 	}
-    pthread_mutex_unlock(&mutex_connqueue);
+    pthread_mutex_unlock(&conn_queue->mutex_connqueue);
 	fd = *pfd;
 	free(pfd);
     return fd;
@@ -35,7 +53,7 @@ static int cq_pop(xlist *conn_queue)
 /*
  * Adds an item to a connection queue.
  */
-static void cq_push(xlist *conn_queue, int fd)
+static void cq_push(conn_queue_t *conn_queue, int fd)
 {
 	int *cfd = NULL;
 	if (!conn_queue || fd < 0) {
@@ -47,9 +65,9 @@ static void cq_push(xlist *conn_queue, int fd)
 		return;
 	}
 	*cfd = fd;
-    pthread_mutex_lock(&mutex_connqueue);
-	xlist_cat(conn_queue, NULL, XLIST_STRING, (char *)cfd);
-    pthread_mutex_unlock(&mutex_connqueue);
+    pthread_mutex_lock(&conn_queue->mutex_connqueue);
+	xlist_cat(conn_queue->conn_queue, NULL, XLIST_STRING, (char *)cfd);
+    pthread_mutex_unlock(&conn_queue->mutex_connqueue);
 }
 
 
@@ -71,11 +89,11 @@ int YS_INIT(global_t *master)
 	memset(master, 0, sizeof(global_t));
 	master->num_threads = WORK_THREAD;
 	master->last_thread = -1;
-	conn_queue = master->conn_queue = xlist_init();
+	/*conn_queue = master->conn_queue = xlist_init();
 	if (!conn_queue) {
 		xerror("conn_queue init error\n");
 		exit(-1);
-	}
+	}*/
 	return 0;
 }
 
@@ -139,7 +157,8 @@ void event_cb(struct bufferevent *bev, short what, void *arg)
 
 void thread_libevent_process(int fd, short which, void *arg)
 {
-	char type = '0', cfd = 0;
+	char type = '0', cfd = 0;	
+	struct bufferevent *bev = NULL;
 	// rec conn
 	assert(arg);
 	thread_entity_t *thread_entity = (thread_entity_t *)arg;
@@ -152,14 +171,13 @@ void thread_libevent_process(int fd, short which, void *arg)
 	{
 		case 'C':
 			{
-				struct bufferevent *bev = NULL;
 				/*
 				if ((read(fd, &cfd, sizeof(cfd)) < 0 ) || cfd < 0) {
 					fprintf(stderr, "Can't read conn fd \n");
 					return;
 				}
 				*/
-				cfd = cq_pop(conn_queue);
+				cfd = cq_pop(&thread_entity->conn_queue);
 				//加入到 base中
 				bev = bufferevent_socket_new(thread_entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);
 
@@ -181,10 +199,12 @@ void thread_libevent_process(int fd, short which, void *arg)
 int setup_thread(thread_entity_t *thread_entity)
 {
 	int ret = 0;
+
+	cq_init(&thread_entity->conn_queue);
+
 	thread_entity->base = event_init();
 
-
-	 if (!thread_entity->base) {
+	if (!thread_entity->base) {
         fprintf(stderr, "Can't allocate event base\n");
         exit(1);
     }
@@ -255,7 +275,6 @@ int YS_thread_init(global_t *master)
 		
         master->thread_entitys[i].notify_receive_fd = pfd[0];
         master->thread_entitys[i].notify_send_fd = pfd[1];
-
         setup_thread(&master->thread_entitys[i]);
     }
 
@@ -290,18 +309,11 @@ void master_libevent_work(int fd, short which, void *arg)
 										master->thread_entitys[2].conn_num,
 										master->thread_entitys[3].conn_num);
 	// 计算出接受任务的线程
-	/*for (i = 0; i < master->num_threads; ++i)
-	{
-		if (num > master->thread_entitys[i].conn_num) {
-			num = master->thread_entitys[i].conn_num;
-			inx = i;
-		}
-	}*/
-	inx = (master->last_thread + 1) % master->num_threads;
 	
+	inx = (master->last_thread + 1) % master->num_threads;
 	master->last_thread = inx;
 	
-	cq_push(conn_queue, cfd);	
+	cq_push(&master->thread_entitys[inx].conn_queue, cfd);	
 
 	//write 'c'
 	if (strlen("C") != write(master->thread_entitys[inx].notify_send_fd, "C", strlen("C"))) {
@@ -342,11 +354,11 @@ static void *master_work(void *arg)
 	addr.sin_port = htons(SER_PORT);
 	slen = sizeof(addr);
 	if (0 != bind(lfd, (struct sockaddr *)&addr, slen)) {
-		fprintf(stderr, "master_work bind error %d\n", lfd);
+		fprintf(stderr, "master_work bind socket error %d\n", lfd);
 		exit(1);
 	}
 	if (0 != listen(lfd, MAX_LISTEN)) {
-		fprintf(stderr, "master_work listen error %d\n", lfd);
+		fprintf(stderr, "master_work listen  socket  error %d\n", lfd);
 		exit(1);
 	}
 

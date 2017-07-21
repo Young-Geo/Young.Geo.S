@@ -32,6 +32,11 @@
 #define MAX_LISTEN 128
 #define MAX_INT 1024*1024
 
+typedef struct _conn_queue_t {
+	xlist *conn_queue;		
+	pthread_mutex_t mutex_connqueue;
+} conn_queue_t;
+
 typedef struct _thread_entity_t
 {
 		pthread_t thread_id;		/* unique ID of this thread */
@@ -42,6 +47,7 @@ typedef struct _thread_entity_t
 		int notify_send_fd; 		/* sending end of notify pipe */
 		//pthread_mutex_t mutex_sen;
 		int conn_num;
+		conn_queue_t conn_queue;
 } thread_entity_t;
 
 

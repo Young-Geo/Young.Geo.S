@@ -95,7 +95,7 @@ void read_cb(struct bufferevent *bev, void *arg)
     struct evbuffer *output = bufferevent_get_output(bev);
     //output 就是当前bufferevent的输出缓冲区地址，如果想向客户端写数据
     //就将数据写到output中就可以了
-
+/*
 	len =  evbuffer_get_length(input);
     //input 拿出来， 
     data = (char *)malloc(len + 1);
@@ -107,11 +107,11 @@ void read_cb(struct bufferevent *bev, void *arg)
 		data[i] = toupper(data[i]);
 
 
-
+*/
     /* Copy all the data from the input buffer to the output buffer. */
-    evbuffer_add_buffer(output, input);
-	evbuffer_add(output, (void *)data, len);
-	free(data);
+    //evbuffer_add_buffer(output, input);
+	//evbuffer_add(output, (void *)data, len);
+	//free(data);
 }
 
 

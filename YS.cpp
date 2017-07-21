@@ -31,7 +31,7 @@ static void cq_init(conn_queue_t *conn_queue)
 static int cq_pop(conn_queue_t *conn_queue)
 {
     xlist *_conn_queue = NULL;
-	int fd = 0, *pfd;
+	int fd = 0, *pfd = NULL;
 
 	if (!conn_queue || !conn_queue->conn_queue) {
 		xerror("cq_pop conn_queue NULL error\n");
@@ -45,6 +45,8 @@ static int cq_pop(conn_queue_t *conn_queue)
 		return -1;
 	}
     pthread_mutex_unlock(&conn_queue->mutex_connqueue);
+	if (!pfd)
+		return -1;
 	fd = *pfd;
 	free(pfd);
     return fd;
@@ -178,6 +180,8 @@ void thread_libevent_process(int fd, short which, void *arg)
 				}
 				*/
 				cfd = cq_pop(&thread_entity->conn_queue);
+				if (cfd <= 0)
+					break;
 				//加入到 base中
 				bev = bufferevent_socket_new(thread_entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);
 

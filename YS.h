@@ -47,11 +47,10 @@ typedef struct _thread_entity_t
 		struct event_base *base;	/* libevent handle this thread uses */
 		struct event notify_event;	/* listen event for notify pipe */
 		int notify_receive_fd;		/* receiving end of notify pipe */
-		//pthread_mutex_t mutex_rec;
 		int notify_send_fd; 		/* sending end of notify pipe */
-		//pthread_mutex_t mutex_sen;
 		int conn_num;
 		conn_queue_t conn_queue;
+		xlist *users;
 } thread_entity_t;
 
 
@@ -65,8 +64,9 @@ typedef struct _global_t
 	int last_thread;
 	pthread_t *threads;
 	thread_entity_t *thread_entitys;
-	xlist *conn_queue;
-	//pthread_mutex_t mutex_connqueue;
+	xlist **arr_users;//已经连接的用户链表数组
+	//游戏链表
+	//各种状态链表
 } global_t;
 
 

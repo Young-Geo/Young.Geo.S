@@ -3,7 +3,7 @@
 global_t master_thread;
 struct event_base *master_main_base;
 
-xlist *user_list = NULL;
+//xlist *user_list = NULL;
 
 
 
@@ -86,14 +86,32 @@ int sigignore(int sig)
 
 int YS_INIT(global_t *master)
 {
+	int i = 0;
+	
 	assert(master);
 	memset(master, 0, sizeof(global_t));
 	master->num_threads = WORK_THREAD;
 	master->last_thread = -1;
+
+	/*
 	user_list = xlist_init();
 	if (!user_list) {
 		xerror("user_list init error\n");
 		exit(-1);
+	}*/
+	
+	master->arr_users = (xlist **)malloc(sizeof(xlist *) * WORK_THREAD);
+	if (!master->arr_users) {
+		xerror("arr_users xmalloc error\n");
+		exit(-1);
+	}
+	for (i = 0; i < WORK_THREAD; ++i)
+	{
+		*(master->arr_users + i) = xlist_init();
+		if (!(*(master->arr_users + i))) {
+			xerror("arr_users init error\n");
+			exit(-1);
+		}
 	}
 	return 0;
 }
@@ -318,6 +336,7 @@ int YS_thread_init(global_t *master)
 
 		master->thread_entitys[i].notify_receive_fd = pfd[0];
         master->thread_entitys[i].notify_send_fd = pfd[1];
+		master->thread_entitys[i].users = master->arr_users[i];
 
 		setup_thread(&master->thread_entitys[i]);
     }
@@ -334,7 +353,7 @@ int YS_thread_init(global_t *master)
 
 void master_libevent_work(int fd, short which, void *arg)
 {
-	int cfd = 0, i = 0, num = MAX_INT, inx = 0;
+	int cfd = 0, i = 0, inx = 0;
 	struct sockaddr_in caddr;
 	socklen_t slen;
 	// accept

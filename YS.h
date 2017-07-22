@@ -24,6 +24,10 @@
 
 #include "afx/xlog.h"
 #include "afx/xlist.h"
+#include "afx/afx.h"
+#include "afx/xchain.h"
+
+#include "Ypkt.h"
 
 
 #define WORK_THREAD 4

@@ -3,8 +3,7 @@
 global_t master_thread;
 struct event_base *master_main_base;
 
-xlist *conn_queue = NULL;
-pthread_mutex_t mutex_connqueue = PTHREAD_MUTEX_INITIALIZER;
+xlist *user_list = NULL;
 
 
 
@@ -91,11 +90,11 @@ int YS_INIT(global_t *master)
 	memset(master, 0, sizeof(global_t));
 	master->num_threads = WORK_THREAD;
 	master->last_thread = -1;
-	/*conn_queue = master->conn_queue = xlist_init();
-	if (!conn_queue) {
-		xerror("conn_queue init error\n");
+	user_list = xlist_init();
+	if (!user_list) {
+		xerror("user_list init error\n");
 		exit(-1);
-	}*/
+	}
 	return 0;
 }
 
@@ -105,8 +104,10 @@ void read_cb(struct bufferevent *bev, void *arg)
 	assert(arg);
 	thread_entity_t *thread_entity = (thread_entity_t *)arg;
 
-	char *data = NULL;
+	unsigned char *data = NULL, *buf = NULL, *t_buf, xor_cc = 0;
+	unsigned short v;
 	int len = 0, i = 0;
+	xchain *chain = NULL;
 
 	    /* This callback is invoked when there is data to read on bev. */
     struct evbuffer *input = bufferevent_get_input(bev);
@@ -116,23 +117,61 @@ void read_cb(struct bufferevent *bev, void *arg)
     struct evbuffer *output = bufferevent_get_output(bev);
     //output 就是当前bufferevent的输出缓冲区地址，如果想向客户端写数据
     //就将数据写到output中就可以了
-/*
+
 	len =  evbuffer_get_length(input);
+
     //input 拿出来， 
-    data = (char *)malloc(len + 1);
+    if (!(data = (unsigned char *)malloc(len + 1))) {
+		xerror("malloc error");
+		goto end;
+	}
+	memset(data, 0, len+1);
 
 	evbuffer_copyout(input, (void *)data, len);
 
-    //小->大
-    for (i = 0; i < len; ++i)
-		data[i] = toupper(data[i]);
+	
+	if (!(buf = pkt_match_head(data, PKT_YS_START_TAG))) {
+		xerror("match head PKT_YS_START_TAG error");
+		goto end;
+	}
+	t_buf = buf;
+	++buf;
+	
+	IN8(buf, xor_cc);//异或校验码
+	memset((buf - 1), 0, sizeof(unsigned char));
+	
 
+	IN8(buf, v);
+	assert(v == PKT_YS_FRAME_TYPE);//类型
 
-*/
-    /* Copy all the data from the input buffer to the output buffer. */
+	IN16(buf, v);//大小  数据大小 = v - 6;
+
+	if (!pkt_check_sum(t_buf, v, xor_cc)) {
+		xerror("match head pkt_check_sum error");
+		goto end;
+	}
+	len = v - 6;
+
+	if (!(chain = xchain_alloc())) {
+		xerror("xchain_alloc error");
+		goto end;
+	}
+	
+	//取数据
+	xchain_add(chain, buf, len);
+	
+	
+    //业务//第一次登录获取用户信息 插入到链表中
+
+	//buf_pase(user_list, chain);
+	
+
+	
     //evbuffer_add_buffer(output, input);
 	//evbuffer_add(output, (void *)data, len);
-	//free(data);
+end:
+	if (data) free(data);
+	if (chain) xchain_clear(chain);
 }
 
 
@@ -276,10 +315,11 @@ int YS_thread_init(global_t *master)
             perror("Can't create notify pipe");
             exit(1);
         }
-		
-        master->thread_entitys[i].notify_receive_fd = pfd[0];
+
+		master->thread_entitys[i].notify_receive_fd = pfd[0];
         master->thread_entitys[i].notify_send_fd = pfd[1];
-        setup_thread(&master->thread_entitys[i]);
+
+		setup_thread(&master->thread_entitys[i]);
     }
 
     /* Create threads after we've done all the libevent setup. */
@@ -386,8 +426,6 @@ static void *master_work(void *arg)
     }
 	
 
-
-	
     event_base_loop(master->master_main_base, 0);//重复循环
 	return NULL;
 }

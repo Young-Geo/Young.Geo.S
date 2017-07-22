@@ -218,6 +218,7 @@ void thread_libevent_process(int fd, short which, void *arg)
 {
 	char type = '0', cfd = 0;	
 	struct bufferevent *bev = NULL;
+	User *user = NULL;
 	// rec conn
 	assert(arg);
 	thread_entity_t *thread_entity = (thread_entity_t *)arg;
@@ -239,11 +240,19 @@ void thread_libevent_process(int fd, short which, void *arg)
 				cfd = cq_pop(&thread_entity->conn_queue);
 				if (cfd <= 0)
 					break;
+
+				/*if (!(user = new User())) {
+					break;
+				}
+				user->set_thread(thread_entity);
+				xlist_cat(thread_entity->users, NULL, XLIST_STRING, (char *)user);
+				*/
+				
 				//加入到 base中
 				bev = bufferevent_socket_new(thread_entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);
 
 			    //当前刚创建好的bufferevent事件 注册一些回调函数
-			    bufferevent_setcb(bev, read_cb, write_cb, NULL, arg);
+			    bufferevent_setcb(bev, read_cb, write_cb, NULL, thread_entity);
 
 			    //启动监听bufferevnet的 读事件 和 写事件
 			    bufferevent_enable(bev, EV_READ|EV_WRITE);
@@ -337,7 +346,7 @@ int YS_thread_init(global_t *master)
 		master->thread_entitys[i].notify_receive_fd = pfd[0];
         master->thread_entitys[i].notify_send_fd = pfd[1];
 		master->thread_entitys[i].users = master->arr_users[i];
-
+		master->thread_entitys[i].master = master;
 		setup_thread(&master->thread_entitys[i]);
     }
 

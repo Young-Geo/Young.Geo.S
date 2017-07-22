@@ -28,6 +28,7 @@
 #include "afx/xchain.h"
 
 #include "Ypkt.h"
+#include "YUser.h"
 
 
 #define WORK_THREAD 4
@@ -41,6 +42,8 @@ typedef struct _conn_queue_t {
 	pthread_mutex_t mutex_connqueue;
 } conn_queue_t;
 
+typedef struct _global_t global_t;
+
 typedef struct _thread_entity_t
 {
 		pthread_t thread_id;		/* unique ID of this thread */
@@ -51,6 +54,7 @@ typedef struct _thread_entity_t
 		int conn_num;
 		conn_queue_t conn_queue;
 		xlist *users;
+		global_t *master;
 } thread_entity_t;
 
 

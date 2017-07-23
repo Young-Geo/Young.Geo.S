@@ -7,7 +7,7 @@ lib=-levent -lpthread
 CC=g++
 tar=demo
 
-#all:$(tar)
+all:$(tar)
 
 $(tar):$(obj)
 	$(CC) $^ $(inc) $(lib) -o $@

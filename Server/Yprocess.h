@@ -3,6 +3,7 @@
 
 #include "afx.h"
 #include "xchain.h"
+#include "xlist.h"
 #include "global_struct.h"
 #include "YGame.h"
 #include "YUser.h"

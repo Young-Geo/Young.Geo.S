@@ -24,7 +24,7 @@ int 			set_username(u8 *username)
 		return -1;
 	}
 
-	memcpy(this->username, username, strlen(username));
+	memcpy(this->username, username, strlen((char *)username));
 	return 0;
 }
 

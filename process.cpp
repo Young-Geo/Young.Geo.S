@@ -11,7 +11,7 @@ int do_work(void *arg, void *r, void *w)
 {
 
 	thread_entity_t *thread_entity = NULL;
-	xchain *rchain = NULL, wchain = NULL;
+	xchain *rchain = NULL, *wchain = NULL;
 	unsigned char type = '\0';
 
 

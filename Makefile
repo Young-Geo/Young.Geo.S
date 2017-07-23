@@ -12,8 +12,6 @@ tar=demo
 $(tar):$(obj)
 	$(CC) $^ $(inc) $(lib) -o $@
     
-#$(obj):$(src)
-#	$(CC) -c $^ $(inc)
 %.o:%.cpp
 	$(CC) -c $< $(inc) -o $@
 

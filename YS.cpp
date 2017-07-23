@@ -179,7 +179,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 
 	
     //evbuffer_add_buffer(output, input);
-    xchain_2data (wchain, &out_data, &len) ;
+    xchain_2data (wchain, (char **)&out_data, &len) ;
 	evbuffer_add(output, (void *)out_data, len);
 end:
 	if (data) xfree(data);	

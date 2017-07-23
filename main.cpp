@@ -6,7 +6,7 @@ int main(int argc, const char **argv)
 {
 	YS_init(&master_thread);
 	
-	func_init(master_thread.func, do_work);
+	func_init(&master_thread.func, do_work);
 	
 	YS_thread_init(&master_thread);
 	

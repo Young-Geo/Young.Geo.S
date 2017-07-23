@@ -7,6 +7,7 @@
 #include "global_struct.h"
 #include "YGame.h"
 #include "YUser.h"
+#include "YS.h"
 
 int work(void *arg, xchain *rhain, xchain *whain);
 

@@ -1,6 +1,9 @@
 #ifndef _YGAME_H_
 #define _YGAME_H_
 
+#include "YUser.h"
+
+
 
 class Game
 {

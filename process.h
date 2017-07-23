@@ -1,7 +1,7 @@
 #ifndef _PROCESS_H_
 #define _PROCESS_H_
 
-//#include "afx/afx.h"
+#include "afx/afx.h"
 #include "afx/xchain.h"
 #include "global_struct.h"
 

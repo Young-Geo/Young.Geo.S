@@ -11,4 +11,3 @@ typedef struct _thread_entity_t thread_entity_t;
 
 
 #endif
-

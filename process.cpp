@@ -22,7 +22,7 @@ int do_work(void *arg, void *r, void *w)
 	thread_entity = (thread_entity_t *)arg;
 	rchain = (xchain *)r, wchain = (xchain *)w;
 
-	xchain_get(rchain, &type, 1);
+	xchain_get(rchain, (void *)&type, 1);
 	
 
 	switch (type)//各种业务处理
@@ -32,6 +32,7 @@ int do_work(void *arg, void *r, void *w)
 		break;
 		
 		default:
+			
 		break;
 	}
 	

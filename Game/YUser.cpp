@@ -12,17 +12,27 @@ User::~User()
 
 
 
+u8 *			User::get_username()
+{
+	return this->username;
+}
+int 			set_username(u8 *username)
+{
 
+	if (!username) {
+		xerror("set_username username NULL\n");
+		return -1;
+	}
 
+	memcpy(this->username, username, strlen(username));
+	return 0;
+}
 
-
-
-
-void * User::get_thread()
+p_g User::get_thread()
 {
 	return this->_thread_entity;
 }
-int  User::set_thread(void *thread_entity)
+int  User::set_thread(p_g thread_entity)
 {
 	if (!thread_entity) {
 		xerror("User set_thread error \n");

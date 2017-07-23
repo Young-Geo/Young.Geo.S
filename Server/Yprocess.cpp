@@ -29,7 +29,14 @@ int do_work(void *arg, void *r, void *w)
 	switch (type)//各种业务处理
 	{
 		case 'C':
-			//登录处理
+			{
+				//登录处理
+				//登录成功
+				User *user = new User();
+				user->set_status(ON_LINE);
+				user->set_thread(thread_entity);
+				xlist_add(thread_entity->users, user->get_username(), XLIST_STRING, (char *)user);
+			}
 		break;
 		
 		default:

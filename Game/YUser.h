@@ -18,6 +18,8 @@ public:
 	User();
 	~User();
 public:
+	u8 *			get_username();
+	int				set_username(u8 username[12]);
 	p_g 			get_thread();
 	int  			set_thread(p_g thread_entity);
 	USER_STATUS 	get_status();

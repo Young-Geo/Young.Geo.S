@@ -153,7 +153,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	IN8(buf, v);
 	assert(v == PKT_YS_FRAME_TYPE);//类型
 
-	IN16(buf, v);//大小  数据大小 = v - 6;
+	IN16_BE(buf, v);//大小  数据大小 = v - 6;
 
 	if (!pkt_check_sum(t_buf, v, xor_cc)) {
 		xerror("match head pkt_check_sum error");

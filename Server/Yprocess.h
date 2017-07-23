@@ -4,6 +4,8 @@
 #include "afx.h"
 #include "xchain.h"
 #include "global_struct.h"
+#include "YGame.h"
+#include "YUser.h"
 
 int work(void *arg, xchain *rhain, xchain *whain);
 

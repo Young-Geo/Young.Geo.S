@@ -22,10 +22,10 @@
 #include <event2/event_struct.h>
 #include <event2/event_compat.h>
 
-#include "afx/xlog.h"
-#include "afx/xlist.h"
-#include "afx/afx.h"
-#include "afx/xchain.h"
+#include "xlog.h"
+#include "xlist.h"
+#include "afx.h"
+#include "xchain.h"
 
 #include "Ypkt.h"
 #include "YUser.h"

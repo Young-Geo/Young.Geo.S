@@ -1,8 +1,8 @@
 #ifndef _YUSER_H_
 #define _YUSER_H_
 
-#include "afx/xlog.h"
-#include "afx/afx.h"
+#include "xlog.h"
+#include "afx.h"
 
 
 enum USER_STATUS{

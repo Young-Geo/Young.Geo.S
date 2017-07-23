@@ -1,27 +1,28 @@
 #########create by yekai 20160729##############
-SrcPcFiles=$(wildcard *.pc)
-SrcFiles=$(patsubst %.pc,%.c,$(SrcPcFiles))
-TargetFiles=$(patsubst %.pc,%,$(SrcPcFiles))
-IncPath=$(ORACLE_HOME)/precomp/public
-LibPath=$(ORACLE_HOME)/lib
-Pubso=-lclntsh
-CC=gcc
+dircpp=afx/*.cpp Server/*.cpp Game/*.cpp ./*.cpp
+src=$(wildcard $(dircpp))
+obj=$(patsubst %.cpp,%.o,$(src))
+inc=-Iafx -IServer -IGame
+lib=-levent -lpthread
+CC=g++
+tar=demo
 
-all:$(TargetFiles)
-%.c:%.pc
-	proc iname=$? oname=$@
+#all:$(tar)
 
-$(TargetFiles):%:%.c
-	$(CC) -o $@ $? -I$(IncPath) -L$(LibPath) $(Pubso)
-
+$(tar):$(obj)
+	$(CC) $^ $(inc) $(lib) -o $@
+    
+#$(obj):$(src)
+#	$(CC) -c $^ $(inc)
+%.o:%.cpp
+	$(CC) -c $< $(inc) -o $@
 
 test:
-	echo $(SrcPcFiles)
-	echo $(TargetFiles)
-	echo $(SrcFiles)
+	echo $(src)
+	echo $(obj)
+	echo $(tar)
 
 clean:
-	rm -f $(TargetFiles)
-	rm -f *.lis
-	rm -f $(SrcFiles)
+	rm -f $(obj)
+	rm -f $(tar)
 

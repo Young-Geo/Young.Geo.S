@@ -1,8 +1,8 @@
 #ifndef _PROCESS_H_
 #define _PROCESS_H_
 
-#include "afx/afx.h"
-#include "afx/xchain.h"
+#include "afx.h"
+#include "xchain.h"
 #include "global_struct.h"
 
 int work(void *arg, xchain *rhain, xchain *whain);

@@ -283,8 +283,8 @@ int setup_thread(thread_entity_t *thread_entity)
 	return 0;
 }
 
-typedef void * (*func_t)(void *arg);
-int create_worker(func_t func, void *arg)
+typedef void * (*funcworker_t)(void *arg);
+int create_worker(funcworker_t func, void *arg)
 {
     int             ret;	
 	thread_entity_t *thread_entitys;

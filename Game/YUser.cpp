@@ -16,7 +16,7 @@ u8 *			User::get_username()
 {
 	return this->username;
 }
-int 			set_username(u8 *username)
+int 			User::set_username(u8 *username)
 {
 
 	if (!username) {

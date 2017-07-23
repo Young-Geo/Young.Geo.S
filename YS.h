@@ -29,6 +29,7 @@
 
 #include "Ypkt.h"
 #include "YUser.h"
+#include "global_struct.h"
 
 
 #define WORK_THREAD 4
@@ -37,12 +38,16 @@
 #define MAX_LISTEN 128
 #define MAX_INT 1024*1024
 
+typedef int (*func_work_t)(void *, void *, void *);
+
+typedef struct _func_t {
+	func_work_t do_work;
+} func_t;
+
 typedef struct _conn_queue_t {
 	xlist *conn_queue;		
 	pthread_mutex_t mutex_connqueue;
 } conn_queue_t;
-
-typedef struct _global_t global_t;
 
 typedef struct _thread_entity_t
 {
@@ -63,23 +68,27 @@ typedef struct _global_t
 	pthread_t master_thread_id;
 	struct event_base *master_main_base;
 	struct event master_main_notify_event;
+	func_t func;
 	int conn_receive_fd;
 	int num_threads;
 	int last_thread;
 	pthread_t *threads;
 	thread_entity_t *thread_entitys;
-	xlist **arr_users;//已经连接的用户链表数组
-	//游戏链表
+	xlist **arr_users;//已经连接的用户的链表数组
+	//游戏中链表
+	xlist *games;
 	//各种状态链表
+	xlist *readys;//已经准备就绪用户的链表
 } global_t;
 
 
 extern global_t master_thread;
 extern struct event_base *master_main_base;
 
-
-int sigignore(int sig);
-int YS_INIT(global_t *master);
+////////////////////
+int func_init(func_t *func, func_work_t do_work);
+////////////////////
+int YS_init(global_t *master);
 int YS_thread_init(global_t *master);
 int YS_master_thread_init(global_t *master);
 void YS_master_thread_loop(global_t *master);

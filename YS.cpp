@@ -3,7 +3,6 @@
 global_t master_thread;
 struct event_base *master_main_base;
 
-//xlist *user_list = NULL;
 
 
 
@@ -61,7 +60,7 @@ static void cq_push(conn_queue_t *conn_queue, int fd)
 		xerror("cq_push conn_queue NULL error || fd error\n");
 		return;
 	}
-	if (!(cfd = (int *)malloc(sizeof(int)))) {
+	if (!(cfd = (int *)xmalloc(sizeof(int)))) {
 		xerror("cq_push error\n");
 		return;
 	}
@@ -71,20 +70,17 @@ static void cq_push(conn_queue_t *conn_queue, int fd)
     pthread_mutex_unlock(&conn_queue->mutex_connqueue);
 }
 
-
-
-int sigignore(int sig)
+int func_init(func_t *func, func_work_t do_work)
 {
-    struct sigaction sa;
-	memset(&sa, 0, sizeof(sa));
-	sa.sa_handler = SIG_IGN, sa.sa_flags = 0;
-    if (sigemptyset(&sa.sa_mask) == -1 || sigaction(sig, &sa, 0) == -1) {
-        return -1;
-    }
-    return 0;
+	if (!func || !do_work) {
+		xerror("func_init func do_work NULL\n");
+		return -1;
+	}
+	func->do_work = do_work;
+	return 0;
 }
 
-int YS_INIT(global_t *master)
+int YS_init(global_t *master)
 {
 	int i = 0;
 	
@@ -92,15 +88,10 @@ int YS_INIT(global_t *master)
 	memset(master, 0, sizeof(global_t));
 	master->num_threads = WORK_THREAD;
 	master->last_thread = -1;
-
-	/*
-	user_list = xlist_init();
-	if (!user_list) {
-		xerror("user_list init error\n");
-		exit(-1);
-	}*/
 	
-	master->arr_users = (xlist **)malloc(sizeof(xlist *) * WORK_THREAD);
+	sigignore(SIGPIPE);
+
+	master->arr_users = (xlist **)xmalloc(sizeof(xlist *) * WORK_THREAD);
 	if (!master->arr_users) {
 		xerror("arr_users xmalloc error\n");
 		exit(-1);
@@ -122,10 +113,10 @@ void read_cb(struct bufferevent *bev, void *arg)
 	assert(arg);
 	thread_entity_t *thread_entity = (thread_entity_t *)arg;
 
-	unsigned char *data = NULL, *buf = NULL, *t_buf, xor_cc = 0;
+	unsigned char *data = NULL, *buf = NULL, *t_buf, xor_cc = 0, *out_data = NULL;
 	unsigned short v;
 	int len = 0, i = 0;
-	xchain *chain = NULL;
+	xchain *rchain = NULL, *wchain = NULL;
 
 	    /* This callback is invoked when there is data to read on bev. */
     struct evbuffer *input = bufferevent_get_input(bev);
@@ -139,7 +130,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	len =  evbuffer_get_length(input);
 
     //input 拿出来， 
-    if (!(data = (unsigned char *)malloc(len + 1))) {
+    if (!(data = (unsigned char *)xmalloc(len + 1))) {
 		xerror("malloc error");
 		goto end;
 	}
@@ -170,26 +161,31 @@ void read_cb(struct bufferevent *bev, void *arg)
 	}
 	len = v - 6;
 
-	if (!(chain = xchain_alloc())) {
-		xerror("xchain_alloc error");
+	if (!(rchain = xchain_alloc())) {
+		xerror("rxchain_alloc error");
+		goto end;
+	}
+	if (!(wchain = xchain_alloc())) {
+		xerror("wxchain_alloc error");
 		goto end;
 	}
 	
 	//取数据
-	xchain_add(chain, buf, len);
+	xchain_add(rchain, buf, len);
 	
 	
-    //业务//第一次登录获取用户信息 插入到链表中
-
-	//buf_pase(user_list, chain);
-	
+    //业务
+    thread_entity->master->func.do_work(thread_entity, rchain, wchain);
 
 	
     //evbuffer_add_buffer(output, input);
-	//evbuffer_add(output, (void *)data, len);
+    xchain_2data (wchain, &out_data, &len) ;
+	evbuffer_add(output, (void *)out_data, len);
 end:
-	if (data) free(data);
-	if (chain) xchain_clear(chain);
+	if (data) xfree(data);	
+	if (out_data) xfree(out_data);
+	if (rchain) xchain_clear(rchain);	
+	if (wchain) xchain_clear(wchain);
 }
 
 
@@ -241,12 +237,7 @@ void thread_libevent_process(int fd, short which, void *arg)
 				if (cfd <= 0)
 					break;
 
-				/*if (!(user = new User())) {
-					break;
-				}
-				user->set_thread(thread_entity);
-				xlist_cat(thread_entity->users, NULL, XLIST_STRING, (char *)user);
-				*/
+
 				
 				//加入到 base中
 				bev = bufferevent_socket_new(thread_entity->base, cfd, BEV_OPT_CLOSE_ON_FREE);

@@ -1,29 +1,18 @@
 #include "YS.h"
+#include "process.h"
 
 
 int main(int argc, const char **argv)
 {
-	//int ret = EXIT_SUCCESS;
+	YS_init(&master_thread);
 	
-	sigignore(SIGPIPE);
-	YS_INIT(&master_thread);
-
+	func_init(master_thread.func, do_work);
 	
-	//main_base = event_init();
-	//assert(main_base);
-
 	YS_thread_init(&master_thread);
+	
 	YS_master_thread_init(&master_thread);
 
 	YS_master_thread_loop(&master_thread);
-	//pthread_exit(NULL);// ¼ÌÐø·â×°
-
-
-	#if 0
-	 if (event_base_loop(main_base, 0) != 0) {
-	 	ret = EXIT_FAILURE;
-	}
-	 #endif
 	
 	return 0;
 }

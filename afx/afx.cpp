@@ -442,3 +442,14 @@ __finish:
   return statu ;
 }
 
+int sigignore(int sig)
+{
+    struct sigaction sa;
+	memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = SIG_IGN, sa.sa_flags = 0;
+    if (sigemptyset(&sa.sa_mask) == -1 || sigaction(sig, &sa, 0) == -1) {
+        return -1;
+    }
+    return 0;
+}
+

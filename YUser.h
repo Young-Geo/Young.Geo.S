@@ -2,18 +2,35 @@
 #define _YUSER_H_
 
 #include "afx/xlog.h"
+#include "afx/afx.h"
 
+
+enum USER_STATUS{
+	OFF_LINE,
+	ON_LINE,
+	READY,
+	IN_GAME
+};
 
 class User
 {
 public:
-	void  *get_thread();
-	int  set_thread(void *thread_entity);
+	User();
+	~User();
+public:
+	p_g 			get_thread();
+	int  			set_thread(p_g thread_entity);
+	USER_STATUS 	get_status();
+	void			set_status(USER_STATUS user_status);
 protected:
 	
 private:
 	//username,password
-	void *_thread_entity;
+	u32 id;
+	u8 username[12];
+	u8 status;
+	p_g _thread_entity;
+	USER_STATUS _user_status;
 };
 
 

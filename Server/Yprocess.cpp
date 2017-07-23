@@ -35,7 +35,7 @@ int do_work(void *arg, void *r, void *w)
 				User *user = new User();
 				user->set_status(ON_LINE);
 				user->set_thread(thread_entity);
-				xlist_add(thread_entity->users, user->get_username(), XLIST_STRING, (char *)user);
+				xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_STRING, (char *)user);
 			}
 		break;
 		

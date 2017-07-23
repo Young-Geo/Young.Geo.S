@@ -1,6 +1,8 @@
 #ifndef __Y_PKT_H_
 #define __Y_PKT_H_
 
+#include "afx/afx.h"
+
 #define PKT_YS_START_TAG 0xA5
 #define PKT_YS_END_TAG 0x5A
 #define PKT_YS_FRAME_TYPE 0xB5

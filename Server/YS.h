@@ -1,3 +1,5 @@
+#ifndef _YS_H_
+#define _YS_H_
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -93,3 +95,6 @@ int YS_thread_init(global_t *master);
 int YS_master_thread_init(global_t *master);
 void YS_master_thread_loop(global_t *master);
 
+
+
+#endif

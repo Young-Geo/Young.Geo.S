@@ -38,6 +38,10 @@ int do_work(void *arg, void *r, void *w)
 				xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_STRING, (char *)user);
 			}
 		break;
+
+		case 'R':
+			
+		break;
 		
 		default:
 			

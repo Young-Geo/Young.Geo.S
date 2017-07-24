@@ -1,2 +1,2 @@
-# Young.Geo.S
-libevent+线程池
+# YS
+多线程+libevent

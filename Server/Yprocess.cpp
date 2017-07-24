@@ -39,8 +39,19 @@ int do_work(void *arg, void *r, void *w)
 			}
 		break;
 
-		case 'R':
-			
+		case 'R'://就绪状态，应该先找同种状态的人看看能不能匹配游戏
+			{
+				User *user = NULL;
+				//找到
+				user = (User *)xlist_getv(thread_entity->users, NULL);//分线程找，，后续需要沟通
+				xlist_add(thread_entity->master->readys, (const char *)user->get_username(), XLIST_STRING, (char *)user);
+			}
+		break;
+
+		case 'S':
+			{
+				
+			}
 		break;
 		
 		default:

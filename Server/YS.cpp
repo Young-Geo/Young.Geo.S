@@ -104,6 +104,16 @@ int YS_init(global_t *master)
 			exit(-1);
 		}
 	}
+
+	if (!(master->games = xlist_init())) {
+		xerror("games init error\n");
+		exit(-1);
+	}
+
+	if (!(master->readys = xlist_init())) {
+		xerror("readys init error\n");
+		exit(-1);
+	}
 	return 0;
 }
 

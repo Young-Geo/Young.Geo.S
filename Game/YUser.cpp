@@ -9,14 +9,14 @@ User::User(u8 *username, u8 *password, p_g thread_entity)
 {
 	if (!username || !password) {
 		xerror("User username password NULL\n");
-		return -1;
+		return;
 	}
 
 	memcpy(this->username, username, strlen((char *)username));
 	memcpy(this->password, password, strlen((char *)password));
 	this->_user_status = ON_LINE;
 	this->_thread_entity = thread_entity;
-	return 0;
+	return;
 }
 User::~User(){}
 

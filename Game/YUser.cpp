@@ -3,12 +3,22 @@
 
 User::User()
 {
-	
+	this->_user_status = ON_LINE;
 }
-User::~User()
+User::User(u8 *username, u8 *password, p_g thread_entity)
 {
+	if (!username || !password) {
+		xerror("User username password NULL\n");
+		return -1;
+	}
 
+	memcpy(this->username, username, strlen((char *)username));
+	memcpy(this->password, password, strlen((char *)password));
+	this->_user_status = ON_LINE;
+	this->_thread_entity = thread_entity;
+	return 0;
 }
+User::~User(){}
 
 
 
@@ -27,6 +37,22 @@ int 			User::set_username(u8 *username)
 	memcpy(this->username, username, strlen((char *)username));
 	return 0;
 }
+
+u8 *			User::get_password()
+{
+	return this->password;
+}
+int 			User::set_password(u8 *password)
+{
+	if (!password) {
+		xerror("set_password password NULL\n");
+		return -1;
+	}
+
+	memcpy(this->password, password, strlen((char *)password));
+	return 0;
+}
+
 
 p_g User::get_thread()
 {

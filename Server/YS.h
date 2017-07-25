@@ -60,7 +60,8 @@ typedef struct _thread_entity_t
 		int notify_send_fd; 		/* sending end of notify pipe */
 		int conn_num;
 		conn_queue_t conn_queue;
-		xlist *users;
+		xlist *users;		
+		pthread_mutex_t mutex_users;
 		global_t *master;
 } thread_entity_t;
 

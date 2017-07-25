@@ -348,6 +348,7 @@ int YS_thread_init(global_t *master)
         master->thread_entitys[i].notify_send_fd = pfd[1];
 		master->thread_entitys[i].users = master->arr_users[i];
 		master->thread_entitys[i].master = master;
+		pthread_mutex_init(&master->thread_entitys[i].mutex_users, NULL);
 		setup_thread(&master->thread_entitys[i]);
     }
 

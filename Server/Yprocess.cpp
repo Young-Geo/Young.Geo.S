@@ -45,7 +45,7 @@ int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username
 
 	if (xlist_size(readys) < 2) {
 		xmessage("%s add readys \n", username);
-		xlist_add(readys, username, XLIST_PTR, (char *)user);
+		xlist_add(readys, (char *)username, XLIST_PTR, (char *)user);
 		return 0;
 	}
 	
@@ -53,7 +53,7 @@ int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username
 	user_2 = (User *)xlist_index(readys, 1)->value;
 	if (!user_1 || !user_2) {
 		xmessage("%s add readys \n", username);
-		xlist_add(readys, username, XLIST_PTR, (char *)user);
+		xlist_add(readys, (char *)username, XLIST_PTR, (char *)user);
 		return 0;
 	}
 	xlist_delete(readys, (char *)user_1->get_username());	

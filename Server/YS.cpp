@@ -149,7 +149,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	evbuffer_copyout(input, (void *)data, len);
 
 	
-	if (!(buf = pkt_match_head(data, PKT_YS_START_TAG))) {
+	if (!(buf = pkt_match_head(data, len, PKT_YS_START_TAG))) {
 		xerror("match head PKT_YS_START_TAG error");
 		goto end;
 	}

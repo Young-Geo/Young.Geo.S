@@ -51,12 +51,20 @@ unsigned char *  pkt_build_short_tag(unsigned char * buf, unsigned short tag)
 	return (buf += 2);
 }
 
-unsigned char *  pkt_match_head(unsigned char *buf, unsigned char tag)
+unsigned char *  pkt_match_head(unsigned char *buf, int len, unsigned char tag)
 {
 	int i = 0;
 	if (!buf) {
 		return NULL;
 	}
+	for (i = 0; i < len; ++i)
+	{
+		if (*buf == tag) {
+			return buf;
+		}
+		++buf;
+	}
+	/*
 	while (1)
 	{
 		if (*buf == '\0')
@@ -65,6 +73,6 @@ unsigned char *  pkt_match_head(unsigned char *buf, unsigned char tag)
 			return buf;
 		}
 		++buf;
-	}
+	}*/
 	return NULL;
 }

@@ -14,7 +14,7 @@ unsigned char pkt_build_check_sum ( unsigned char * buf , int size);
 int pkt_check_sum ( unsigned char * buf , int size , unsigned char checksum );
 unsigned char *  pkt_build_byte_tag(unsigned char * buf, unsigned char tag);
 unsigned char *  pkt_build_short_tag(unsigned char * buf, unsigned short tag);
-unsigned char *  pkt_match_head(unsigned char *buf, unsigned char tag);
+unsigned char *  pkt_match_head(unsigned char *buf, int len, unsigned char tag);
 
 
 

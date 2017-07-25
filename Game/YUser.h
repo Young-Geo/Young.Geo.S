@@ -19,7 +19,7 @@ class User
 {
 public:
 	User();
-	User(u8 *username, u8 *password);
+	User(u8 *username, u8 *password, p_g thread_entity);
 	~User();
 public:
 	u8 *			get_username();

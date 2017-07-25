@@ -75,7 +75,7 @@ int do_work(void *arg, void *r, void *w)
 
 	thread_entity_t *thread_entity = NULL;
 	xchain *rchain = NULL, *wchain = NULL;
-	unsigned char buf[1024] = '\0';
+	unsigned char buf[1024];
 	unsigned short type = 0;
 	u8 username[USERNAME_LEN], password[PASSWORD_LEN];
 	u8 inx = 0;

@@ -74,10 +74,11 @@ int do_work(void *arg, void *r, void *w)
 {
 	thread_entity_t *thread_entity = NULL;
 	xchain *rchain = NULL, *wchain = NULL;
-	unsigned char buf[1024];
+	unsigned char buf[1024], *data = NULL;
 	unsigned short type = 0;
 	u8 username[USERNAME_LEN], password[PASSWORD_LEN];
 	u8 inx = 0;
+	int len = 0;
 
 
 	assert(arg);
@@ -88,14 +89,18 @@ int do_work(void *arg, void *r, void *w)
 	thread_entity = (thread_entity_t *)arg;
 	rchain = (xchain *)r, wchain = (xchain *)w;
 
-	xchain_get(rchain, (void *)&type, 2);
-	
+	//xchain_get(rchain, (void *)&type, 2);
+	xchain_2data(rchain, &data, &len)
+	xmessage("data len = %d\n", len);
+	memcpy((void *)&type, data, 2);
 	switch (type)//各种业务处理
 	{
 		case LOGIN:
 			{
-				xchain_get(rchain, (void *)username, USERNAME_LEN);				
-				xchain_get(rchain, (void *)password, PASSWORD_LEN);
+				//xchain_get(rchain, (void *)username, USERNAME_LEN);				
+				//xchain_get(rchain, (void *)password, PASSWORD_LEN);
+				memcpy((void *)username, (data + 2), USERNAME_LEN);				
+				memcpy((void *)username, (data + USERNAME_LEN + 2), PASSWORD_LEN);
 				if (login(thread_entity, username, password)) {
 					xerror("login error\n");
 					}

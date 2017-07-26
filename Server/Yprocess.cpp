@@ -100,7 +100,7 @@ int do_work(void *arg, void *r, void *w)
 				//xchain_get(rchain, (void *)username, USERNAME_LEN);				
 				//xchain_get(rchain, (void *)password, PASSWORD_LEN);
 				memcpy((void *)username, (data + 2), USERNAME_LEN);				
-				memcpy((void *)username, (data + USERNAME_LEN + 2), PASSWORD_LEN);
+				memcpy((void *)password, (data + USERNAME_LEN + 2), PASSWORD_LEN);
 				if (login(thread_entity, username, password)) {
 					xerror("login error\n");
 					}

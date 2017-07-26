@@ -90,7 +90,7 @@ int do_work(void *arg, void *r, void *w)
 	rchain = (xchain *)r, wchain = (xchain *)w;
 
 	//xchain_get(rchain, (void *)&type, 2);
-	xchain_2data(rchain, &data, &len);
+	xchain_2data(rchain, (char **)&data, &len);
 	xmessage("data len = %d\n", len);
 	memcpy((void *)&type, data, 2);
 	switch (type)//各种业务处理

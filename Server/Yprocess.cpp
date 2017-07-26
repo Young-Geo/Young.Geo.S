@@ -72,7 +72,6 @@ int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username
 
 int do_work(void *arg, void *r, void *w)
 {
-
 	thread_entity_t *thread_entity = NULL;
 	xchain *rchain = NULL, *wchain = NULL;
 	unsigned char buf[1024];
@@ -93,17 +92,18 @@ int do_work(void *arg, void *r, void *w)
 	
 	switch (type)//各种业务处理
 	{
-		case 'C':
+		case LOGIN:
 			{
 				xchain_get(rchain, (void *)username, USERNAME_LEN);				
 				xchain_get(rchain, (void *)password, PASSWORD_LEN);
 				if (login(thread_entity, username, password)) {
 					xerror("login error\n");
 				}
+				xmessage("登录成功\n");
 			}
 		break;
 
-		case 'R'://就绪状态，应该先找同种状态的人看看能不能匹配游戏
+		case MATCH://就绪状态，应该先找同种状态的人看看能不能匹配游戏
 			{
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
 				xchain_get(rchain, (void *)&inx, 1);	

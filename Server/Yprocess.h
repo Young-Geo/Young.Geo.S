@@ -9,6 +9,11 @@
 #include "YUser.h"
 #include "YS.h"
 
+enum Business_type {
+	LOGIN = 1,
+	MATCH
+};
+
 int work(void *arg, xchain *rhain, xchain *whain);
 
 int do_work(void *arg, void *r, void *w);

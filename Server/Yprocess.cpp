@@ -98,8 +98,8 @@ int do_work(void *arg, void *r, void *w)
 				xchain_get(rchain, (void *)password, PASSWORD_LEN);
 				if (login(thread_entity, username, password)) {
 					xerror("login error\n");
-				}
-				xmessage("µÇÂ¼³É¹¦\n");
+					}
+				xmessage("login ok username = %s, password = %s\n", username, password);
 			}
 		break;
 

@@ -28,12 +28,10 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 int register(thread_entity_t *thread_entity, u8 *username, u8 *password)
 {
 	if (!thread_entity || !username || !password) {
-		xerror("login error NULL\n");
+		xerror("register error NULL\n");
 		return -1;
 	}
-	//登录处理数据查询
-	//if ()
-	//登录成功
+	//注册处理
 	User *user = new User(username, password, (p_g)thread_entity);
 	user->set_status(ON_LINE);
 	user->set_thread(thread_entity);

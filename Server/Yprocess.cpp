@@ -25,7 +25,7 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	return 0;
 }
 
-int register(thread_entity_t *thread_entity, u8 *username, u8 *password)
+int rigister(thread_entity_t *thread_entity, u8 *username, u8 *password)
 {
 	if (!thread_entity || !username || !password) {
 		xerror("register error NULL\n");
@@ -157,7 +157,6 @@ int do_work(void *arg, void *r, void *w)
 
 		case REGISTER:
 			{
-				/*
 				#define RREC_LEN 9
 				unsigned char rec[RREC_LEN] = {0}, *buf = NULL, roc;
 				u8 rec_inx = 0;
@@ -167,7 +166,7 @@ int do_work(void *arg, void *r, void *w)
 				xchain_get(rchain, (void *)password, PASSWORD_LEN);
 				xchain_delete(rchain, PASSWORD_LEN);
 
-				if (register(thread_entity, username, password)) {
+				if (rigister(thread_entity, username, password)) {
 					xerror("register error\n");					
 					rec_inx = 0;
 				} else {
@@ -186,7 +185,6 @@ int do_work(void *arg, void *r, void *w)
 				buf = &rec[1];
 				OUT8(buf, roc);
 				xchain_add(wchain, (void *)rec, RREC_LEN);
-				*/
 			}
 		break;
 		

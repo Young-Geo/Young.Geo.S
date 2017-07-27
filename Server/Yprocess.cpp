@@ -31,7 +31,7 @@ int register(thread_entity_t *thread_entity, u8 *username, u8 *password)
 		xerror("register error NULL\n");
 		return -1;
 	}
-	//×¢²á´¦Àí
+
 	User *user = new User(username, password, (p_g)thread_entity);
 	user->set_status(ON_LINE);
 	user->set_thread(thread_entity);
@@ -157,6 +157,7 @@ int do_work(void *arg, void *r, void *w)
 
 		case REGISTER:
 			{
+				/*
 				#define RREC_LEN 9
 				unsigned char rec[RREC_LEN] = {0}, *buf = NULL, roc;
 				u8 rec_inx = 0;
@@ -185,6 +186,7 @@ int do_work(void *arg, void *r, void *w)
 				buf = &rec[1];
 				OUT8(buf, roc);
 				xchain_add(wchain, (void *)rec, RREC_LEN);
+				*/
 			}
 		break;
 		

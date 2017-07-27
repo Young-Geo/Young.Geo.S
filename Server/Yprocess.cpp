@@ -13,7 +13,8 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 		xerror("login error NULL\n");
 		return -1;
 	}
-	//登录处理
+	//登录处理数据查询
+	//if ()
 	//登录成功
 	User *user = new User(username, password, (p_g)thread_entity);
 	user->set_status(ON_LINE);
@@ -96,6 +97,7 @@ int do_work(void *arg, void *r, void *w)
 	{
 		case LOGIN:
 			{
+				char rec[3];
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
 				xchain_delete(rchain, USERNAME_LEN);
 				xchain_get(rchain, (void *)password, PASSWORD_LEN);
@@ -103,8 +105,11 @@ int do_work(void *arg, void *r, void *w)
 
 				if (login(thread_entity, username, password)) {
 					xerror("login error\n");
-					}
+				}
 				xmessage("login ok username = %s, password = %s\n", username, password);
+				*((short *)rec) = REC_LOGIN;
+				rec[2] = thread_entity->inx;
+				xchain_add(wchain, (void *)rec, 3);
 			}
 		break;
 

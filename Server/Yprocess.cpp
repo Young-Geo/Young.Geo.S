@@ -117,7 +117,8 @@ int do_work(void *arg, void *r, void *w)
 				buf = pkt_build_byte_tag(buf, PKT_YS_START_TAG);	
 				buf = pkt_build_byte_tag(buf, 0);				
 				buf = pkt_build_byte_tag(buf, PKT_YS_FRAME_TYPE);				
-				buf = pkt_build_short_tag(buf, REC_LEN);				
+				//buf = pkt_build_short_tag(buf, REC_LEN);	
+				OUT16_BE(buf ,REC_LEN);
 				buf = pkt_build_short_tag(buf, REC_LOGIN);
 				buf = pkt_build_byte_tag(buf, (unsigned char)rec_inx);				
 				buf = pkt_build_byte_tag(buf, PKT_YS_END_TAG);

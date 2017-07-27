@@ -114,17 +114,24 @@ int do_work(void *arg, void *r, void *w)
 				}
 				xmessage("login ok username = %s, password = %s\n", username, password);
 				buf = rec;
-				buf = pkt_build_byte_tag(buf, PKT_YS_START_TAG);	
-				buf = pkt_build_byte_tag(buf, 0);				
-				buf = pkt_build_byte_tag(buf, PKT_YS_FRAME_TYPE);				
+				//buf = pkt_build_byte_tag(buf, PKT_YS_START_TAG);
+				OUT8(buf, PKT_YS_START_TAG);
+				//buf = pkt_build_byte_tag(buf, 0);				
+				OUT8(buf, 0);
+				//buf = pkt_build_byte_tag(buf, PKT_YS_FRAME_TYPE);
+				OUT8(buf, PKT_YS_FRAME_TYPE);
 				//buf = pkt_build_short_tag(buf, REC_LEN);	
 				OUT16_BE(buf ,REC_LEN);
-				buf = pkt_build_short_tag(buf, REC_LOGIN);
-				buf = pkt_build_byte_tag(buf, (unsigned char)rec_inx);				
-				buf = pkt_build_byte_tag(buf, PKT_YS_END_TAG);
+				//buf = pkt_build_short_tag(buf, REC_LOGIN);
+				OUT16_LE(buf, REC_LOGIN);
+				//buf = pkt_build_byte_tag(buf, (unsigned char)rec_inx);	
+				OUT8(buf, rec_inx);
+				//buf = pkt_build_byte_tag(buf, PKT_YS_END_TAG);
+				OUT8(buf, PKT_YS_END_TAG);
 				roc = pkt_build_check_sum(rec, REC_LEN);
 				buf = &rec[1];
-				pkt_build_byte_tag(buf, roc);	
+				//pkt_build_byte_tag(buf, roc);	
+				OUT8(buf, roc);
 				xchain_add(wchain, (void *)rec, REC_LEN);
 			}
 		break;

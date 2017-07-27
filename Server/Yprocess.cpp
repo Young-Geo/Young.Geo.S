@@ -25,6 +25,25 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	return 0;
 }
 
+int register(thread_entity_t *thread_entity, u8 *username, u8 *password)
+{
+	if (!thread_entity || !username || !password) {
+		xerror("login error NULL\n");
+		return -1;
+	}
+	//登录处理数据查询
+	//if ()
+	//登录成功
+	User *user = new User(username, password, (p_g)thread_entity);
+	user->set_status(ON_LINE);
+	user->set_thread(thread_entity);
+	pthread_mutex_lock(&thread_entity->mutex_users);
+	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_STRING, (char *)user);			
+	pthread_mutex_unlock(&thread_entity->mutex_users);
+	return 0;
+}
+
+
 int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username)
 {
 	User *user = NULL, *user_1 = NULL, *user_2 = NULL;
@@ -114,23 +133,15 @@ int do_work(void *arg, void *r, void *w)
 				}
 				xmessage("login ok username = %s, password = %s\n", username, password);
 				buf = rec;
-				//buf = pkt_build_byte_tag(buf, PKT_YS_START_TAG);
-				OUT8(buf, PKT_YS_START_TAG);
-				//buf = pkt_build_byte_tag(buf, 0);				
+				OUT8(buf, PKT_YS_START_TAG);		
 				OUT8(buf, 0);
-				//buf = pkt_build_byte_tag(buf, PKT_YS_FRAME_TYPE);
-				OUT8(buf, PKT_YS_FRAME_TYPE);
-				//buf = pkt_build_short_tag(buf, REC_LEN);	
+				OUT8(buf, PKT_YS_FRAME_TYPE);	
 				OUT16_BE(buf ,REC_LEN);
-				//buf = pkt_build_short_tag(buf, REC_LOGIN);
-				OUT16_LE(buf, REC_LOGIN);
-				//buf = pkt_build_byte_tag(buf, (unsigned char)rec_inx);	
+				OUT16_LE(buf, REC_LOGIN);	
 				OUT8(buf, rec_inx);
-				//buf = pkt_build_byte_tag(buf, PKT_YS_END_TAG);
 				OUT8(buf, PKT_YS_END_TAG);
 				roc = pkt_build_check_sum(rec, REC_LEN);
 				buf = &rec[1];
-				//pkt_build_byte_tag(buf, roc);	
 				OUT8(buf, roc);
 				xchain_add(wchain, (void *)rec, REC_LEN);
 			}
@@ -139,16 +150,43 @@ int do_work(void *arg, void *r, void *w)
 		case MATCH://就绪状态，应该先找同种状态的人看看能不能匹配游戏
 			{
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
-				xchain_get(rchain, (void *)&inx, 1);	
+				xchain_get(rchain, (void *)&inx, 1);
 				if (ready_start(thread_entity->master->arr_users, inx, thread_entity->master->readys, thread_entity->master->games, username)) {
 					xerror("ready_start error\n");
 				}
 			}
 		break;
 
-		case 'S':
+		case REGISTER:
 			{
+				#define REC_LEN 9
+				unsigned char rec[REC_LEN] = {0}, *buf = NULL, roc;
+				u8 rec_inx = 0;
 				
+				xchain_get(rchain, (void *)username, USERNAME_LEN);	
+				xchain_delete(rchain, USERNAME_LEN);
+				xchain_get(rchain, (void *)password, PASSWORD_LEN);
+				xchain_delete(rchain, PASSWORD_LEN);
+
+				if (register(thread_entity, username, password)) {
+					xerror("register error\n");					
+					rec_inx = 0;
+				} else {
+					rec_inx = thread_entity->inx + 1;
+				}
+				xmessage("register ok username = %s, password = %s\n", username, password);
+				buf = rec;
+				OUT8(buf, PKT_YS_START_TAG);		
+				OUT8(buf, 0);
+				OUT8(buf, PKT_YS_FRAME_TYPE);	
+				OUT16_BE(buf ,REC_LEN);
+				OUT16_LE(buf, REC_LOGIN);	
+				OUT8(buf, rec_inx);
+				OUT8(buf, PKT_YS_END_TAG);
+				roc = pkt_build_check_sum(rec, REC_LEN);
+				buf = &rec[1];
+				OUT8(buf, roc);
+				xchain_add(wchain, (void *)rec, REC_LEN);
 			}
 		break;
 		

@@ -12,7 +12,8 @@
 enum Business_type {
 	LOGIN = 1,
 	MATCH,
-	REC_LOGIN
+	REC_LOGIN,
+	REGISTER
 };
 
 int work(void *arg, xchain *rhain, xchain *whain);

@@ -104,11 +104,13 @@ int do_work(void *arg, void *r, void *w)
 				xchain_delete(rchain, PASSWORD_LEN);
 
 				if (login(thread_entity, username, password)) {
-					xerror("login error\n");
+					xerror("login error\n");					
+					rec[2] = 0;
+				} else {
+					rec[2] = thread_entity->inx + 1;
 				}
 				xmessage("login ok username = %s, password = %s\n", username, password);
 				*((short *)rec) = REC_LOGIN;
-				rec[2] = thread_entity->inx;
 				xchain_add(wchain, (void *)rec, 3);
 			}
 		break;

@@ -97,7 +97,10 @@ int do_work(void *arg, void *r, void *w)
 	{
 		case LOGIN:
 			{
-				char rec[3];
+				#define REC_LEN 9
+				unsigned char rec[REC_LEN] = {0}, *buf = NULL, roc;
+				u8 rec_inx = 0;
+				
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
 				xchain_delete(rchain, USERNAME_LEN);
 				xchain_get(rchain, (void *)password, PASSWORD_LEN);
@@ -105,13 +108,23 @@ int do_work(void *arg, void *r, void *w)
 
 				if (login(thread_entity, username, password)) {
 					xerror("login error\n");					
-					rec[2] = 0;
+					rec_inx = 0;
 				} else {
-					rec[2] = thread_entity->inx + 1;
+					rec_inx = thread_entity->inx + 1;
 				}
 				xmessage("login ok username = %s, password = %s\n", username, password);
-				*((short *)rec) = REC_LOGIN;
-				xchain_add(wchain, (void *)rec, 3);
+				buf = rec;
+				pkt_build_byte_tag(buf, PKT_YS_START_TAG);	
+				pkt_build_byte_tag(buf, 0);				
+				pkt_build_byte_tag(buf, PKT_YS_FRAME_TYPE);				
+				pkt_build_short_tag(buf, REC_LEN);				
+				pkt_build_short_tag(buf, REC_LOGIN);
+				pkt_build_byte_tag(buf, (unsigned char)rec_inx);				
+				pkt_build_byte_tag(buf, PKT_YS_END_TAG);
+				roc = pkt_build_check_sum(rec, REC_LEN);
+				buf = &rec[1];
+				pkt_build_byte_tag(buf, roc);	
+				xchain_add(wchain, (void *)rec, REC_LEN);
 			}
 		break;
 

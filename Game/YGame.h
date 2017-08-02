@@ -5,13 +5,14 @@
 
 
 
-class Game
+class Game : public virtual_Game
 {
 public:
 	Game(User *_user_1, User *_user_2, User *_user_3, u8 *name);
 	~Game();
 public:
-	int display();
+	virtual int display();
+	virtual int stop();
 	u8 *get_name();
 protected:
 	

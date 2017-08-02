@@ -33,6 +33,11 @@ int 	Game::display()
 	return 0;
 }
 
+int Game::stop()
+{
+	return 0;
+}
+
 u8 * 	Game::get_name()
 {
 	return this->name;

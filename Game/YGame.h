@@ -3,6 +3,8 @@
 
 #include "YUser.h"
 
+#define GAME_LEN (USERNAME_LEN * 3)
+
 
 
 class Game : public virtual_Game
@@ -19,7 +21,7 @@ protected:
 private:
 	//Èý¸öuser
 	User *_user_1, *_user_2, *_user_3;
-	u8 name[USERNAME_LEN * 3];
+	u8 name[GAME_LEN];
 };
 
 

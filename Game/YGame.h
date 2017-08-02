@@ -18,9 +18,7 @@ protected:
 	
 private:
 	//Èý¸öuser
-	User *_user_1;
-	User *_user_2;
-	User *_user_3;
+	User *_user_1, *_user_2, *_user_3;
 	u8 name[USERNAME_LEN * 3];
 };
 

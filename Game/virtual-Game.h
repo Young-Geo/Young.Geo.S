@@ -11,6 +11,7 @@ public:
 public:
 	virtual int display() = 0;
 	virtual int stop() = 0;
+	virtual u8 *get_name() = 0;
 };
 
 #endif

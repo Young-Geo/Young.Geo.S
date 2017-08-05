@@ -15,7 +15,7 @@ public:
 public:
 	virtual int display();
 	virtual int stop();
-	u8 *get_name();
+	virtual u8 *get_name();
 protected:
 	
 private:

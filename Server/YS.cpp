@@ -108,12 +108,15 @@ int YS_init(global_t *master)
 	if (!(master->games = xlist_init())) {
 		xerror("games init error\n");
 		exit(-1);
-	}
+	}	
+	pthread_mutex_init(&master->mutex_game, NULL);
 
 	if (!(master->readys = xlist_init())) {
 		xerror("readys init error\n");
 		exit(-1);
-	}
+	}	
+	pthread_mutex_init(&master->mutex_ready, NULL);
+	
 	return 0;
 }
 

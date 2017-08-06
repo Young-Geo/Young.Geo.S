@@ -76,13 +76,15 @@ typedef struct _global_t
 	int conn_receive_fd;
 	int num_threads;
 	int last_thread;
-	pthread_t *threads;
+	pthread_t *threads;//鍙互鍒犻櫎
 	thread_entity_t *thread_entitys;
 	xlist **arr_users;//已经连接的用户的链表数组
 	//游戏中链表
 	xlist *games;
+	pthread_mutex_t mutex_game;
 	//各种状态链表
-	xlist *readys;//已经准备就绪用户的链表
+	xlist *readys;//已经准备就绪用户的链表	
+	pthread_mutex_t mutex_ready;
 } global_t;
 
 

@@ -115,7 +115,7 @@ int do_work(void *arg, void *r, void *w)
 		case LOGIN:
 			{
 				#define REC_LEN 9
-				unsigned char rec[REC_LEN] = {0}, *buf = NULL, roc;
+				unsigned char rec[REC_LEN] = {0}, *buf = NULL;
 				u8 rec_inx = 0;
 				
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
@@ -131,17 +131,9 @@ int do_work(void *arg, void *r, void *w)
 				}
 				xmessage("login ok username = %s, password = %s\n", username, password);
 				buf = rec;
-				OUT8(buf, PKT_YS_START_TAG);		
-				OUT8(buf, 0);
-				OUT8(buf, PKT_YS_FRAME_TYPE);	
-				OUT16_BE(buf ,REC_LEN);
 				OUT16_LE(buf, REC_LOGIN);	
 				OUT8(buf, rec_inx);
-				OUT8(buf, PKT_YS_END_TAG);
-				roc = pkt_build_check_sum(rec, REC_LEN);
-				buf = &rec[1];
-				OUT8(buf, roc);
-				xchain_add(wchain, (void *)rec, REC_LEN);
+				xchain_add(wchain, (void *)rec, (buf-rec));
 			}
 		break;
 
@@ -157,8 +149,7 @@ int do_work(void *arg, void *r, void *w)
 
 		case REGISTER:
 			{
-				#define RREC_LEN 9
-				unsigned char rec[RREC_LEN] = {0}, *buf = NULL, roc;
+				unsigned char rec[REC_LEN] = {0}, *buf = NULL;
 				u8 rec_inx = 0;
 				
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
@@ -174,17 +165,9 @@ int do_work(void *arg, void *r, void *w)
 				}
 				xmessage("register ok username = %s, password = %s\n", username, password);
 				buf = rec;
-				OUT8(buf, PKT_YS_START_TAG);		
-				OUT8(buf, 0);
-				OUT8(buf, PKT_YS_FRAME_TYPE);
-				OUT16_BE(buf, RREC_LEN);
-				OUT16_LE(buf, REC_LOGIN);	
+				OUT16_LE(buf, REGISTER);	
 				OUT8(buf, rec_inx);
-				OUT8(buf, PKT_YS_END_TAG);
-				roc = pkt_build_check_sum(rec, RREC_LEN);
-				buf = &rec[1];
-				OUT8(buf, roc);
-				xchain_add(wchain, (void *)rec, RREC_LEN);
+				xchain_add(wchain, (void *)rec, (buf-rec));
 			}
 		break;
 		

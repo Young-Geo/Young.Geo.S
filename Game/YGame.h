@@ -2,6 +2,7 @@
 #define _YGAME_H_
 
 #include "YUser.h"
+#include "virtual-Game.h"
 
 #define GAME_LEN (USERNAME_LEN * 3)
 

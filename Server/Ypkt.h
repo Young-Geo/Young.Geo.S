@@ -6,6 +6,8 @@
 #define PKT_YS_START_TAG 0xA5
 #define PKT_YS_END_TAG 0x5A
 #define PKT_YS_FRAME_TYPE 0xB5
+#define PKT_YS_HEADLEN 5
+#define PKT_YS_ENDLEN 1
 
 
 

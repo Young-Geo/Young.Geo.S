@@ -126,7 +126,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	assert(arg);
 	thread_entity_t *thread_entity = (thread_entity_t *)arg;
 
-	unsigned char *data = NULL, *buf = NULL, *t_buf, xor_cc = 0, *out_data = NULL;
+	unsigned char *data = NULL, *buf = NULL, *t_buf, xor_cc = 0, *out_data = NULL, *pack = NULL;
 	unsigned short v;
 	int len = 0, i = 0;
 	xchain *rchain = NULL, *wchain = NULL;
@@ -193,6 +193,24 @@ void read_cb(struct bufferevent *bev, void *arg)
 	
     //evbuffer_add_buffer(output, input);
     xchain_2data (wchain, (char **)&out_data, &len) ;
+	pack = (unsigned char *)xmalloc(len + PKT_YS_HEADLEN + PKT_YS_ENDLEN);
+	if (!pack) {
+		xerror("xmalloc");
+		goto end;
+	}
+	
+	memcpy(pack + PKT_YS_ENDLEN, out_data, len);
+	xfree(out_data);
+	out_data = pack;
+	OUT8(pack, PKT_YS_START_TAG);		
+	OUT8(pack, 0);
+	OUT8(pack, PKT_YS_FRAME_TYPE);	
+	OUT16_BE(pack, (len+PKT_YS_HEADLEN+PKT_YS_ENDLEN));
+	pack += len;
+	OUT8(pack, PKT_YS_END_TAG);
+	xor_cc = pkt_build_check_sum(out_data, (len+PKT_YS_HEADLEN+PKT_YS_ENDLEN));
+	buf = out_data + 1;
+	OUT8(buf, xor_cc);
 	evbuffer_add(output, (void *)out_data, len);
 end:
 	if (data) xfree(data);	

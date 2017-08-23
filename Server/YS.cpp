@@ -211,7 +211,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	xor_cc = pkt_build_check_sum(out_data, (len+PKT_YS_HEADLEN+PKT_YS_ENDLEN));
 	buf = out_data + 1;
 	OUT8(buf, xor_cc);
-	evbuffer_add(output, (void *)out_data, len);
+	evbuffer_add(output, (void *)out_data, (len+PKT_YS_HEADLEN+PKT_YS_ENDLEN));
 end:
 	if (data) xfree(data);	
 	if (out_data) xfree(out_data);

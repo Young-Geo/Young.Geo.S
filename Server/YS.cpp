@@ -199,7 +199,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 		goto end;
 	}
 	
-	memcpy(pack + PKT_YS_ENDLEN, out_data, len);
+	memcpy(pack + PKT_YS_HEADLEN, out_data, len);
 	xfree(out_data);
 	out_data = pack;
 	OUT8(pack, PKT_YS_START_TAG);		

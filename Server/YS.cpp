@@ -379,6 +379,7 @@ int YS_thread_init(global_t *master)
 			exit(0);
 		}
 		master->thread_entitys[i].coc.COCICursor_init(&master->thread_entitys[i].database);
+		xmessage("init DataBase ok %d", (i + 1));
 		//
 		
 		setup_thread(&master->thread_entitys[i]);

@@ -30,6 +30,7 @@ public:
 	COCIDatabase();
 	virtual ~COCIDatabase();
 	
+	void COCIDatabase_init();
 	int GetLastError();
     char* GetErrorMessage();
     bool RollbackTrans();

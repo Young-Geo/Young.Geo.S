@@ -202,15 +202,19 @@ bool FCheckError(MYSQL *mysql,int& errcode, char* errbuf)
 
 COCIDatabase::COCIDatabase()
 {
-
-	mysql_init(&mysql);
-	m_IsOpen = false;
-	m_errCode = 0;
+	this->COCIDatabase_init();
 }
 
 COCIDatabase::~COCIDatabase()
 {
 	Close();
+}
+
+void COCIDatabase::COCIDatabase_init()
+{
+	mysql_init(&mysql);
+	m_IsOpen = false;
+	m_errCode = 0;
 }
 
 bool COCIDatabase::IsOpen()

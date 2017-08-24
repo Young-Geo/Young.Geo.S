@@ -10,6 +10,7 @@
 #include <sys/time.h>
 #endif
 
+/*
 int OrclDateToTime_t(char* pVal)
 {
 	MYSQL_TIME tmp;	
@@ -36,7 +37,7 @@ void OrclDateToTime_Sec_Msec(char* pVal,b_i32& Sec,b_i16& Msec)
 			&year,&month, &day, &hour, &min, &sec,&msec);
 	Msec = msec/1000;
 
-	/*
+	/[*
 	   char pDataValue[10];
 
 	//year
@@ -75,7 +76,7 @@ void OrclDateToTime_Sec_Msec(char* pVal,b_i32& Sec,b_i16& Msec)
 	memcpy(pDataValue,pVal + 15,6);
 	Msec = atoi(pDataValue);
 
-*/
+*]/
 	struct tm when;
 	when.tm_year = year - 1900;
 	when.tm_mon = month - 1;
@@ -175,7 +176,7 @@ void Sec_Msec_Time_tToOrclDate(int t, char* pVal)
 		sprintf(pTmpChar+15+i,"0");
 	}
 }
-
+*/
 
 bool FCheckError(MYSQL *mysql,int& errcode, char* errbuf)
 {

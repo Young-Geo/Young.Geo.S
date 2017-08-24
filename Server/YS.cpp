@@ -373,6 +373,7 @@ int YS_thread_init(global_t *master)
 		pthread_mutex_init(&master->thread_entitys[i].mutex_users, NULL);
 		
 		//Êı¾İ¿â²Ù×÷"//192.168.1.9:3306/landlord_game"
+		master->thread_entitys[i].database.COCIDatabase_init();
 		if (!master->thread_entitys[i].database.Open(DATABASE_SID, DATABASE_USR, DATABASE_PWD)) {
 			xerror("conn database error %s", master->thread_entitys[i].database.GetErrorMessage());
 			exit(0);

@@ -3,7 +3,8 @@
 
 
 
-#include "mysql.h"
+#include "mysql/mysql.h"
+
 #ifdef __OS_WIN32_
 #define MYSQL_TIME_LEN	36
 #else

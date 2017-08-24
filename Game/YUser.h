@@ -8,7 +8,7 @@
 #define PASSWORD_LEN 32
 
 
-enum USER_STATUS{
+enum USER_STATUS {
 	OFF_LINE,
 	ON_LINE,
 	READY,
@@ -33,13 +33,17 @@ public:
 protected:
 	
 private:
-	//username,password
 	u32 id;
 	u8 username[12];
 	u8 password[32];
 	u8 status;
 	p_g _thread_entity;
 	USER_STATUS _user_status;
+private:
+	u32 money_z, money_d;//钻和豆子
+	u32 solo_w, solo_f;//赢和失败的局数
+	u16 solo_s;//连胜
+	u16 lv;//级数
 };
 
 

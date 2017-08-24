@@ -22,6 +22,7 @@ bool SCheckError(MYSQL_STMT *stmt,int& errcode, char* errbuf)
 
 COCICursor::COCICursor( COCIDatabase* pDb )
 {
+/*
 	m_pDb = pDb;
 	m_pStmt = 0;
 	m_errCode = 0;
@@ -38,7 +39,8 @@ COCICursor::COCICursor( COCIDatabase* pDb )
     memset(m_pDefine, 0, MAX_COL_COUNT * sizeof(MYSQL_BIND));
     memset(m_pBind, 0, MAX_COL_COUNT * sizeof(MYSQL_BIND));
 	m_RecordCount = -1;
-
+	*/
+	this->COCICursor_init(pDb);
 }
 
 COCICursor::~COCICursor()
@@ -51,6 +53,26 @@ COCICursor::~COCICursor()
 		m_pStmt = NULL;
 	}
 
+}
+
+void COCICursor::COCICursor_init(COCIDatabase* pDb)
+{
+	m_pDb = pDb;
+	m_pStmt = 0;
+	m_errCode = 0;
+	result = NULL;
+
+	FCheckError(&(m_pDb->mysql),m_errCode,m_errBuf);
+	m_pDb->SetLastError(m_errCode, m_errBuf);
+	m_pStmt = mysql_stmt_init(&(m_pDb->mysql));
+	SCheckError(m_pStmt,m_errCode,m_errBuf);
+	m_pDb->SetLastError(m_errCode, m_errBuf);
+
+	m_nDefineCount = 0;
+	m_nBindCount = 0;	
+    memset(m_pDefine, 0, MAX_COL_COUNT * sizeof(MYSQL_BIND));
+    memset(m_pBind, 0, MAX_COL_COUNT * sizeof(MYSQL_BIND));
+	m_RecordCount = -1;
 }
 
 void COCICursor::FreeDefineAndBindHandles()

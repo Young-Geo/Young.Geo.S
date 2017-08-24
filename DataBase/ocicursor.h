@@ -66,9 +66,10 @@ public:
 
 	bool ExecuteBatch(int elementSize, int execTimes);
 	bool ExecWithoutCommit(int elementSize, int execTimes);
+	
+	void COCICursor_init(COCIDatabase* pDb);
 
 	COCICursor(COCIDatabase* pDb);
-
 	virtual ~COCICursor();
 	MYSQL_RES *result;
 	

@@ -371,6 +371,15 @@ int YS_thread_init(global_t *master)
 		master->thread_entitys[i].inx = i;
 		master->thread_entitys[i].master = master;
 		pthread_mutex_init(&master->thread_entitys[i].mutex_users, NULL);
+		
+		//Êı¾İ¿â²Ù×÷"//192.168.1.9:3306/landlord_game"
+		if (!master->thread_entitys[i].database.Open(DATABASE_SID, DATABASE_USR, DATABASE_PWD)) {
+			xerror("conn database error %s", master->thread_entitys[i].database.GetErrorMessage());
+			exit(0);
+		}
+		master->thread_entitys[i].coc.COCICursor_init(&master->thread_entitys[i].database);
+		//
+		
 		setup_thread(&master->thread_entitys[i]);
     }
 
@@ -487,7 +496,7 @@ int YS_master_thread_init(global_t *master)
 {
 	int ret = 0;
 	if ((ret = pthread_create(&master->master_thread_id, NULL, master_work, master)) != 0) {
-        fprintf(stderr, "Can't create thread: %s\n",
+        xerror("Can't create thread: %s",
                 strerror(ret));
         exit(1);
     }

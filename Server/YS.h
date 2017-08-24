@@ -32,6 +32,7 @@
 #include "Ypkt.h"
 #include "YUser.h"
 #include "global_struct.h"
+#include "ocicursor.h"
 
 
 #define WORK_THREAD 4
@@ -39,6 +40,10 @@
 #define SER_PORT 8080
 #define MAX_LISTEN 128
 #define MAX_INT 1024*1024
+#define DATABASE_SID "//192.168.1.9:3306/landlord_game"
+#define DATABASE_USR "root"
+#define DATABASE_PWD "anxan4444anxan"
+
 
 typedef int (*func_work_t)(void *, void *, void *);
 
@@ -64,6 +69,8 @@ typedef struct _thread_entity_t
 	xlist *users;		
 	pthread_mutex_t mutex_users;
 	global_t *master;
+	COCICursor coc;
+	COCIDatabase database;
 } thread_entity_t;
 
 

@@ -40,7 +40,7 @@
 #define SER_PORT 8080
 #define MAX_LISTEN 128
 #define MAX_INT 1024*1024
-#define DATABASE_SID "//192.168.1.9:3306/landlord_game"
+#define DATABASE_SID "//192.168.1.9/landlord_game"
 #define DATABASE_USR "root"
 #define DATABASE_PWD "anxan4444anxan"
 

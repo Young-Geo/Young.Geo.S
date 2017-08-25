@@ -160,7 +160,7 @@ int do_work(void *arg, void *r, void *w)
 				xchain_get(rchain, (void *)password, PASSWORD_LEN);
 				xchain_delete(rchain, PASSWORD_LEN);
 
-				if (!(u_buf = login(thread_entity, username, password))) {
+				if (!(u_buf = (u8 *)login(thread_entity, username, password))) {
 					xerror("login error\n");					
 					rec_inx = 0;
 				} else {

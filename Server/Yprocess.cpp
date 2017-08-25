@@ -11,6 +11,7 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 {
 	char sql[1024] = { 0 };
 	int id, solo_f, solo_w, solo_s, lv, money_d, money_z;
+	unsigned long user_len = 0, pass_len = 0;
 	if (!thread_entity || !username || !password) {
 		xerror("login error NULL\n");
 		return -1;
@@ -20,9 +21,10 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	if (!thread_entity->coc.Prepare(sql)) {
 		xerror("prepare error %s", thread_entity->coc.GetErrorMessage());
 	}
-	
-	thread_entity->coc.BindString(1, (char *)username, xstrlen((char *)username));//绑定输入结果
-	thread_entity->coc.BindString(2, (char *)password, xstrlen((char *)password));
+	user_len = xstrlen((char *)username;
+	pass_len = xstrlen((char *)password;
+	thread_entity->coc.BindString(1, (char *)username, &user_len);//绑定输入结果
+	thread_entity->coc.BindString(2, (char *)password, &pass_len);
 	thread_entity->coc.BindFinish();
 
 	thread_entity->coc.DefineInt(1, &id);//绑定输出结果

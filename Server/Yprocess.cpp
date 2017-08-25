@@ -9,7 +9,7 @@ int work(void *arg, xchain *rchain, xchain *wchain)
 
 int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 {
-	char sql[1024] = { 0 }, user[USERNAME_LEN];
+	char sql[1024] = { 0 };
 	int id, solo_f, solo_w, solo_s, lv, money_d, money_z;
 	if (!thread_entity || !username || !password) {
 		xerror("login error NULL\n");
@@ -21,18 +21,17 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 		xerror("prepare error %s", thread_entity->coc.GetErrorMessage());
 	}
 	
-	thread_entity->coc.BindString(1, username, xstrlen(username));//绑定输入结果
-	thread_entity->coc.BindString(2, password, xstrlen(password));
+	thread_entity->coc.BindString(1, username, xstrlen((char *)username));//绑定输入结果
+	thread_entity->coc.BindString(2, password, xstrlen((char *)password));
 	thread_entity->coc.BindFinish();
 
 	thread_entity->coc.DefineInt(1, &id);//绑定输出结果
-	thread_entity->coc.DefineString(2, user, USERNAME_LEN);	
-	thread_entity->coc.DefineInt(3, &solo_f);	
-	thread_entity->coc.DefineInt(4, &solo_w);
-	thread_entity->coc.DefineInt(5, &solo_s);
-	thread_entity->coc.DefineInt(6, &lv);
-	thread_entity->coc.DefineInt(7, &money_d);
-	thread_entity->coc.DefineInt(8, &money_z);
+	thread_entity->coc.DefineInt(2, &solo_f);	
+	thread_entity->coc.DefineInt(3, &solo_w);
+	thread_entity->coc.DefineInt(4, &solo_s);
+	thread_entity->coc.DefineInt(5, &lv);
+	thread_entity->coc.DefineInt(6, &money_d);
+	thread_entity->coc.DefineInt(7, &money_z);
 	thread_entity->coc.DefineFinish();
 	
 	if (!thread_entity->coc.ExecQuery()) {

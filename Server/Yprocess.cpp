@@ -64,14 +64,35 @@ p_g login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 
 int rigister(thread_entity_t *thread_entity, u8 *username, u8 *password)
 {
+	char sql[1024] = { 0 };
+	unsigned long user_len = 0, pass_len = 0;
+	int id = 0;
+	
 	if (!thread_entity || !username || !password) {
 		xerror("register error NULL\n");
 		return -1;
 	}
 
-	User *user = new User(username, password, (p_g)thread_entity);
-	user->set_status(ON_LINE);
-	user->set_thread(thread_entity);
+	xstrcpy(sql, "INSERT INTO USER(USERNAME, PASSWORD) VALUES(?, ?)");
+
+	user_len = xstrlen((char *)username);
+	pass_len = xstrlen((char *)password);
+	
+	thread_entity->coc.BindString(1, (char *)username, &user_len);	
+	thread_entity->coc.BindString(2, (char *)password, &pass_len);
+	thread_entity->coc.BindFinish();
+	if (!thread_entity->coc.Execute()) {
+		xerror("insert data error %s", thread_entity->coc.GetErrorMessage());
+		return -1;
+	}
+	
+	User *user = new User(id, username, password, (p_g)thread_entity);
+	if (!user) {
+		xerror("new User error");
+  		return -1;
+	}
+
+	
 	pthread_mutex_lock(&thread_entity->mutex_users);
 	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_STRING, (char *)user);			
 	pthread_mutex_unlock(&thread_entity->mutex_users);

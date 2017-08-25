@@ -6,7 +6,7 @@ User::User()
 	this->_user_status = ON_LINE;
 }
 
-User::User(u8 *username, u8 *password, p_g thread_entity)
+User::User(u32 id, u8 *username, u8 *password, p_g thread_entity)
 {
 	if (!username || !password) {
 		xerror("User username password NULL\n");
@@ -15,8 +15,17 @@ User::User(u8 *username, u8 *password, p_g thread_entity)
 
 	memcpy(this->_username, username, strlen((char *)username));
 	memcpy(this->_password, password, strlen((char *)password));
+
+	this->_id = id;
+	this->_money_z = ZERO;
+	this->_money_d = ZERO;
+	this->_solo_w = ZERO;
+	this->_solo_f = ZERO;
+	this->_solo_s = ZERO;
+	this->_lv = ZERO;
 	this->_user_status = ON_LINE;
 	this->_thread_entity = thread_entity;
+	
 	return;
 }
 

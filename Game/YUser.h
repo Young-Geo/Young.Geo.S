@@ -20,6 +20,7 @@ class User
 public:
 	User();
 	User(u8 *username, u8 *password, p_g thread_entity);
+	User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 solo_w, u32 solo_f, u16 solo_s, u16 lv， p_g thread_entity);
 	~User();
 public:
 	u8 *			get_username();
@@ -33,17 +34,17 @@ public:
 protected:
 	
 private:
-	u32 id;
-	u8 username[12];
-	u8 password[32];
-	u8 status;
+	u32 _id;
+	u8 _username[12];
+	u8 _password[32];
+	u8 _status;
 	p_g _thread_entity;
 	USER_STATUS _user_status;
 private:
-	u32 money_z, money_d;//钻和豆子
-	u32 solo_w, solo_f;//赢和失败的局数
-	u16 solo_s;//连胜
-	u16 lv;//级数
+	u32 _money_z, _money_d;//钻和豆子
+	u32 _solo_w, _solo_f;//赢和失败的局数
+	u16 _solo_s;//连胜
+	u16 _lv;//级数
 };
 
 

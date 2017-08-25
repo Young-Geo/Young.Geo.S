@@ -9,19 +9,48 @@ int work(void *arg, xchain *rchain, xchain *wchain)
 
 int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 {
+	char sql[1024] = { 0 }, user[USERNAME_LEN];
+	int id, solo_f, solo_w, solo_s, lv, money_d, money_z;
 	if (!thread_entity || !username || !password) {
 		xerror("login error NULL\n");
+		return -1;
+	}
+
+	strcpy(sql, "SELECT ID, USERNAME, SOLO_FAIL, SOLO_W, SOLO_S, LV, MONEY_D, MONEY_Z FROM user WHERE USERNAME = ? and PASSWORD = ? ");
+	if (!thread_entity->coc.Prepare(sql)) {
+		xerror("prepare error %s", thread_entity->coc.GetErrorMessage());
+	}
+	
+	thread_entity->coc.BindString(1, username, xstrlen(username));//绑定输入结果
+	thread_entity->coc.BindString(2, password, xstrlen(password));
+
+	thread_entity->coc.DefineInt(1, &id);//绑定输出结果
+	thread_entity->coc.DefineString(2, user, USERNAME_LEN);	
+	thread_entity->coc.DefineInt(3, &solo_f);	
+	thread_entity->coc.DefineInt(4, &solo_w);
+	thread_entity->coc.DefineInt(5, &solo_s);
+	thread_entity->coc.DefineInt(6, &lv);
+	thread_entity->coc.DefineInt(7, &money_d);
+	thread_entity->coc.DefineInt(8, &money_z);
+	
+	if (!thread_entity->coc.ExecQuery()) {
+		xerror("select data error %s", thread_entity->coc.GetErrorMessage());
 		return -1;
 	}
 	//登录处理数据查询
 	//if ()
 	//登录成功
-	User *user = new User(username, password, (p_g)thread_entity);
-	user->set_status(ON_LINE);
-	user->set_thread(thread_entity);
+	User *user = new User(id, username, password, money_z, money_d, solo_w, solo_f, solo_s, lv, (p_g)thread_entity);
+	if (!user) {
+		xerror("new User error");
+		return -1;
+	}
+	
 	pthread_mutex_lock(&thread_entity->mutex_users);
 	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_STRING, (char *)user);			
 	pthread_mutex_unlock(&thread_entity->mutex_users);
+
+	//查询其他信息
 	return 0;
 }
 

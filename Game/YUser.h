@@ -5,7 +5,7 @@
 #include "afx.h"
 
 #define USERNAME_LEN 12
-#define PASSWORD_LEN 32
+#define PASSWORD_LEN 33
 #define USER_DATA_SIZE 28
 #define U_ID_INIT 100000
 
@@ -26,9 +26,9 @@ public:
 	~User();
 public:
 	u8 *			get_username();
-	int				set_username(u8 username[12]);
+	int				set_username(u8 username[USERNAME_LEN]);
 	u8 *			get_password();
-	int				set_password(u8 password[32]);
+	int				set_password(u8 password[PASSWORD_LEN]);
 	p_g 			get_thread();
 	int  			set_thread(p_g thread_entity);
 	USER_STATUS 	get_status();
@@ -38,8 +38,8 @@ protected:
 	
 private:
 	u32 _id;
-	u8 _username[12];
-	u8 _password[32];
+	u8 _username[USERNAME_LEN];
+	u8 _password[PASSWORD_LEN];
 	u8 _status;
 	p_g _thread_entity;
 	USER_STATUS _user_status;

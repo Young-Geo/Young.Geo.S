@@ -17,7 +17,7 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 		return -1;
 	}
 
-	strcpy(sql, "SELECT ID, USERNAME, SOLO_FAIL, SOLO_W, SOLO_S, LV, MONEY_D, MONEY_Z FROM user WHERE USERNAME = ? and PASSWORD = ? ");
+	strcpy(sql, "SELECT ID, SOLO_FAIL, SOLO_W, SOLO_S, LV, MONEY_D, MONEY_Z FROM user WHERE USERNAME = ? and PASSWORD = ? ");
 	if (!thread_entity->coc.Prepare(sql)) {
 		xerror("prepare error %s", thread_entity->coc.GetErrorMessage());
 	}

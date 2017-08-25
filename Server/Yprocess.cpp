@@ -21,8 +21,8 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 		xerror("prepare error %s", thread_entity->coc.GetErrorMessage());
 	}
 	
-	thread_entity->coc.BindString(1, username, xstrlen((char *)username));//绑定输入结果
-	thread_entity->coc.BindString(2, password, xstrlen((char *)password));
+	thread_entity->coc.BindString(1, (char *)username, xstrlen((char *)username));//绑定输入结果
+	thread_entity->coc.BindString(2, (char *)password, xstrlen((char *)password));
 	thread_entity->coc.BindFinish();
 
 	thread_entity->coc.DefineInt(1, &id);//绑定输出结果

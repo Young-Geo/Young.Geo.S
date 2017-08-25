@@ -21,8 +21,8 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	if (!thread_entity->coc.Prepare(sql)) {
 		xerror("prepare error %s", thread_entity->coc.GetErrorMessage());
 	}
-	user_len = xstrlen((char *)username;
-	pass_len = xstrlen((char *)password;
+	user_len = xstrlen((char *)username);
+	pass_len = xstrlen((char *)password);
 	thread_entity->coc.BindString(1, (char *)username, &user_len);//绑定输入结果
 	thread_entity->coc.BindString(2, (char *)password, &pass_len);
 	thread_entity->coc.BindFinish();

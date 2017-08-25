@@ -22,7 +22,7 @@ User::User(u8 *username, u8 *password, p_g thread_entity)
 
 User::User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 solo_w, u32 solo_f, u16 solo_s, u16 lv, p_g thread_entity)
 {
-	if (!username || !password) {
+	if (!username || !password || id < U_ID_INIT) {
 		xerror("new User username password NULL\n");
 		return;
 	}
@@ -101,7 +101,29 @@ void			User::set_status(USER_STATUS user_status)
 	this->_user_status = user_status;
 }
 
-
+u8 *			User::todata()
+{
+	u8 *data = NULL, *out_data = NULL;
+	data = (u8 *)xmalloc(USER_DATA_SIZE);
+	XXNULL(data, NULL);
+	out_data = data;
+	
+	if (this->_id < U_ID_INIT || ZERO == this->_user_status) {
+		xerror("user todata error");
+		return NULL;
+	}
+	
+	OUT32_LE(data, this->_id);
+	OUT32_LE(data, this->_user_status);
+	OUT32_LE(data, this->_money_z);
+	OUT32_LE(data, this->_money_d);
+	OUT32_LE(data, this->_solo_w);
+	OUT32_LE(data, this->_solo_f);
+	OUT16_LE(data, this->_solo_s);
+	OUT16_LE(data, this->_lv);
+	
+	return out_data;
+}
 
 
 

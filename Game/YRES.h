@@ -3,6 +3,8 @@
 
 #include "afx.h"
 
+#define RES_NAMELEN 12
+
 class Res
 {
 public:
@@ -10,7 +12,10 @@ public:
 protected:
 	
 private:
-	u32 res_money;
+	u8 _res_name[RES_NAMELEN];
+	u32 _res_money;
+	u32 _res_num;
+	u32 _res_id;
 };
 
 

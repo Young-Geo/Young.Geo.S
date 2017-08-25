@@ -33,6 +33,7 @@ typedef __int64 int64_t
 #include <stdint.h>
 #endif
 ////////////////////////////////////////////////////////////////////////////
+#define ZERO 0
 ////////////////////////////////////////////////////////////////////////////
 #define Kbyte(x) (1024 * (x))
 #define Mbyte(x) (1024 * 1024 * (x))
@@ -121,6 +122,7 @@ char * xstrdup ( const char * str ) ;
 char * xstrndup ( char * str , int n ) ;
 void * xmemdup ( void * mem , int n ) ;
 int xmemmem ( char * buffer , int len1 ,  char * buf , int len2 ) ;
+#define xmemcpy(dest, src, n) memcpy(dest, src, n)
 int xstrcmp ( const char * a , const char * b ) ;
 //unsigned int xgetminsecond () ;
 int intpercentcalc ( int min , int max , int current , int limit ) ;

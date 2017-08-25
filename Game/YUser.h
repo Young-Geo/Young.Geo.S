@@ -6,6 +6,8 @@
 
 #define USERNAME_LEN 12
 #define PASSWORD_LEN 32
+#define USER_DATA_SIZE 28
+#define U_ID_INIT 100000
 
 
 enum USER_STATUS {
@@ -31,6 +33,7 @@ public:
 	int  			set_thread(p_g thread_entity);
 	USER_STATUS 	get_status();
 	void			set_status(USER_STATUS user_status);
+	u8 *			todata();
 protected:
 	
 private:

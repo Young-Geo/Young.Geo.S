@@ -7,27 +7,26 @@ int work(void *arg, xchain *rchain, xchain *wchain)
 	return 0;
 }
 
-int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
+p_g login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 {
 	char sql[1024] = { 0 };
 	int id, solo_f, solo_w, solo_s, lv, money_d, money_z;
 	unsigned long user_len = 0, pass_len = 0;
 	if (!thread_entity || !username || !password) {
 		xerror("login error NULL\n");
-		return -1;
+		return NULL;
 	}
 
 	strcpy(sql, "SELECT ID, SOLO_FAIL, SOLO_W, SOLO_S, LV, MONEY_D, MONEY_Z FROM user WHERE USERNAME = ? and PASSWORD = ? ");
 	if (!thread_entity->coc.Prepare(sql)) {
 		xerror("prepare error %s", thread_entity->coc.GetErrorMessage());
+		return NULL;
 	}
 	user_len = xstrlen((char *)username);
 	pass_len = xstrlen((char *)password);
 	thread_entity->coc.BindString(1, (char *)username, &user_len);//绑定输入结果
 	thread_entity->coc.BindString(2, (char *)password, &pass_len);
 	thread_entity->coc.BindFinish();
-
-	//thread_entity->coc.Execute();
 
 	thread_entity->coc.DefineInt(1, &id);//绑定输出结果
 	thread_entity->coc.DefineInt(2, &solo_f);	
@@ -40,11 +39,11 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	
 	if (!thread_entity->coc.ExecQuery()) {
 		xerror("select data error %s", thread_entity->coc.GetErrorMessage());
-		return -1;
+		return NULL;
 	}
 	if (!thread_entity->coc.Fetch()) {
 		xerror("select data error %s", thread_entity->coc.GetErrorMessage());
-		return -1;
+		return NULL;
 	}
 	//登录处理数据查询
 	//if ()
@@ -52,15 +51,15 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	User *user = new User(id, username, password, money_z, money_d, solo_w, solo_f, solo_s, lv, (p_g)thread_entity);
 	if (!user) {
 		xerror("new User error");
-		return -1;
+  		return NULL;
 	}
 	
 	pthread_mutex_lock(&thread_entity->mutex_users);
 	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_STRING, (char *)user);			
 	pthread_mutex_unlock(&thread_entity->mutex_users);
 
-	//查询其他信息
-	return 0;
+	//查询其他信息物品等
+	return user->todata();
 }
 
 int rigister(thread_entity_t *thread_entity, u8 *username, u8 *password)
@@ -153,7 +152,7 @@ int do_work(void *arg, void *r, void *w)
 		case LOGIN:
 			{
 				#define REC_LEN 9
-				unsigned char rec[REC_LEN] = {0}, *buf = NULL;
+				u8 rec[REC_LEN + USER_DATA_SIZE] = {0}, *buf = NULL, *u_buf = NULL;
 				u8 rec_inx = 0;
 				
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
@@ -161,7 +160,7 @@ int do_work(void *arg, void *r, void *w)
 				xchain_get(rchain, (void *)password, PASSWORD_LEN);
 				xchain_delete(rchain, PASSWORD_LEN);
 
-				if (login(thread_entity, username, password)) {
+				if (!(u_buf = login(thread_entity, username, password))) {
 					xerror("login error\n");					
 					rec_inx = 0;
 				} else {
@@ -169,8 +168,12 @@ int do_work(void *arg, void *r, void *w)
 				}
 				xmessage("login ok username = %s, password = %s\n", username, password);
 				buf = rec;
-				OUT16_LE(buf, REC_LOGIN);	
+				OUT16_LE(buf, REC_LOGIN);
 				OUT8(buf, rec_inx);
+				if (rec_inx) {
+					xmemcpy(buf, u_buf, USER_DATA_SIZE);
+					buf += USER_DATA_SIZE;
+				}
 				xchain_add(wchain, (void *)rec, (buf-rec));
 			}
 		break;

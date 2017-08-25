@@ -73,7 +73,7 @@ int rigister(thread_entity_t *thread_entity, u8 *username, u8 *password)
 		return -1;
 	}
 
-	xstrcpy(sql, "INSERT INTO USER(USERNAME, PASSWORD) VALUES(?, ?)");
+	xstrcpy(sql, "INSERT INTO user(USERNAME, PASSWORD) VALUES(?, ?)");
 	if (!thread_entity->coc.Prepare(sql)) {
 		xerror("prepare error %s", thread_entity->coc.GetErrorMessage());
 		return -1;

@@ -23,6 +23,7 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	
 	thread_entity->coc.BindString(1, username, xstrlen(username));//绑定输入结果
 	thread_entity->coc.BindString(2, password, xstrlen(password));
+	thread_entity->coc.BindFinish();
 
 	thread_entity->coc.DefineInt(1, &id);//绑定输出结果
 	thread_entity->coc.DefineString(2, user, USERNAME_LEN);	
@@ -32,6 +33,7 @@ int login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	thread_entity->coc.DefineInt(6, &lv);
 	thread_entity->coc.DefineInt(7, &money_d);
 	thread_entity->coc.DefineInt(8, &money_z);
+	thread_entity->coc.DefineFinish();
 	
 	if (!thread_entity->coc.ExecQuery()) {
 		xerror("select data error %s", thread_entity->coc.GetErrorMessage());

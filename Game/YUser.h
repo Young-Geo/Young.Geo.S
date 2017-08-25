@@ -20,7 +20,7 @@ class User
 public:
 	User();
 	User(u8 *username, u8 *password, p_g thread_entity);
-	User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 solo_w, u32 solo_f, u16 solo_s, u16 lv£¬ p_g thread_entity);
+	User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 solo_w, u32 solo_f, u16 solo_s, u16 lv, p_g thread_entity);
 	~User();
 public:
 	u8 *			get_username();

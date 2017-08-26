@@ -182,7 +182,7 @@ int do_work(void *arg, void *r, void *w)
 				
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
 				xchain_delete(rchain, USERNAME_LEN);
-				xchain_get(rchain, (void *)password, (PASSWORD_LEN - 1));
+				xchain_get(rchain, (void *)password, PASSWORD_LEN);
 				xchain_delete(rchain, PASSWORD_LEN);
 
 				if (!(u_buf = (u8 *)login(thread_entity, username, password))) {
@@ -220,7 +220,7 @@ int do_work(void *arg, void *r, void *w)
 				
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
 				xchain_delete(rchain, USERNAME_LEN);
-				xchain_get(rchain, (void *)password, (PASSWORD_LEN - 1));
+				xchain_get(rchain, (void *)password, PASSWORD_LEN);
 				xchain_delete(rchain, PASSWORD_LEN);
 
 				if (rigister(thread_entity, username, password)) {

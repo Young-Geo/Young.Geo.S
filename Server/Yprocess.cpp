@@ -141,7 +141,7 @@ int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username
 	xlist_delete(readys, (char *)user_1->get_username());	
 	xlist_delete(readys, (char *)user_2->get_username());
 
-	sprintf((char *)game_name, "%s%s%s", user->get_username(), user_1->get_username(), user_2->get_username());
+	xsprintf((char *)game_name, "%s%s%s", user->get_username(), user_1->get_username(), user_2->get_username());
 	game = new Game(user, user_1, user_2, game_name);
 	if (!game) {
 		xerror("new Game error\n");

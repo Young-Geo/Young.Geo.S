@@ -117,6 +117,7 @@ float xsqrt ( float v ) ;
 unsigned int xstr_hash (const char * v) ;
 #define xstrlen(S) ((int)strlen(S))
 #define xstrcpy(dest, src) strcpy((dest), (src))
+#define xsprintf(dest, ...) sprintf((dest), ...)
 char * xstrdup ( const char * str ) ;
 char * xstrndup ( char * str , int n ) ;
 void * xmemdup ( void * mem , int n ) ;

@@ -4,6 +4,7 @@
 User::User()
 {
 	this->_user_status = ON_LINE;
+	this->ress_init();
 }
 
 User::User(u32 id, u8 *username, u8 *password, p_g thread_entity)
@@ -25,6 +26,8 @@ User::User(u32 id, u8 *username, u8 *password, p_g thread_entity)
 	this->_lv = ZERO;
 	this->_user_status = ON_LINE;
 	this->_thread_entity = thread_entity;
+	
+	this->ress_init();
 	
 	return;
 }
@@ -48,9 +51,15 @@ User::User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 sol
 	this->_lv = lv;
 	this->_user_status = ON_LINE;
 	this->_thread_entity = thread_entity;
+	
+	this->ress_init();
+
 }
 
-User::~User(){}
+User::~User()
+{
+	xlist_clean(&this->_res_s);
+}
 
 
 
@@ -134,9 +143,25 @@ u8 *			User::todata()
 	return out_data;
 }
 
+int 			User::ress_init()
+{
+	this->_res_s = xlist_init();
+	if (!this->_res_s) {
+		xerror("res_s init error");
+		return -1;
+	}
+	return 0;
+}
 
-
-
+int 			User::add_res(Res * res)
+{
+	if (!res || !this->_res_s) {
+		xerror("add res error");
+		return -1;
+	}
+	xlist_add(this->_res_s, res->get_res_name(), XLIST_CPP, (char *)res);
+	return 0;
+}
 
 
 

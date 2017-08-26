@@ -55,7 +55,7 @@ p_g login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	}
 	
 	pthread_mutex_lock(&thread_entity->mutex_users);
-	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_STRING, (char *)user);			
+	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_CPP, (char *)user);			
 	pthread_mutex_unlock(&thread_entity->mutex_users);
 
 	//查询其他信息物品等
@@ -193,7 +193,7 @@ int do_work(void *arg, void *r, void *w)
 				} else {
 					rec_inx = thread_entity->inx + 1;
 				}
-				xmessage("login ok username = %s, password = %s\n", username, password);
+				xmessage("login username = %s, password = %s\n", username, password);
 				buf = rec;
 				OUT16_LE(buf, REC_LOGIN);
 				OUT8(buf, rec_inx);
@@ -231,7 +231,7 @@ int do_work(void *arg, void *r, void *w)
 				} else {
 					rec_inx = thread_entity->inx + 1;
 				}
-				xmessage("register ok username = %s, password = %s\n", username, password);
+				xmessage("register username = %s, password = %s\n", username, password);
 				buf = rec;
 				OUT16_LE(buf, REC_REGISTER);	
 				OUT8(buf, rec_inx);

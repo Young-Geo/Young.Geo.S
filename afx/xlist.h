@@ -11,6 +11,7 @@
 #define XLIST_PTR 0
 #define XLIST_STRING 1
 #define XLIST_XLIST 2
+#define XLIST_CPP 3
 
 /* define */
 typedef struct _xlist

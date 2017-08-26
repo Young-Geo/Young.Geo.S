@@ -23,7 +23,7 @@ public:
 	User();
 	User(u32 id, u8 *username, u8 *password, p_g thread_entity);
 	User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 solo_w, u32 solo_f, u16 solo_s, u16 lv, p_g thread_entity);
-	~User();
+	virtual ~User();
 public:
 	u8 *			get_username();
 	int				set_username(u8 username[USERNAME_LEN]);
@@ -34,6 +34,8 @@ public:
 	USER_STATUS 	get_status();
 	void			set_status(USER_STATUS user_status);
 	u8 *			todata();
+	int				ress_init();
+	int				add_res(Res *res);
 protected:
 	
 private:
@@ -48,6 +50,8 @@ private:
 	u32 _solo_w, _solo_f;//赢和失败的局数
 	u16 _solo_s;//连胜
 	u16 _lv;//级数
+private:
+	xlist *_res_s;
 };
 
 

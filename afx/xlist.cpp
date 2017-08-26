@@ -147,6 +147,11 @@ int xlist_set (
     case XLIST_XLIST :
       xlist_clean ( (xlist **)(&xlst ->value) ) ;
       break ;
+#ifdef LANGUAGE_CPP
+	case XLIST_CPP:
+		delete (xlst->value);
+		break;
+#endif
     default : break ;
   }
 
@@ -404,6 +409,11 @@ void xlist_clean ( xlist ** px )
       case XLIST_STRING:
         xfree (x->value);
         break;
+#ifdef LANGUAGE_CPP
+	  case XLIST_CPP:
+		delete (x->value);
+		break;
+#endif
       default:break ;
     }
     xfree (x->key);

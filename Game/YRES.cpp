@@ -1,4 +1,4 @@
-#include "Yres.h"
+#include "YRes.h"
 
 
 char *		Res::get_res_name()

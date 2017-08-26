@@ -3,6 +3,7 @@
 
 #include "xlog.h"
 #include "afx.h"
+#include "Yres.h"
 
 #define USERNAME_LEN 12
 #define PASSWORD_LEN 33

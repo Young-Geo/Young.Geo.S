@@ -4,6 +4,7 @@
 #include "xlog.h"
 #include "afx.h"
 #include "YRes.h"
+#include "xlist.h"
 
 #define USERNAME_LEN 12
 #define PASSWORD_LEN 33

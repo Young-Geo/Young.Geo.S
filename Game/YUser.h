@@ -54,6 +54,7 @@ private:
 	u16 _lv;//¼¶Êý
 private:
 	xlist *_res_s;
+	u8 *_data;
 };
 
 

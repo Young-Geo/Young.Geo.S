@@ -58,7 +58,10 @@ User::User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 sol
 
 User::~User()
 {
-	xlist_clean(&this->_res_s);
+	if (this->_res_s)
+		xlist_clean(&this->_res_s);
+	if (this->_data)
+		delete this->_data;
 }
 
 
@@ -124,7 +127,7 @@ u8 *			User::todata()
 	u8 *data = NULL, *out_data = NULL;
 	data = (u8 *)xmalloc(USER_DATA_SIZE);
 	XXNULL(data, NULL);
-	out_data = data;
+	this->_data = out_data = data;
 	
 	if (this->_id < U_ID_INIT || ZERO == this->_user_status) {
 		xerror("user todata error");

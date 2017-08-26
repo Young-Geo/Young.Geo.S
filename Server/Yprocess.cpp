@@ -178,7 +178,7 @@ int do_work(void *arg, void *r, void *w)
 	{
 		case LOGIN:
 			{
-				#define REC_LEN 9
+				#define REC_LEN 3
 				u8 rec[REC_LEN + USER_DATA_SIZE] = {0}, *buf = NULL, *u_buf = NULL;
 				u8 rec_inx = 0;
 				

@@ -27,5 +27,3 @@ char *		Res::get_res_name()
 
 
 
-
-

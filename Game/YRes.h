@@ -10,7 +10,7 @@ class Res
 public:
 	Res(){}
 public:
-	char *		get_res_name();
+	u8 *		get_res_name();
 protected:
 	
 private:

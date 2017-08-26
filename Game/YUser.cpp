@@ -159,7 +159,7 @@ int 			User::add_res(Res * res)
 		xerror("add res error");
 		return -1;
 	}
-	xlist_add(this->_res_s, res->get_res_name(), XLIST_CPP, (char *)res);
+	xlist_add(this->_res_s, (char *)res->get_res_name(), XLIST_CPP, (char *)res);
 	return 0;
 }
 

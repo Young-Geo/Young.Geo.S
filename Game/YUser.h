@@ -6,7 +6,7 @@
 
 #define USERNAME_LEN 12
 #define PASSWORD_LEN 33
-#define USER_DATA_SIZE 28
+#define USER_DATA_SIZE 25
 #define U_ID_INIT 100000
 
 

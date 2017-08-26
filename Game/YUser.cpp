@@ -123,7 +123,7 @@ u8 *			User::todata()
 	}
 	
 	OUT32_LE(data, this->_id);
-	OUT32_LE(data, this->_user_status);
+	OUT8(data, this->_user_status);
 	OUT32_LE(data, this->_money_z);
 	OUT32_LE(data, this->_money_d);
 	OUT32_LE(data, this->_solo_w);

@@ -89,7 +89,8 @@ int rigister(thread_entity_t *thread_entity, u8 *username, u8 *password)
 		xerror("insert data error %s", thread_entity->coc.GetErrorMessage());
 		return -1;
 	}
-	
+
+	/*
 	User *user = new User(id, username, password, (p_g)thread_entity);
 	if (!user) {
 		xerror("new User error");
@@ -100,6 +101,7 @@ int rigister(thread_entity_t *thread_entity, u8 *username, u8 *password)
 	pthread_mutex_lock(&thread_entity->mutex_users);
 	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_STRING, (char *)user);			
 	pthread_mutex_unlock(&thread_entity->mutex_users);
+	*/
 	return 0;
 }
 
@@ -231,7 +233,7 @@ int do_work(void *arg, void *r, void *w)
 				}
 				xmessage("register ok username = %s, password = %s\n", username, password);
 				buf = rec;
-				OUT16_LE(buf, REGISTER);	
+				OUT16_LE(buf, REC_REGISTER);	
 				OUT8(buf, rec_inx);
 				xchain_add(wchain, (void *)rec, (buf-rec));
 			}

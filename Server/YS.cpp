@@ -149,7 +149,8 @@ void read_cb(struct bufferevent *bev, void *arg)
 	}
 	memset(data, 0, len+1);
 
-	evbuffer_copyout(input, (void *)data, len);
+	//evbuffer_copyout(input, (void *)data, len);
+	evbuffer_remove(input, (void *)data, len);
 
 	
 	if (!(buf = pkt_match_head(data, len, PKT_YS_START_TAG))) {

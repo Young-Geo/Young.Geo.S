@@ -23,7 +23,7 @@ public:
 public:
 	virtual int 	display();//开始游戏
 	virtual int 	stop();//停止游戏
-	virtual int 	destory();//销毁游戏
+	virtual void 	destory();//销毁游戏
 public:
 	u8 *	get_name();//获取名字
 	int 	create_card();//创建棋牌

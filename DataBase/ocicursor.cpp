@@ -179,11 +179,11 @@ bool COCICursor::Fetch()
 	m_pDb->SetLastError(m_errCode,m_errBuf);
 	if (res == MYSQL_NO_DATA)
 	{
-		m_pDb->SetLastError(MYSQL_NO_DATA, "MYSQL_NO_DATA");
+		m_pDb->SetLastError(MYSQL_NO_DATA, (char *)"MYSQL_NO_DATA");
 	}
 	else if (res == MYSQL_DATA_TRUNCATED)
 	{
-		m_pDb->SetLastError(MYSQL_DATA_TRUNCATED, "MYSQL_DATA_TRUNCATED");
+		m_pDb->SetLastError(MYSQL_DATA_TRUNCATED, (char *)"MYSQL_DATA_TRUNCATED");
 	}
 	if (!res)
 	{

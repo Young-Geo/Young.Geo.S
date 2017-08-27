@@ -132,6 +132,7 @@ int Game::Shuffle()
 {
 	deque<Card*> newque;
 	deque<Card*>::iterator it;
+	int r;
 	
     if (CARDCOUNT != this->get_car_count()) {
 		xerror("Cardcount error");
@@ -141,7 +142,8 @@ int Game::Shuffle()
 	for (it = this->cards->begin(); it != this->cards->end(); ++it)
 	{
 		srand((unsigned)time(NULL));
-		newque.insert(rand() % CARDCOUNT, *it);
+		r = (rand() % CARDCOUNT);
+		newque.insert(r, (*it));
 	}
 
     this->cards->clear();

@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: c975b269f23ba654fbc04cd69d405601
+timeCreated: 1500213255
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: HYXueJunJ
+  fontNames:
+  - HYXueJunJ
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: a1c17d352c7fffd47a66960c4bcd205c
+timeCreated: 1503709907
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Harvest
+  fontNames:
+  - Harvest
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

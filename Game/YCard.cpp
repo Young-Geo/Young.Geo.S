@@ -23,10 +23,10 @@ void Card::set_CardName()
 {
 	char *color_name[SUITSCOUNT] = {(char *)"Club", (char *)"Diamond", (char *)"Heart", (char *)"Spade", (char *)""};
 	char *weight_name[WEIGHTCOUNT] = {
-		"Three", "Four", "Five", "Six",
-		"Seven", "Eight", "Nine", "Ten",
-		"Jack", "Queen", "King", "One",
-		"Two", "SJoker", "LJoker"
+		(char *)"Three", (char *)"Four", (char *)"Five", (char *)"Six",
+		(char *)"Seven", (char *)"Eight", (char *)"Nine", (char *)"Ten",
+		(char *)"Jack", (char *)"Queen", (char *)"King", (char *)"One",
+		(char *)"Two", (char *)"SJoker", (char *)"LJoker"
 		};
 	
 	xzero(this->_cardName, CARD_NAME_LEN);

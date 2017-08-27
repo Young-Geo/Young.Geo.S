@@ -103,6 +103,9 @@ void safefree(void ** ptr) ;
 #define xrealloc(oldp,x) (char*)saferealloc((oldp), (unsigned int)(x))
 #define null NULL
 ////////////////////////////////////////////////////////////////////////////
+#define xzero(buf, count) memset((buf), 0, (count))
+#define xmemset(buf, v, count) memset((buf), (v), (count))
+////////////////////////////////////////////////////////////////////////////
 float stov ( char * s ) ;
 int hexstring2hex ( char * s ) ;
 ////////////////////////////////////////////////////////////////////////////
@@ -117,6 +120,7 @@ float xsqrt ( float v ) ;
 unsigned int xstr_hash (const char * v) ;
 #define xstrlen(S) ((int)strlen(S))
 #define xstrcpy(dest, src) strcpy((dest), (src))
+#define xstrcat(dest, src) strcat((dest), (src))
 #define xsprintf(str, format, ...) sprintf((str), (format), ##__VA_ARGS__)
 char * xstrdup ( const char * str ) ;
 char * xstrndup ( char * str , int n ) ;

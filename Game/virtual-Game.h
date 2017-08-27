@@ -4,6 +4,91 @@
 #include "xlog.h"
 #include "afx.h"
 
+#define SUITSCOUNT 4
+#define WEIGHTCOUNT 15
+
+/// <summary>
+///	角色
+/// </summary>
+typedef enum _CharacterType {
+    Library = 0,
+    FarmerOne,
+    FarmerTwo,
+    Landlord,
+    Desk
+} CharacterType;
+
+
+/// <summary>
+/// 花色
+/// </summary>
+typedef enum _Suits {
+    Club = 0,
+    Diamond,
+    Heart,
+    Spade,
+    None
+} Suits;
+
+/// <summary>
+/// 卡牌权值
+/// </summary>
+typedef enum _Weight {
+    Three = 0,
+    Four,
+    Five,
+    Six,
+    Seven,
+    Eight,
+    Nine,
+    Ten,
+    Jack,
+    Queen,
+    King,
+    One,
+    Two,
+    SJoker,
+    LJoker,
+} Weight;
+
+/*
+/// <summary>
+/// 身份
+/// </summary>
+enum Identity {
+    Farmer,
+    Landlord
+};*/
+
+/// <summary>
+/// 出牌类型
+/// </summary>
+enum CardsType {
+    //未知类型
+    none_type,
+    //王炸
+    JokerBoom,
+    //炸弹
+    Boom,
+    //三个不带
+    OnlyThree,
+    //三个带一
+    ThreeAndOne,
+    //三个带二
+    ThreeAndTwo,
+    //顺子 五张或更多的连续单牌
+    Straight,
+    //双顺 三对或更多的连续对牌
+    DoubleStraight,
+    //三顺 二个或更多的连续三张牌
+    TripleStraight,
+    //对子
+    Double,
+    //单个
+    Single
+};
+
+
 class virtual_Game {
 public:
 	virtual_Game(){}

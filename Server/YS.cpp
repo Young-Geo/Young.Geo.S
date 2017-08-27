@@ -85,7 +85,7 @@ int YS_init(global_t *master)
 	int i = 0;
 	
 	assert(master);
-	memset(master, 0, sizeof(global_t));
+	xzero(master, sizeof(global_t));
 	master->num_threads = WORK_THREAD;
 	master->last_thread = -1;
 	
@@ -147,7 +147,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 		xerror("malloc error");
 		goto end;
 	}
-	memset(data, 0, len+1);
+	xzero(data, len+1);
 
 	//evbuffer_copyout(input, (void *)data, len);
 	evbuffer_remove(input, (void *)data, len);
@@ -161,8 +161,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	++buf;
 	
 	IN8(buf, xor_cc);//异或校验码
-	memset((buf - 1), 0, sizeof(unsigned char));
-	
+	xzero((buf - 1), sizeof(unsigned char));
 
 	IN8(buf, v);
 	assert(v == PKT_YS_FRAME_TYPE);//类型
@@ -456,7 +455,7 @@ static void *master_work(void *arg)
 
 	master->conn_receive_fd = lfd;
 
-	memset(&addr, 0, sizeof(addr));
+	xzero(&addr, sizeof(addr));
 	addr.sin_family = AF_INET;
 	addr.sin_addr.s_addr = htonl(SER_ADDR);
 	addr.sin_port = htons(SER_PORT);

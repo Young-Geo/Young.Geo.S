@@ -10,7 +10,6 @@
 class Card
 {
 public:
-	Card(Weight weight, Suits color, CharacterType belongTo);
 	Card(Weight weight, Suits color);
 	
 public:

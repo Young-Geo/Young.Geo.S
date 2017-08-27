@@ -1,19 +1,5 @@
 #include "YCard.h"
 
-
-Card::Card(Weight weight, Suits color)
-{
-	if (weight < Three || weight > LJoker || color < Club || \
-		color > None) {
-		return;
-	}
-	
-	this->_weight = weight;
-	this->_color = color;
-
-	this->set_CardName();
-}
-
 Card::Card(Weight weight, Suits color)
 {
 	if (weight < Three || weight > LJoker || color < Club || color > None) {
@@ -35,8 +21,8 @@ u8 * Card::GetCardName()
 
 void Card::set_CardName()
 {
-	u8 *color_name[SUITSCOUNT] = {"Club", "Diamond", "Heart", "Spade", ""};
-	u8 *weight_name[WEIGHTCOUNT] = {
+	char *color_name[SUITSCOUNT] = {"Club", "Diamond", "Heart", "Spade", ""};
+	char *weight_name[WEIGHTCOUNT] = {
 		"Three", "Four", "Five", "Six",
 		"Seven", "Eight", "Nine", "Ten",
 		"Jack", "Queen", "King", "One"
@@ -44,8 +30,8 @@ void Card::set_CardName()
 	};
 	
 	xzero(this->_cardName, CARD_NAME_LEN);
-	xstrcpy(this->_cardName, color_name[this->_color]);
-	xstrcat(this->_cardName, weight_name[this->_weight]);
+	xstrcpy((char *)this->_cardName, color_name[this->_color]);
+	xstrcat((char *)this->_cardName, weight_name[this->_weight]);
 }
 
 Weight Card::GetCardWeight()

@@ -3,6 +3,7 @@
 
 #include "afx.h"
 #include "virtual-Game.h"
+#include "YUser.h"
 
 #define CARD_NAME_LEN 12
 

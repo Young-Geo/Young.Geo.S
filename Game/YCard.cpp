@@ -1,16 +1,15 @@
 #include "YCard.h"
 
 
-Card::Card(Weight weight, Suits color, CharacterType belongTo)
+Card::Card(Weight weight, Suits color)
 {
 	if (weight < Three || weight > LJoker || color < Club || \
-		color > None || belongTo < Library || belongTo > Desk) {
+		color > None) {
 		return;
 	}
 	
 	this->_weight = weight;
 	this->_color = color;
-	this->_belongTo = belongTo;
 
 	this->set_CardName();
 }

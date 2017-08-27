@@ -141,8 +141,7 @@ int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username
 	xlist_delete(readys, (char *)user_1->get_username());	
 	xlist_delete(readys, (char *)user_2->get_username());
 
-	xsprintf((char *)game_name, "%s%s%s", user->get_username(), user_1->get_username(), user_2->get_username());
-	game = new Game(user, user_1, user_2, game_name);
+	game = new Game(user, user_1, user_2);
 	if (!game) {
 		xerror("new Game error\n");
 		return -1;
@@ -178,7 +177,7 @@ int do_work(void *arg, void *r, void *w)
 	{
 		case LOGIN:
 			{
-				#define REC_LEN 3
+				#define REC_LEN  3
 				u8 rec[REC_LEN + USER_DATA_SIZE] = {0}, *buf = NULL, *u_buf = NULL;
 				u8 rec_inx = 0;
 				

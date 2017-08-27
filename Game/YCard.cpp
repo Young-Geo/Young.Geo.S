@@ -36,7 +36,7 @@ u8 * Card::GetCardName()
 
 void Card::set_CardName()
 {
-	u8 *color_name[SUITSCOUNT] = {"Club", "Diamond", "Heart", "Spade"};
+	u8 *color_name[SUITSCOUNT] = {"Club", "Diamond", "Heart", "Spade", ""};
 	u8 *weight_name[WEIGHTCOUNT] = {
 		"Three", "Four", "Five", "Six",
 		"Seven", "Eight", "Nine", "Ten",
@@ -59,6 +59,7 @@ Suits Card::GetCardSuit()
 	return this->_color;
 }
 
+/*
 void Card::set_attribution(CharacterType belongTo)
 {
 	this->_belongTo = belongTo;
@@ -68,8 +69,16 @@ CharacterType Card::get_attribution()
 {
 	return this->_belongTo;
 }
+*/
 
-
+int 			Card::set_user(User *user)
+{
+	this->_user = user;
+}
+User *			get_user()
+{
+	return this->_user;
+}
 
 
 

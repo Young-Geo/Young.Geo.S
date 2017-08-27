@@ -166,6 +166,15 @@ int 			User::add_res(Res * res)
 	return 0;
 }
 
+int 			User::set_chara(CharacterType chara)
+{
+	this->_chara = chara;
+}
+
+CharacterType	User::get_chara()
+{
+	return this->_chara;
+}
 
 
 

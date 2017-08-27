@@ -5,6 +5,8 @@
 #include "afx.h"
 #include "YRes.h"
 #include "xlist.h"
+#include "virtual-Game.h"
+
 
 #define USERNAME_LEN 12
 #define PASSWORD_LEN 33
@@ -38,6 +40,8 @@ public:
 	u8 *			todata();
 	int				ress_init();
 	int				add_res(Res *res);
+	int				set_chara(CharacterType chara);
+	CharacterType   get_chara();
 protected:
 	
 private:
@@ -55,6 +59,7 @@ private:
 private:
 	xlist *_res_s;
 	u8 *_data;
+	CharacterType _chara;
 };
 
 

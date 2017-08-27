@@ -6,6 +6,9 @@
 
 #define SUITSCOUNT 4
 #define WEIGHTCOUNT 15
+#define CARDCOUNT 54
+#define CHARACTERCOUNT 3
+#define LAST_CARD 3
 
 /// <summary>
 ///	角色
@@ -18,6 +21,11 @@ typedef enum _CharacterType {
     Desk
 } CharacterType;
 
+enum USER_TAG {
+	U1,
+	U2,
+	U3
+};
 
 /// <summary>
 /// 花色
@@ -51,21 +59,12 @@ typedef enum _Weight {
     LJoker,
 } Weight;
 
-/*
-/// <summary>
-/// 身份
-/// </summary>
-enum Identity {
-    Farmer,
-    Landlord
-};*/
-
 /// <summary>
 /// 出牌类型
 /// </summary>
-enum CardsType {
+typedef enum _CardsType {
     //未知类型
-    none_type,
+    none_type = 0,
     //王炸
     JokerBoom,
     //炸弹
@@ -86,7 +85,7 @@ enum CardsType {
     Double,
     //单个
     Single
-};
+} CardsType;
 
 
 class virtual_Game {

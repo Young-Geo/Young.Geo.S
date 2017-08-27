@@ -4,7 +4,7 @@
 #include "xlog.h"
 #include "afx.h"
 
-#define SUITSCOUNT 4
+#define SUITSCOUNT 5
 #define WEIGHTCOUNT 15
 #define CARDCOUNT 54
 #define CHARACTERCOUNT 3

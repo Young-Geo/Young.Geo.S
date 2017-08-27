@@ -60,7 +60,7 @@ int 			Card::set_user(User *user)
 {
 	this->_user = user;
 }
-User *			get_user()
+User *			Card::get_user()
 {
 	return this->_user;
 }

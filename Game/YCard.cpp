@@ -21,7 +21,7 @@ u8 * Card::GetCardName()
 
 void Card::set_CardName()
 {
-	char *color_name[SUITSCOUNT] = {"Club", "Diamond", "Heart", "Spade", ""};
+	char *color_name[SUITSCOUNT] = {(char *)"Club", (char *)"Diamond", (char *)"Heart", (char *)"Spade", (char *)""};
 	char *weight_name[WEIGHTCOUNT] = {
 		"Three", "Four", "Five", "Six",
 		"Seven", "Eight", "Nine", "Ten",

@@ -14,8 +14,8 @@ User::User(u32 id, u8 *username, u8 *password, p_g thread_entity)
 		return;
 	}
 
-	memcpy(this->_username, username, strlen((char *)username));
-	memcpy(this->_password, password, strlen((char *)password));
+	xmemcpy(this->_username, username, xstrlen((char *)username));
+	xmemcpy(this->_password, password, xstrlen((char *)password));
 
 	this->_id = id;
 	this->_money_z = ZERO;
@@ -39,8 +39,8 @@ User::User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 sol
 		return;
 	}
 	
-	memcpy(this->_username, username, strlen((char *)username));
-	memcpy(this->_password, password, strlen((char *)password));
+	xmemcpy(this->_username, username, xstrlen((char *)username));
+	xmemcpy(this->_password, password, xstrlen((char *)password));
 	
 	this->_id = id;
 	this->_money_z = money_z;
@@ -79,7 +79,7 @@ int 			User::set_username(u8 *username)
 		return -1;
 	}
 
-	memcpy(this->_username, username, strlen((char *)username));
+	xmemcpy(this->_username, username, strlen((char *)username));
 	return 0;
 }
 
@@ -94,7 +94,7 @@ int 			User::set_password(u8 *password)
 		return -1;
 	}
 
-	memcpy(this->_password, password, strlen((char *)password));
+	xmemcpy(this->_password, password, strlen((char *)password));
 	return 0;
 }
 

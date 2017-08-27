@@ -110,11 +110,11 @@ void Game::destory()
 	if (this->cards) {
 		while (!this->cards->empty())
 		{
-			card = this->cards[i];
+			card = this->front();
 			if (!card)
 				continue;
 			delete card;
-			this->cards->erase(i++);
+			this->cards->pop_front();
 		}
 		delete this->cards;
 		this->cards = NULL;

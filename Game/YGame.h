@@ -2,7 +2,7 @@
 #define _YGAME_H_
 
 #include <string>
-#include <queue>
+#include <deque>
 #include <iterator>
 #include <algorithm>
 

@@ -1,6 +1,7 @@
 #ifndef _YGAME_H_
 #define _YGAME_H_
 
+using namespace std;
 #include <string>
 #include <deque>
 #include <iterator>

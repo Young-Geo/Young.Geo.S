@@ -143,7 +143,7 @@ int Game::Shuffle()
 	{
 		srand((unsigned)time(NULL));
 		r = (rand() % CARDCOUNT);
-		newque.insert(r, (*it));
+		newque.insert((newque.begin() + r), (*it));
 	}
 
     this->cards->clear();

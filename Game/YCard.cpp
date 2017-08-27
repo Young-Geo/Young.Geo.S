@@ -25,9 +25,9 @@ void Card::set_CardName()
 	char *weight_name[WEIGHTCOUNT] = {
 		"Three", "Four", "Five", "Six",
 		"Seven", "Eight", "Nine", "Ten",
-		"Jack", "Queen", "King", "One"
+		"Jack", "Queen", "King", "One",
 		"Two", "SJoker", "LJoker"
-	};
+		};
 	
 	xzero(this->_cardName, CARD_NAME_LEN);
 	xstrcpy((char *)this->_cardName, color_name[this->_color]);

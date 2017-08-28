@@ -19,6 +19,6 @@ enum Business_type {
 
 int work(void *arg, xchain *rhain, xchain *whain);
 
-int do_work(void *arg, void *r, void *w);
+int do_work(void *arg, void *U_buf, void *r, void *w);
 
 #endif

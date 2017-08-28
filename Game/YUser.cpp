@@ -189,5 +189,14 @@ int 			User::send_client(u8 * data, int len)
 	return 0;
 }
 
+int &			User::Card_Count()
+{
+	return this->_chad_count;
+}
 
+void			User::set_clientbuf(p_g buf)
+{
+	XNULL(buf);
+	this->_client_buf = buf;
+}
 

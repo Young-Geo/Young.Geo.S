@@ -188,7 +188,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	
 	
     //าตฮ๑
-    thread_entity->master->func.do_work(thread_entity, rchain, wchain);
+    thread_entity->master->func.do_work(thread_entity, output, rchain, wchain);
 
 	
     //evbuffer_add_buffer(output, input);
@@ -199,7 +199,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 		goto end;
 	}
 	
-	memcpy(pack + PKT_YS_HEADLEN, out_data, len);
+	xmemcpy(pack + PKT_YS_HEADLEN, out_data, len);
 	xfree(out_data);
 	out_data = pack;
 	OUT8(pack, PKT_YS_START_TAG);		

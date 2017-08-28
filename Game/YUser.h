@@ -43,6 +43,8 @@ public:
 	int				set_chara(CharacterType chara);
 	CharacterType   get_chara();
 	int				send_client(u8 * data);
+	int	&			Card_Count();
+	void			set_clientbuf(p_g buf);
 protected:
 	
 private:
@@ -62,6 +64,7 @@ private:
 	u8 *			_data;
 	CharacterType 	_chara;
 	p_g				_client_buf;
+	int				_chad_count;
 };
 
 

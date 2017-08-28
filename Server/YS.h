@@ -45,7 +45,7 @@
 #define DATABASE_PWD "anxan4444anxan"
 
 
-typedef int (*func_work_t)(void *, void *, void *);
+typedef int (*func_work_t)(void *, void *, void *, void *);
 
 typedef struct _func_t {
 	func_work_t do_work;

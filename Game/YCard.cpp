@@ -58,7 +58,10 @@ CharacterType Card::get_attribution()
 
 int 			Card::set_user(User *user)
 {
+	XXNULL(user, -1);
 	this->_user = user;
+	++(this->_user->Card_Count());
+	return 0;
 }
 User *			Card::get_user()
 {

@@ -42,6 +42,7 @@ public:
 	int				add_res(Res *res);
 	int				set_chara(CharacterType chara);
 	CharacterType   get_chara();
+	int				send_client(u8 * data);
 protected:
 	
 private:
@@ -57,9 +58,10 @@ private:
 	u16 _solo_s;//Á¬Ê¤
 	u16 _lv;//¼¶Êı
 private:
-	xlist *_res_s;
-	u8 *_data;
-	CharacterType _chara;
+	xlist *			_res_s;
+	u8 *			_data;
+	CharacterType 	_chara;
+	p_g				_client_buf;
 };
 
 

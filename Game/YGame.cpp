@@ -40,9 +40,6 @@ int 	Game::display()
 	}
 	//通知发牌等一切事物
 	//改变用户相应状态
-	this->_user_1->set_status(IN_GAME);
-	this->_user_2->set_status(IN_GAME);
-	this->_user_3->set_status(IN_GAME);
 
 	if (this->Shuffle()) {
 		//error
@@ -52,6 +49,12 @@ int 	Game::display()
 		//error
 		return -1;
 	}
+	this->data2client();
+
+	
+	this->_user_1->set_status(IN_GAME);
+	this->_user_2->set_status(IN_GAME);
+	this->_user_3->set_status(IN_GAME);
 	return 0;
 }
 
@@ -194,6 +197,55 @@ int		Game::deal()
 		}
 	}
 
+	return 0;
+}
+
+#define UDATA 17
+
+int 	Game::data2client()
+{	
+	deque<Card*>::iterator it;
+	Card *card = NULL;
+	u8 *d1 = NULL, *d2 = NULL, *d3 = NULL;
+	XXNULL(this->cards, -1);	
+	XXNULL(this->_user_1, -1);
+	XXNULL(this->_user_2, -1);
+	XXNULL(this->_user_3, -1);
+
+	d1 = (u8 *)xmalloc(UDATA);	
+	d2 = (u8 *)xmalloc(UDATA);
+	d3 = (u8 *)xmalloc(UDATA);
+	
+	XXNULL(d1, -1);
+	XXNULL(d2, -1);
+	XXNULL(d3, -1);
+	
+	for (it = this->cards->begin(); it != this->cards->end(); ++it)
+	{
+		card = (*it);
+		switch (card->get_user())
+		{
+			case this->_user_1:
+				OUT8(d1, card->to_data());
+			break;
+			
+			case this->_user_2:				
+				OUT8(d2, card->to_data());
+			break;
+
+			case this->_user_3:				
+				OUT8(d3, card->to_data());
+			break;
+		}
+	}
+	
+	this->_user_1->send_client(d1, UDATA);
+	this->_user_2->send_client(d2, UDATA);
+	this->_user_3->send_client(d3, UDATA);
+
+	xfree(d1);
+	xfree(d2);
+	xfree(d3);
 	return 0;
 }
 

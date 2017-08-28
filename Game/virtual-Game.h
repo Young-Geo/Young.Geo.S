@@ -56,7 +56,7 @@ typedef enum _Weight {
     One,
     Two,
     SJoker,
-    LJoker,
+    LJoker
 } Weight;
 
 /// <summary>

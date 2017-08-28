@@ -1,4 +1,6 @@
 #include "YUser.h"
+#include <event2/buffer.h>
+#include <event2/event.h>
 
 
 User::User()
@@ -177,7 +179,15 @@ CharacterType	User::get_chara()
 }
 
 
-
+int 			User::send_client(u8 * data, int len)
+{
+	XXNULL(data, -1);
+	XXNULL(len, -1);
+	XXNULL(this->_client_buf, -1);
+	
+	evbuffer_add((struct evbuffer *)this->_client_buf, (void *)data, len);
+	return 0;
+}
 
 
 

@@ -294,7 +294,7 @@ int setup_thread(thread_entity_t *thread_entity)
 
 	cq_init(&thread_entity->conn_queue);
 
-	thread_entity->base = event_init();
+	thread_entity->base = event_base_new();
 
 	if (!thread_entity->base) {
         fprintf(stderr, "Can't allocate event base\n");
@@ -470,7 +470,7 @@ static void *master_work(void *arg)
 	}
 
 
-	master->master_main_base = master_main_base = event_init();
+	master->master_main_base = master_main_base = event_base_new();
 
 
 	 if (!master_main_base) {

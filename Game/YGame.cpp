@@ -222,17 +222,17 @@ int 	Game::data2client()
 	for (it = this->cards->begin(); it != this->cards->end(); ++it)
 	{
 		card = (*it);
-		switch ((unsigned int)card->get_user())
+		switch ((unsigned int)(card->get_user()))
 		{
-			case (unsigned int)this->_user_1:
+			case (unsigned int)(this->_user_1):
 				OUT8(d1, card->to_data());
 			break;
 			
-			case (unsigned int)this->_user_2:				
+			case (unsigned int)(this->_user_2):				
 				OUT8(d2, card->to_data());
 			break;
 
-			case (unsigned int)this->_user_3:				
+			case (unsigned int)(this->_user_3):				
 				OUT8(d3, card->to_data());
 			break;
 		}

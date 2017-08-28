@@ -42,7 +42,7 @@ public:
 	int				add_res(Res *res);
 	int				set_chara(CharacterType chara);
 	CharacterType   get_chara();
-	int				send_client(u8 * data);
+	int				send_client(u8 * data, int len);
 	int	&			Card_Count();
 	void			set_clientbuf(p_g buf);
 protected:

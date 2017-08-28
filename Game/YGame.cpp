@@ -204,8 +204,10 @@ int		Game::deal()
 int 	Game::data2client()
 {	
 	deque<Card*>::iterator it;
+	User *user= NULL;
 	Card *card = NULL;
 	u8 *d1 = NULL, *d2 = NULL, *d3 = NULL;
+	
 	XXNULL(this->cards, -1);	
 	XXNULL(this->_user_1, -1);
 	XXNULL(this->_user_2, -1);
@@ -222,19 +224,20 @@ int 	Game::data2client()
 	for (it = this->cards->begin(); it != this->cards->end(); ++it)
 	{
 		card = (*it);
-		switch ((unsigned int)(card->get_user()))
-		{
-			case (unsigned int)(this->_user_1):
-				OUT8(d1, card->to_data());
-			break;
-			
-			case (unsigned int)(this->_user_2):				
-				OUT8(d2, card->to_data());
-			break;
+		xassert(card);
+		user = card->get_user();
+		xassert(user);
 
-			case (unsigned int)(this->_user_3):				
-				OUT8(d3, card->to_data());
-			break;
+		if (user == this->_user_1) {
+			OUT8(d1, card->to_data());
+		}
+		
+		if (user == this->_user_2) {
+			OUT8(d2, card->to_data());
+		}
+		
+		if (user == this->_user_2) {
+			OUT8(d3, card->to_data());
 		}
 	}
 	

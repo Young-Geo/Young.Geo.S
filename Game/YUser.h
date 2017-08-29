@@ -66,6 +66,8 @@ private:
 	CharacterType 	_chara;
 	p_g				_client_buf;
 	int				_chad_count;
+private:	
+	long now;
 };
 
 

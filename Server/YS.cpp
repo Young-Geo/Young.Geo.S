@@ -213,7 +213,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	buf = out_data + 1;
 	OUT8(buf, xor_cc);
 	*/
-	if (!pkt_make_client(out_data, len, &pack, &len))
+	if (!pkt_make_client(out_data, len, &pack, &len)
 		evbuffer_add(output, (void *)pack, len);
 end:
 	if (data) xfree(data);	

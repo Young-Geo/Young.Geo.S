@@ -76,3 +76,43 @@ unsigned char *  pkt_match_head(unsigned char *buf, int len, unsigned char tag)
 	}*/
 	return NULL;
 }
+
+
+
+
+
+
+int	 pkt_make_client(unsigned char *buf, int len, unsigned char **out_data, int *out_len)
+{
+	unsigned char *data = NULL, *pack = NULL, xor_cc;
+
+	XXNULL(buf, -1);
+	XXNULL(out_data, -1);
+	XXNULL(out_len, -1);
+
+	
+	pack = (unsigned char *)xmalloc((len+PKT_YS_HEADLEN+PKT_YS_ENDLEN));
+	XXNULL(pack, -1);
+	data = pack;
+	
+	OUT8(pack, PKT_YS_START_TAG);		
+	OUT8(pack, 0);
+	OUT8(pack, PKT_YS_FRAME_TYPE);	
+	OUT16_BE(pack, (len+PKT_YS_HEADLEN+PKT_YS_ENDLEN));
+	xmemcpy(pack, buf, len);
+	pack += len;
+	OUT8(pack, PKT_YS_END_TAG);
+	
+	xor_cc = pkt_build_check_sum(data, (len+PKT_YS_HEADLEN+PKT_YS_ENDLEN));
+	pack = data + 1;
+	OUT8(pack, xor_cc);
+
+	*out_data = data;
+	*out_len = (len+PKT_YS_HEADLEN+PKT_YS_ENDLEN);
+	return 0;
+}
+
+
+
+
+

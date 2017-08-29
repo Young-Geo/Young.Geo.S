@@ -193,6 +193,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	
     //evbuffer_add_buffer(output, input);
     xchain_2data (wchain, (char **)&out_data, &len) ;
+	/*
 	pack = (unsigned char *)xmalloc(len + PKT_YS_HEADLEN + PKT_YS_ENDLEN);
 	if (!pack) {
 		xerror("xmalloc");
@@ -211,9 +212,12 @@ void read_cb(struct bufferevent *bev, void *arg)
 	xor_cc = pkt_build_check_sum(out_data, (len+PKT_YS_HEADLEN+PKT_YS_ENDLEN));
 	buf = out_data + 1;
 	OUT8(buf, xor_cc);
-	evbuffer_add(output, (void *)out_data, (len+PKT_YS_HEADLEN+PKT_YS_ENDLEN));
+	*/
+	if (!pkt_make_client(out_data, len, &pack, &len))
+		evbuffer_add(output, (void *)pack, len);
 end:
 	if (data) xfree(data);	
+	if (pack) xfree(pack);	
 	if (out_data) xfree(out_data);
 	if (rchain) xchain_clear(rchain);	
 	if (wchain) xchain_clear(wchain);

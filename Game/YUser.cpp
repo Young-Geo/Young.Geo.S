@@ -181,11 +181,19 @@ CharacterType	User::get_chara()
 
 int 			User::send_client(u8 * data, int len)
 {
+	unsigned char *pack = NULL;
+	int pack_len = 0;
+	
 	XXNULL(data, -1);
 	XXNULL(len, -1);
 	XXNULL(this->_client_buf, -1);
+
+	pkt_make_client((unsigned char *)data, len, &pack, &pack_len);
+	XXNULL(pack, -1);
 	
-	evbuffer_add((struct evbuffer *)this->_client_buf, (void *)data, len);
+	evbuffer_add((struct evbuffer *)this->_client_buf, (void *)pack, pack_len);
+	
+	xfree(pack);
 	return 0;
 }
 

@@ -6,6 +6,7 @@
 #include "YRes.h"
 #include "xlist.h"
 #include "virtual-Game.h"
+#include "Ypkt.h"
 
 
 #define USERNAME_LEN 12

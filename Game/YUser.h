@@ -7,6 +7,8 @@
 #include "xlist.h"
 #include "virtual-Game.h"
 #include "Ypkt.h"
+#include "global_struct.h"
+
 
 
 #define USERNAME_LEN 12

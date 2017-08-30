@@ -8,6 +8,8 @@
 #include "virtual-Game.h"
 #include "Ypkt.h"
 #include "global_struct.h"
+#include "YS.h"
+
 
 
 

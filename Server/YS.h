@@ -1,5 +1,7 @@
 #ifndef _YS_H_
 #define _YS_H_
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

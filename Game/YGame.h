@@ -6,7 +6,7 @@ using namespace std;
 #include <deque>
 #include <iterator>
 #include <algorithm>
-
+#include "global_struct.h"
 #include "virtual-Game.h"
 #include "YUser.h"
 #include "YCard.h"
@@ -18,11 +18,11 @@ using namespace std;
 class Game : public virtual_Game
 {
 public:
-	Game(User *_user_1, User *_user_2, User *_user_3);
+	Game(User *_user_1, User *_user_2, User *_user_3, p_g arg);
 	virtual ~Game();
 public:
 	virtual int 	display();//开始游戏
-	virtual int 	stop();//停止游戏
+	virtual void 	stop();//停止游戏
 	virtual void 	destory();//销毁游戏
 public:
 	u8 *	get_name();//获取名字
@@ -38,6 +38,7 @@ private:
 	User *_user_1, *_user_2, *_user_3;
 	u8 name[GAME_LEN];
 	deque<Card *> *cards;
+	p_g master;
 };
 
 

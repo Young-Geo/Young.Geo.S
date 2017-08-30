@@ -94,7 +94,7 @@ public:
 	~virtual_Game(){}
 public:
 	virtual int display() = 0;
-	virtual int stop() = 0;
+	virtual void stop() = 0;
 	virtual u8 *get_name() = 0;
 };
 

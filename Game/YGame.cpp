@@ -2,15 +2,20 @@
 
 
 
-Game::Game(User * user_1,User * user_2,User * user_3)
+Game::Game(User * user_1,User * user_2,User * user_3, p_g arg)
 {
-	if (!user_1 || !user_2 || !user_3) {
+	if (!user_1 || !user_2 || !user_3 || !arg) {
 		xerror("make Game error");
 		return;
 	}
 	this->_user_1 = user_1;
 	this->_user_2 = user_2;
 	this->_user_3 = user_3;
+	this->master = arg;
+
+	this->_user_1->set_status(READY);
+	this->_user_2->set_status(READY);
+	this->_user_3->set_status(READY);
 	
 	xsprintf((char *)this->name, "%s%s%s", user_1->get_username(), user_2->get_username(), user_3->get_username());
 
@@ -57,9 +62,25 @@ int 	Game::display()
 	return 0;
 }
 
-int Game::stop()
+void Game::stop()
 {
-	return 0;
+	global_t *master = NULL;
+	if (this->_user_1->get_status() == OFF_LINE || this->_user_1->get_status() == IN_GAME_OFF || \
+		this->_user_2->get_status() == OFF_LINE || this->_user_2->get_status() == IN_GAME_OFF || \
+		this->_user_3->get_status() == OFF_LINE || this->_user_3->get_status() == IN_GAME_OFF ||) {
+		
+		this->destory();
+		//((global_t *)this->master)->;
+		xlist_delete(((global_t *)this->master)->games, this->get_name());
+		//直接销毁游戏
+		delete this;
+		return;
+	}
+
+	//如果都在则更改状态等待下次开始
+	this->_user_1->set_status(READY);
+	this->_user_2->set_status(READY);
+	this->_user_3->set_status(READY);
 }
 
 u8 * 	Game::get_name()

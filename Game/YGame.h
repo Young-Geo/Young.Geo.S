@@ -10,6 +10,7 @@ using namespace std;
 #include "virtual-Game.h"
 #include "YUser.h"
 #include "YCard.h"
+#include "xlist.h"
 
 #define GAME_LEN (USERNAME_LEN * 3)
 

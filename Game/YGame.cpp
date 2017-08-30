@@ -66,11 +66,11 @@ void Game::stop()
 {
 	if (this->_user_1->get_status() == OFF_LINE || this->_user_1->get_status() == IN_GAME_OFF || \
 		this->_user_2->get_status() == OFF_LINE || this->_user_2->get_status() == IN_GAME_OFF || \
-		this->_user_3->get_status() == OFF_LINE || this->_user_3->get_status() == IN_GAME_OFF ||) {
+		this->_user_3->get_status() == OFF_LINE || this->_user_3->get_status() == IN_GAME_OFF) {
 		
 		this->destory();
 		//((global_t *)this->master)->;
-		xlist_delete(((global_t *)this->master)->games, this->get_name());
+		xlist_delete(((global_t *)this->master)->games, (char *)this->get_name());
 		//直接销毁游戏
 		delete this;
 		return;

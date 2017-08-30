@@ -64,7 +64,6 @@ int 	Game::display()
 
 void Game::stop()
 {
-	global_t *master = NULL;
 	if (this->_user_1->get_status() == OFF_LINE || this->_user_1->get_status() == IN_GAME_OFF || \
 		this->_user_2->get_status() == OFF_LINE || this->_user_2->get_status() == IN_GAME_OFF || \
 		this->_user_3->get_status() == OFF_LINE || this->_user_3->get_status() == IN_GAME_OFF ||) {

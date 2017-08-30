@@ -1,7 +1,9 @@
 #ifndef _GLOBAL_STRUCT_H_
 #define _GLOBAL_STRUCT_H_
 
+#include "xlist.h"
 #include "ocicursor.h"
+#include <pthread.h>
 #include <event2/listener.h>
 #include <event2/bufferevent.h>
 #include <event2/buffer.h>

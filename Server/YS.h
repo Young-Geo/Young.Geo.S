@@ -17,22 +17,15 @@
 #include <pthread.h>
 
 
-#include <event2/listener.h>
-#include <event2/bufferevent.h>
-#include <event2/buffer.h>
-#include <event2/event.h>
-#include <event2/event_struct.h>
-#include <event2/event_compat.h>
-
 #include "xlog.h"
 #include "xlist.h"
 #include "afx.h"
 #include "xchain.h"
 
+
 #include "Ypkt.h"
 #include "YUser.h"
 #include "global_struct.h"
-#include "ocicursor.h"
 
 
 #define WORK_THREAD 4

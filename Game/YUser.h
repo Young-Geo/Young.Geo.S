@@ -19,7 +19,8 @@ enum USER_STATUS {
 	OFF_LINE,
 	ON_LINE,
 	READY,
-	IN_GAME
+	IN_GAME,
+	IN_GAME_OFF
 };
 
 class User
@@ -45,7 +46,9 @@ public:
 	CharacterType   get_chara();
 	int				send_client(u8 * data, int len);
 	int	&			Card_Count();
-	void			set_clientbuf(p_g buf);
+	void			set_clientbuf(p_g buf);	
+	long	&		Time();
+	void			Destory();
 protected:
 	
 private:

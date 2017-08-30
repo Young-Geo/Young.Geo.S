@@ -59,11 +59,11 @@ User::User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 sol
 }
 
 User::~User()
-{
+{	
 	if (this->_res_s)
-		xlist_clean(&this->_res_s);
+		xlist_clean(&this->_res_s);//需要主动调用销毁函数
 	if (this->_data)
-		delete this->_data;
+		xfree(this->_data);
 }
 
 
@@ -164,7 +164,7 @@ int 			User::add_res(Res * res)
 		xerror("add res error");
 		return -1;
 	}
-	xlist_add(this->_res_s, (char *)res->get_res_name(), XLIST_CPP, (char *)res);
+	xlist_add(this->_res_s, (char *)res->get_res_name(), XLIST_PTR, (char *)res);
 	return 0;
 }
 
@@ -208,3 +208,19 @@ void			User::set_clientbuf(p_g buf)
 	this->_client_buf = buf;
 }
 
+long &			User::Time()
+{
+	return this->now;
+}
+
+void			User::Destory()
+{
+	thread_entity_t *thread_entity = NULL;
+	
+	thread_entity = (thread_entity_t *)this->_thread_entity;
+	if (thread_entity) {
+		xlist_delete(thread_entity->master->readys, this->get_username());
+		xlist_delete(thread_entity->users, this->get_username());
+	}
+	delete this;
+}

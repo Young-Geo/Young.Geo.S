@@ -91,12 +91,12 @@ int YS_init(global_t *master)
 	
 	sigignore(SIGPIPE);
 
-	master->arr_users = (xlist **)xmalloc(sizeof(xlist *) * WORK_THREAD);
+	master->arr_users = (xlist **)xmalloc(sizeof(xlist *) * master->num_threads);
 	if (!master->arr_users) {
 		xerror("arr_users xmalloc error\n");
 		exit(-1);
 	}
-	for (i = 0; i < WORK_THREAD; ++i)
+	for (i = 0; i < master->num_threads; ++i)
 	{
 		*(master->arr_users + i) = xlist_init();
 		if (!(*(master->arr_users + i))) {

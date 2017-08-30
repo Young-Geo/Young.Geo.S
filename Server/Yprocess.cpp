@@ -55,7 +55,7 @@ p_g login(thread_entity_t *thread_entity, void *client_buf, u8 *username, u8 *pa
 	}
 	user->set_clientbuf((p_g)client_buf);
 	pthread_mutex_lock(&thread_entity->mutex_users);
-	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_CPP, (char *)user);			
+	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_PTR, (char *)user);			
 	pthread_mutex_unlock(&thread_entity->mutex_users);
 
 	//查询其他信息物品等
@@ -151,6 +151,57 @@ int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username
 }
 
 
+int	pro_scrap_user(global_t *master)
+{
+	static xlist *users[WORK_THREAD] = {0};
+	int i = 0, user_inx = 0;
+	User *user = NULL;	
+	long now;
+	
+	xassert(master);
+	xassert(master->arr_users);
+
+	now = time(NULL);
+
+	for (i = 0; i < master->num_threads; ++i)
+	{
+		if (NULL == users[i]) {
+			users[i] = master->arr_users[i];
+			xassert(users[i]);
+		}
+
+		//遍历前100
+		while (users[i] && (users[i]->next) && ((user_inx++) < 100))
+  		{
+  			user = (User *)users[i]->value;
+			xassert(user);
+
+			//判断时间
+			if ((now - user->Time()) > 10) {
+				if (user->get_status() != IN_GAME)
+					user->set_status(OFF_LINE);
+				else
+					user->set_status(IN_GAME_OFF);
+			}
+
+			if (user->get_status() == OFF_LINE) {
+				user->Destory();
+			}
+
+			users[i] = users[i]->next;
+			
+  		}
+		
+		user_inx = 0;
+		
+		if (!users[i]->next) {
+			users[i] = NULL;
+		}
+	}
+	
+	return 0;
+}
+
 int do_work(void *arg, void *U_buf, void *r, void *w)
 {
 	thread_entity_t *thread_entity = NULL;
@@ -242,6 +293,9 @@ int do_work(void *arg, void *U_buf, void *r, void *w)
 			
 		break;
 	}
+
+	//对长时间没有处理的User进行处理
+	pro_scrap_user(thread_entity->master);
 	
 	return 0;
 }

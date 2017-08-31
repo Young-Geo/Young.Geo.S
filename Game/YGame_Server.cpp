@@ -159,10 +159,10 @@ void recvdata(int fd, int events, void *arg)
     else if (len == 0) {
         close(ev->fd);
         /* ev-g_events 地址相减得到偏移元素位置 */
-        printf("[fd=%d] pos[%d], closed\n", fd, ev - g_events);
+        xmessage("[fd=%d] pos[%d], closed\n", fd, (int)(ev - g_events));
     }	else {
         close(ev->fd);
-        xprintf("recv[fd=%d] error[%d]:%s\n", fd, errno, strerror(errno));
+        xerror("recv[fd=%d] error[%d]:%s\n", fd, errno, strerror(errno));
     }
 
     return;

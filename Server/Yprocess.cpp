@@ -114,7 +114,7 @@ int ready_start(xlist **users, u8 inx, xlist *readys, u8 *username)
 	Game *game = NULL;
 	u8 game_name[USERNAME_LEN * 3];
 
-	if (!users || !readys || !games || !username) {
+	if (!users || !readys || !username) {
 		xerror("ready_start error NULL\n");
 		return -1;
 	}

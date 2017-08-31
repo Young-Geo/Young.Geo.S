@@ -111,8 +111,8 @@ int ready_start(global_t *master, u8 inx, u8 *username)
 	xlist **users = NULL;
 	User *user = NULL, *user_1 = NULL, *user_2 = NULL;
 	int i = 0, size = 0;
-	xlist *t_list = NULL;
-	Game *game = NULL, *readys = NULL;
+	xlist *t_list = NULL, *readys = NULL;
+	Game *game = NULL;
 	u8 game_name[USERNAME_LEN * 3];
 
 	if (!master || !username) {

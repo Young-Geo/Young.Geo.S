@@ -13,13 +13,14 @@ using namespace std;
 #include "xlist.h"
 
 #define GAME_LEN (USERNAME_LEN * 3)
+#define GAME_USER_COUNT 3
 
 
 
 class Game : public virtual_Game
 {
 public:
-	Game(User *_user_1, User *_user_2, User *_user_3, p_g arg);
+	Game(User *_user_1, User *_user_2, User *_user_3);
 	virtual ~Game();
 public:
 	virtual int 	display();//¿ªÊ¼ÓÎÏ·

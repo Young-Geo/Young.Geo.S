@@ -52,6 +52,7 @@ typedef struct _global_t
 	pthread_t master_thread_id, game_thread_id;
 	struct event_base *master_main_base;
 	struct event master_main_notify_event;
+	int game_efd;
 	func_t func;
 	int conn_receive_fd;
 	int num_threads;
@@ -64,6 +65,7 @@ typedef struct _global_t
 	pthread_mutex_t mutex_game;
 	//各种状态链表
 	xlist *readys;//已经准备就绪用户的链表	
+	int ready_num;
 	pthread_mutex_t mutex_ready;
 } global_t;
 

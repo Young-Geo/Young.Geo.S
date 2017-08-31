@@ -106,27 +106,34 @@ int rigister(thread_entity_t *thread_entity, u8 *username, u8 *password)
 }
 
 
-int ready_start(xlist **users, u8 inx, xlist *readys, u8 *username)
+int ready_start(global_t *master, u8 inx, u8 *username)
 {
+	xlist **users = NULL;
 	User *user = NULL, *user_1 = NULL, *user_2 = NULL;
 	int i = 0, size = 0;
 	xlist *t_list = NULL;
-	Game *game = NULL;
+	Game *game = NULL, *readys = NULL;
 	u8 game_name[USERNAME_LEN * 3];
 
-	if (!users || !readys || !username) {
+	if (!master || !username) {
 		xerror("ready_start error NULL\n");
 		return -1;
 	}
+
+	xassert((users = master->arr_users));
+	xassert((readys = master->readys));
 	
 	user = (User *)xlist_getv(users[inx], (char *)username);//分线程找，，后续需要沟通
 	if (!user) {
 		xerror("no find user\n");
 		return -1;
 	}
-	
-	xlist_add(readys, (char *)username, XLIST_PTR, (char *)user);
 
+	pthread_mutex_lock(&master->mutex_ready);
+	xlist_add(readys, (char *)username, XLIST_PTR, (char *)user);
+	++master->ready_num;
+	pthread_mutex_unlock(&master->mutex_ready);
+	
 	/*
 	if (xlist_size(readys) < 2) {
 		xmessage("%s add readys \n", username);
@@ -266,7 +273,7 @@ int do_work(void *arg, void *U_buf, void *r, void *w)
 				
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
 				xchain_get(rchain, (void *)&inx, 1);
-				if (ready_start(thread_entity->master->arr_users, inx, thread_entity->master->readys, username)) {
+				if (ready_start(thread_entity->master, inx, username)) {
 					xerror("ready_start error\n");
 				} else {				
 					buf = rec;

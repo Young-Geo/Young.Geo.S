@@ -2,7 +2,7 @@
 
 
 
-Game::Game(User * user_1,User * user_2,User * user_3, p_g arg)
+Game::Game(User * user_1,User * user_2,User * user_3)
 {
 	if (!user_1 || !user_2 || !user_3 || !arg) {
 		xerror("make Game error");
@@ -11,7 +11,7 @@ Game::Game(User * user_1,User * user_2,User * user_3, p_g arg)
 	this->_user_1 = user_1;
 	this->_user_2 = user_2;
 	this->_user_3 = user_3;
-	this->master = arg;
+	//this->master = arg;
 
 	this->_user_1->set_status(READY);
 	this->_user_2->set_status(READY);

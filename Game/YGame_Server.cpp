@@ -262,7 +262,7 @@ int		parse_readys(global_t *master)
 			continue;
 		}
 		game->display();
-		xlist_add(master->games, game->get_name(), XLIST_PTR, (char *)game);
+		xlist_add(master->games, (char *)game->get_name(), XLIST_PTR, (char *)game);
 		
 	}
 }

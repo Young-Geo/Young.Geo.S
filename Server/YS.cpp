@@ -110,8 +110,8 @@ int YS_init(global_t *master)
 		xerror("games init error\n");
 		exit(-1);
 	}
-*/
 	pthread_mutex_init(&master->mutex_game, NULL);
+	*/
 
 	if (!(master->readys = xlist_init())) {
 		xerror("readys init error\n");

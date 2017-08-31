@@ -122,6 +122,7 @@ unsigned int xstr_hash (const char * v) ;
 #define xstrcpy(dest, src) strcpy((dest), (src))
 #define xstrcat(dest, src) strcat((dest), (src))
 #define xsprintf(str, format, ...) sprintf((str), (format), ##__VA_ARGS__)
+#define xprintf(format, ...) printf((format), ##__VA_ARGS__);
 char * xstrdup ( const char * str ) ;
 char * xstrndup ( char * str , int n ) ;
 void * xmemdup ( void * mem , int n ) ;

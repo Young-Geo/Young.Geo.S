@@ -49,7 +49,7 @@ typedef struct _thread_entity_t
 
 typedef struct _global_t
 {
-	pthread_t master_thread_id;
+	pthread_t master_thread_id, game_thread_id;
 	struct event_base *master_main_base;
 	struct event master_main_notify_event;
 	func_t func;

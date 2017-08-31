@@ -38,7 +38,7 @@ void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void *),
 	xassert(ev);
 	xassert(call_back);
 	xassert(arg);
-	xassert(user);
+	//xassert(user);
 	
     ev->fd = fd;
 	ev->call_back = call_back;
@@ -251,7 +251,7 @@ int		parse_readys(global_t *master)
 		pthread_mutex_lock(&master->mutex_ready);
 		for (i = 0; i < GAME_USER_COUNT; ++i)
 		{
-			xlist_delete(master->readys, users[i]->get_username());
+			xlist_delete(master->readys, (char *)users[i]->get_username());
 			--master->ready_num;
 		}
 		pthread_mutex_unlock(&master->mutex_ready);

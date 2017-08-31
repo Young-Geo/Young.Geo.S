@@ -4,7 +4,7 @@
 
 Game::Game(User * user_1,User * user_2,User * user_3)
 {
-	if (!user_1 || !user_2 || !user_3 || !arg) {
+	if (!user_1 || !user_2 || !user_3) {
 		xerror("make Game error");
 		return;
 	}

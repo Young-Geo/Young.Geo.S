@@ -71,13 +71,6 @@ User *			Card::get_user()
 u8				Card::to_data()
 {
 	u8 data = 0;
-	/*data = xmalloc(CARD_DATA_SIZE);
-	XXNULL(data, NULL);
-	this->_data = data;
-
-	OUT8(data, this->GetCardSuit());
-	OUT8(data, this->GetCardWeight());
-	*/
 	data = this->GetCardSuit();
 	data <<= 4;
 	data = (data & 0xf0) | (this->GetCardWeight() & 0x0f);

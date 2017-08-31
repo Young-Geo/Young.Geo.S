@@ -106,7 +106,7 @@ int rigister(thread_entity_t *thread_entity, u8 *username, u8 *password)
 }
 
 
-int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username, p_g arg)
+int ready_start(xlist **users, u8 inx, xlist *readys, u8 *username)
 {
 	User *user = NULL, *user_1 = NULL, *user_2 = NULL;
 	int i = 0, size = 0;
@@ -124,13 +124,15 @@ int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username
 		xerror("no find user\n");
 		return -1;
 	}
+	
+	xlist_add(readys, (char *)username, XLIST_PTR, (char *)user);
 
+	/*
 	if (xlist_size(readys) < 2) {
 		xmessage("%s add readys \n", username);
 		xlist_add(readys, (char *)username, XLIST_PTR, (char *)user);
 		return 0;
 	}
-	
 	user_1 = (User *)xlist_index(readys, 0)->value;
 	user_2 = (User *)xlist_index(readys, 1)->value;
 	if (!user_1 || !user_2) {
@@ -147,6 +149,7 @@ int ready_start(xlist **users, u8 inx, xlist *readys, xlist *games, u8 *username
 		return -1;
 	}
 	xlist_add(games, (char *)game->get_name(), XLIST_PTR, (char *)game);
+	*/
 	return 0;
 }
 
@@ -257,11 +260,24 @@ int do_work(void *arg, void *U_buf, void *r, void *w)
 
 		case MATCH://就绪状态，应该先找同种状态的人看看能不能匹配游戏
 			{
+				unsigned short port = GAME_SER_PORT;
+				unsigned char ip[GAME_SER_IP_SIZE] = { 0 };
+				u8 rec[2 + GAME_SER_IP_SIZE] = {0}, *buf = NULL;
+				
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
 				xchain_get(rchain, (void *)&inx, 1);
-				if (ready_start(thread_entity->master->arr_users, inx, thread_entity->master->readys, thread_entity->master->games, username, (p_g)thread_entity->master)) {
+				if (ready_start(thread_entity->master->arr_users, inx, thread_entity->master->readys, username)) {
 					xerror("ready_start error\n");
+				} else {				
+					buf = rec;
+					OUT16_LE(buf, port);
+					xsprintf(ip, "%s", GAME_SER_IP);
+					xmemcpy(buf, ip, GAME_SER_IP_SIZE);
+					buf += GAME_SER_IP_SIZE;					
+					xchain_add(wchain, (void *)rec, (buf-rec));
 				}
+
+				//发送ip和端口
 			}
 		break;
 
@@ -295,7 +311,7 @@ int do_work(void *arg, void *U_buf, void *r, void *w)
 	}
 
 	//对长时间没有处理的User进行处理
-	pro_scrap_user(thread_entity->master);
+	//pro_scrap_user(thread_entity->master);
 	
 	return 0;
 }

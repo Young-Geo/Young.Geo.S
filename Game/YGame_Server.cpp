@@ -146,15 +146,15 @@ void recvdata(int fd, int events, void *arg)
         eventadd(g_efd, EPOLLOUT, ev);
     }
     else if (len == 0) {
-		close(ev->fd);
-		/* ev-g_events 地址相减得到偏移元素位置 */
-		printf("[fd=%d] pos[%d], closed\n", fd, ev - g_events);
-		}	else {
-		close(ev->fd);
-		xprintf("recv[fd=%d] error[%d]:%s\n", fd, errno, strerror(errno));
-		}
+        close(ev->fd);
+        /* ev-g_events 地址相减得到偏移元素位置 */
+        printf("[fd=%d] pos[%d], closed\n", fd, ev - g_events);
+    }	else {
+        close(ev->fd);
+        xprintf("recv[fd=%d] error[%d]:%s\n", fd, errno, strerror(errno));
+    }
 
-	return;
+    return;
 }
 
 
@@ -162,29 +162,29 @@ void recvdata(int fd, int events, void *arg)
 
 void senddata(int fd, int events, void *arg)
 {
-	struct myevent_s *ev = (struct myevent_s *)arg;
-	int len;
-	//处理业务，小写转大写    len = send(fd, ev->buf, ev->len, 0);
-	/*
-	printf("fd=%d\tev->buf=%s\ttev->len=%d\n", fd, ev->buf, ev->len);
-	printf("send len = %d\n", len);
-	*/
-	if (len > 0) {
+    struct myevent_s *ev = (struct myevent_s *)arg;
+    int len;
+    //处理业务，小写转大写    len = send(fd, ev->buf, ev->len, 0);
+    /*
+       printf("fd=%d\tev->buf=%s\ttev->len=%d\n", fd, ev->buf, ev->len);
+       printf("send len = %d\n", len);
+     */
+    if (len > 0) {
 
-		xprintf("send[fd=%d], [%d]%s\n", fd, len, ev->buf);
-		eventdel(g_efd, ev);
-		eventset(ev, fd, recvdata, ev);
-		eventadd(g_efd, EPOLLIN, ev);
-		
-	} else {
-	
-		close(ev->fd);
-		eventdel(g_efd, ev);
-		printf("send[fd=%d] error %s\n", fd, strerror(errno));
-		
+        xprintf("send[fd=%d], [%d]%s\n", fd, len, ev->buf);
+        eventdel(g_efd, ev);
+        eventset(ev, fd, recvdata, ev);
+        eventadd(g_efd, EPOLLIN, ev);
+
+    } else {
+
+        close(ev->fd);
+        eventdel(g_efd, ev);
+        printf("send[fd=%d] error %s\n", fd, strerror(errno));
+
     }
 
-	return;
+    return;
 }
 
 
@@ -195,73 +195,73 @@ void senddata(int fd, int events, void *arg)
 
 void initlistensocket(int efd, short port)
 {
-	int lfd = 0;
-	struct sockaddr_in sin;
-	memset(&sin, 0, sizeof(sin));
+    int lfd = 0;
+    struct sockaddr_in sin;
+    memset(&sin, 0, sizeof(sin));
 
-	lfd = socket(AF_INET, SOCK_STREAM, 0);
-	fcntl(lfd, F_SETFL, O_NONBLOCK);
-	eventset(&g_events[MAX_EVENTS], lfd, acceptconn, &g_events[MAX_EVENTS]);
-	eventadd(efd, EPOLLIN, &g_events[MAX_EVENTS]);
-	
-	sin.sin_family = AF_INET;	
-	sin.sin_addr.s_addr = INADDR_ANY;
-	sin.sin_port = htons(port);	
-	bind(lfd, (struct sockaddr *)&sin, sizeof(sin));
-	listen(lfd, 20);
-	return;
+    lfd = socket(AF_INET, SOCK_STREAM, 0);
+    fcntl(lfd, F_SETFL, O_NONBLOCK);
+    eventset(&g_events[MAX_EVENTS], lfd, acceptconn, &g_events[MAX_EVENTS]);
+    eventadd(efd, EPOLLIN, &g_events[MAX_EVENTS]);
+
+    sin.sin_family = AF_INET;	
+    sin.sin_addr.s_addr = INADDR_ANY;
+    sin.sin_port = htons(port);	
+    bind(lfd, (struct sockaddr *)&sin, sizeof(sin));
+    listen(lfd, 20);
+    return;
 }
 int main(int argc, char *argv[])
 {
-	unsigned short port = SERV_PORT;
-	if (argc == 2)
-		port = atoi(argv[1]);
-	g_efd = epoll_create(MAX_EVENTS+1);
-	if (g_efd <= 0) 
-		printf("create efd in %s err %s\n", __func__, strerror(errno));
-	initlistensocket(g_efd, port);
-	/* 事件循环 */ 
-	struct epoll_event events[MAX_EVENTS+1];
-	printf("server running:port[%d]\n", port);
-	int checkpos = 0, i;
-	while (1)
-	{
-		/* 超时验证，每次测试100个链接，不测试listenfd 当客户端60秒内没有和服务器通信，则关闭此客户端链接 */
-		long now = time(NULL);
-		for (i = 0; i < 100; i++, checkpos++)
-		{
-			if (checkpos == MAX_EVENTS)
-				checkpos = 0;
-			if (g_events[checkpos].status != 1)
-				continue;
-			long duration = now - g_events[checkpos].last_active;
-			if (duration >= 60) {                
-				close(g_events[checkpos].fd);                
-				printf("[fd=%d] timeout\n", g_events[checkpos].fd);                
-				eventdel(g_efd, &g_events[checkpos]);            
-			}
-		}        
+    unsigned short port = SERV_PORT;
+    if (argc == 2)
+        port = atoi(argv[1]);
+    g_efd = epoll_create(MAX_EVENTS+1);
+    if (g_efd <= 0) 
+        printf("create efd in %s err %s\n", __func__, strerror(errno));
+    initlistensocket(g_efd, port);
+    /* 事件循环 */ 
+    struct epoll_event events[MAX_EVENTS+1];
+    printf("server running:port[%d]\n", port);
+    int checkpos = 0, i;
+    while (1)
+    {
+        /* 超时验证，每次测试100个链接，不测试listenfd 当客户端60秒内没有和服务器通信，则关闭此客户端链接 */
+        long now = time(NULL);
+        for (i = 0; i < 100; i++, checkpos++)
+        {
+            if (checkpos == MAX_EVENTS)
+                checkpos = 0;
+            if (g_events[checkpos].status != 1)
+                continue;
+            long duration = now - g_events[checkpos].last_active;
+            if (duration >= 60) {                
+                close(g_events[checkpos].fd);                
+                printf("[fd=%d] timeout\n", g_events[checkpos].fd);                
+                eventdel(g_efd, &g_events[checkpos]);            
+            }
+        }        
 
-	/* 等待事件发生 */        
-	int nfd = epoll_wait(g_efd, events, MAX_EVENTS+1, 1000);        
-	if (nfd < 0) {            
-		printf("epoll_wait error, exit\n");           
-		break;        
-	}        
+        /* 等待事件发生 */        
+        int nfd = epoll_wait(g_efd, events, MAX_EVENTS+1, 1000);        
+        if (nfd < 0) {            
+            printf("epoll_wait error, exit\n");           
+            break;        
+        }        
 
-	for (i = 0; i < nfd; i++)
-	{            
-		struct myevent_s *ev = (struct myevent_s *)events[i].data.ptr;            
-		if ((events[i].events & EPOLLIN) && (ev->events & EPOLLIN)) {                
-			ev->call_back(ev->fd, events[i].events, ev->arg);            
-		}            
-		if ((events[i].events & EPOLLOUT) && (ev->events & EPOLLOUT)) {
-			ev->call_back(ev->fd, events[i].events, ev->arg);            
-		}        
-	}
-	}
-/* 退出前释放所有资源 */    
-	return 0;
+        for (i = 0; i < nfd; i++)
+        {            
+            struct myevent_s *ev = (struct myevent_s *)events[i].data.ptr;            
+            if ((events[i].events & EPOLLIN) && (ev->events & EPOLLIN)) {                
+                ev->call_back(ev->fd, events[i].events, ev->arg);            
+            }            
+            if ((events[i].events & EPOLLOUT) && (ev->events & EPOLLOUT)) {
+                ev->call_back(ev->fd, events[i].events, ev->arg);            
+            }        
+        }
+    }
+    /* 退出前释放所有资源 */    
+    return 0;
 }
 
 

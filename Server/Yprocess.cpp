@@ -285,8 +285,8 @@ int do_work(void *arg, void *U_buf, void *r, void *w)
 				xmessage("ready_start username = %s, inx = %d\t flag = %d\n", username, inx, flag);
 				
 				buf = rec;
+				OUT16_LE(buf, REC_MATCH);
 				OUT8(buf, flag);
-				OUT16_LE(buf, REC_MATCH)
 				if (flag) {
 					OUT16_LE(buf, port);
 					xsprintf((char *)ip, "%s", GAME_SER_IP);

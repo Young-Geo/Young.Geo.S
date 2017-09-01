@@ -167,7 +167,7 @@ void recvdata(int fd, int events, void *arg)
 		xassert(buft);
         xmessage("C[%d]\n", fd);
 		pkt_parse_data(buf, len, &buft->buf, &buft->len);
-		xlist_add(ev->bufs, NULL, XLIST_PTR, buft);
+		xlist_add(ev->bufs, NULL, XLIST_PTR, (char *)buft);
 		//解析数据
         /* 转换为发送事件 */
         //eventset(ev, fd, senddata, ev);
@@ -201,7 +201,6 @@ void senddata(int fd, int events, void *arg)
      //遍历加协议
     if (len > 0) {
 
-        xprintf("send[fd=%d], [%d]%s\n", fd, len, ev->buf);
         eventdel(g_efd, ev);
         eventset(ev, fd, recvdata, ev);
         eventadd(g_efd, EPOLLIN, ev);

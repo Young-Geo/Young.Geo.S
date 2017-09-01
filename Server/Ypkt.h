@@ -18,6 +18,6 @@ unsigned char *  pkt_build_byte_tag(unsigned char * buf, unsigned char tag);
 unsigned char *  pkt_build_short_tag(unsigned char * buf, unsigned short tag);
 unsigned char *  pkt_match_head(unsigned char *buf, int len, unsigned char tag);
 int	 pkt_make_client(unsigned char *buf, int len, unsigned char **out_data, int *out_len);
-
+int	 pkt_parse_data(unsigned char *buf, int len, unsigned char **out_data, int *out_len);
 
 #endif

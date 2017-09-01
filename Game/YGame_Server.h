@@ -4,6 +4,10 @@
 #include "afx.h"
 #include "YS.h"
 
+typedef enum _Game_type {
+	first = 4
+} Game_type;
+
 int YS_game_thread_init(global_t *master);
 
 

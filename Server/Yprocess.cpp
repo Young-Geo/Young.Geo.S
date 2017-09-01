@@ -269,21 +269,31 @@ int do_work(void *arg, void *U_buf, void *r, void *w)
 			{
 				unsigned short port = GAME_SER_PORT;
 				unsigned char ip[GAME_SER_IP_SIZE] = { 0 };
-				u8 rec[2 + GAME_SER_IP_SIZE] = {0}, *buf = NULL;
+				u8 rec[REC_LEN + 2 + GAME_SER_IP_SIZE] = {0}, *buf = NULL;
+				u8 flag = 0;
 				
 				xchain_get(rchain, (void *)username, USERNAME_LEN);	
+				xchain_delete(rchain, USERNAME_LEN);
 				xchain_get(rchain, (void *)&inx, 1);
 				if (ready_start(thread_entity->master, inx, username)) {
 					xerror("ready_start error\n");
-				} else {				
-					buf = rec;
+					flag = 0;
+				} else {
+					flag = 1;
+				}
+
+				
+				buf = rec;
+				OUT8(buf, flag);
+				OUT16_LE(buf, REC_MATCH)
+				if (flag) {
 					OUT16_LE(buf, port);
 					xsprintf((char *)ip, "%s", GAME_SER_IP);
 					xmemcpy(buf, ip, GAME_SER_IP_SIZE);
-					buf += GAME_SER_IP_SIZE;					
-					xchain_add(wchain, (void *)rec, (buf-rec));
+					buf += 0;	
 				}
-
+				
+				xchain_add(wchain, (void *)rec, (buf-rec));
 				//·¢ËÍipºÍ¶Ë¿Ú
 			}
 		break;

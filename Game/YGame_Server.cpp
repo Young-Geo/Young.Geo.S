@@ -13,6 +13,11 @@
 #define BUFLEN 1024
 #define TRUE 1
 
+typedef struct _BUF_T {
+	unsigned char *buf;
+	int len;
+} Buf_t;
+
 
 /* * status:1表示在监听事件中，0表示不在  * last_active:记录最后一次响应时间,做超时处理 */
 struct myevent_s {
@@ -21,8 +26,9 @@ struct myevent_s {
     void *arg;
     void (*call_back)(int fd, int events, void *arg);
     int status;
-    char buf[BUFLEN];
-    int len;
+//    unsigned char buf[BUFLEN];
+//    int len;
+	xlist *bufs;
     long last_active;
 	User *user;
 };
@@ -46,6 +52,9 @@ void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void *),
     ev->arg = arg;
 	ev->user = NULL;
     ev->status = 0;
+	if (!ev->bufs) {
+		ev->bufs = xlist_init();
+	}
     //memset(ev->buf, 0, sizeof(ev->buf));
     //ev->len = 0;
     ev->last_active = time(NULL);
@@ -144,22 +153,31 @@ void recvdata(int fd, int events, void *arg)
 {
     struct myevent_s *ev = (struct myevent_s *)arg;
     int len;
+	unsigned char buf[BUFLEN] = { 0 };
+	Buf_t *buft = NULL;
 
-    len = recv(fd, ev->buf, sizeof(ev->buf), 0);
+	
+    len = recv(fd, buf, sizeof(buf), 0);
     eventdel(g_efd, ev);
 
     if (len > 0) {
-        ev->len = len;
-        ev->buf[len] = '\0';
-        xprintf("C[%d]:%s\n", fd, ev->buf);
+		//处理数据
+        buf[len] = '\0';
+		buft = (Buf_t *)xmalloc(sizeof(Buf_t));
+		xassert(buft);
+        xmessage("C[%d]\n", fd);
+		pkt_parse_data(buf, len, &buft->buf, &buft->len);
+		xlist_add(ev->bufs, NULL, XLIST_PTR, buft);
+		//解析数据
         /* 转换为发送事件 */
-        eventset(ev, fd, senddata, ev);
-        eventadd(g_efd, EPOLLOUT, ev);
+        //eventset(ev, fd, senddata, ev);
+        //eventadd(g_efd, EPOLLOUT, ev);
     }
     else if (len == 0) {
         close(ev->fd);
         /* ev-g_events 地址相减得到偏移元素位置 */
         xmessage("[fd=%d] pos[%d], closed\n", fd, (int)(ev - g_events));
+		//eventdel(g_efd, &g_events[checkpos]);
     }	else {
         close(ev->fd);
         xerror("recv[fd=%d] error[%d]:%s\n", fd, errno, strerror(errno));
@@ -180,6 +198,7 @@ void senddata(int fd, int events, void *arg)
        printf("fd=%d\tev->buf=%s\ttev->len=%d\n", fd, ev->buf, ev->len);
        printf("send len = %d\n", len);
      */
+     //遍历加协议
     if (len > 0) {
 
         xprintf("send[fd=%d], [%d]%s\n", fd, len, ev->buf);
@@ -267,6 +286,29 @@ int		parse_readys(global_t *master)
 	}
 }
 
+int work(struct myevent_s *ev)
+{
+	int i = 0, size = 0;
+	xlist *bufs = NULL;
+	Buf_t *buft = NULL;
+	
+	xassert(ev);
+	
+	bufs = ev->bufs;
+	size = xlist_size(ev->bufs);
+	
+	while (size-- > 0)
+	{
+		//解析数据处理相应业务
+		buft = (Buf_t *)xlist_popv(bufs);
+		if (!buft)
+			continue;
+		//处理业务
+	}
+
+	return 0;
+}
+
 static void *game_work(void *arg)
 {
 	global_t *master = NULL;
@@ -330,7 +372,9 @@ static void *game_work(void *arg)
             }            
             if ((events[i].events & EPOLLOUT) && (ev->events & EPOLLOUT)) {
                 ev->call_back(ev->fd, events[i].events, ev->arg);            
-            }        
+            }
+
+			work(ev);
         }		
     }
 

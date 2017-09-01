@@ -112,7 +112,47 @@ int	 pkt_make_client(unsigned char *buf, int len, unsigned char **out_data, int 
 	return 0;
 }
 
+int	 pkt_parse_data(unsigned char *buf, int len, unsigned char **out_data, int *out_len)
+{
+	unsigned short v = 0;
+	unsigned char *data = NULL, *tdata = NULL, xor_cc;
 
+	if (!buf || !out_data) {
+		xerror("error par");
+		return -1;
+	}
+
+	if (!(data = pkt_match_head(buf, len, PKT_YS_START_TAG))) {
+		xerror("match head PKT_YS_START_TAG error");
+		return -1;
+	}
+	tdata = data;
+	++data;
+	
+	IN8(data, xor_cc);//异或校验码
+	xzero((data - 1), sizeof(unsigned char));
+
+	IN8(data, v);
+	assert(v == PKT_YS_FRAME_TYPE);//类型
+
+	IN16_BE(data, v);//大小  数据大小 = v - 6;
+
+	if (!pkt_check_sum(tdata, v, xor_cc)) {
+		xerror("match head pkt_check_sum error");
+		return -1;
+	}
+	len = v - 6;
+	tdata = (unsigned char *)xmalloc(len + 1);
+	xassert(tdata);
+	xzero(tdata, (len + 1));
+	
+	xmemcpy(tdata, data, len);
+	
+	*out_data = tdata;
+	*out_len = len;
+
+	return 0;
+}
 
 
 

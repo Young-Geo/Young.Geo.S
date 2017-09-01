@@ -291,7 +291,7 @@ int do_work(void *arg, void *U_buf, void *r, void *w)
 					OUT16_LE(buf, port);
 					xsprintf((char *)ip, "%s", GAME_SER_IP);
 					xmemcpy(buf, ip, GAME_SER_IP_SIZE);
-					buf += 0;
+					buf += GAME_SER_IP_SIZE;
 				}
 				
 				xchain_add(wchain, (void *)rec, (buf-rec));

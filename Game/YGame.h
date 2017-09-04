@@ -33,7 +33,7 @@ public:
 	int 	get_car_count();
 	int		Shuffle();//洗牌
 	int		deal();//发牌
-	int		data2client();//把牌的数据发给客户端
+	int		data2user();//把牌的数据发给客户端
 	User *	get_user_by_name(unsigned char *username);
 protected:
 	

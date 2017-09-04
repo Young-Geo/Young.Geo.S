@@ -46,11 +46,14 @@ public:
 	int				add_res(Res *res);
 	int				set_chara(CharacterType chara);
 	CharacterType   get_chara();
-	int				send_client(u8 * data, int len);
+	//int				send_client(u8 * data, int len);
 	int	&			Card_Count();
-	void			set_clientbuf(p_g buf);	
+	//void			set_clientbuf(p_g buf);	
 	long	&		Time();
 	void			Destory();
+	void			set_carddata(u8 *);
+	u8*				get_carddata();
+	void			addlandlord(u8 *);
 protected:
 	
 private:
@@ -71,6 +74,9 @@ private:
 	CharacterType 	_chara;
 	p_g				_client_buf;
 	int				_chad_count;
+	#define CARD_DATA_MAXSIZE 20
+	#define LANDLORD_SIZE 3
+	u8 				_card_data[CARD_DATA_SIZE];
 private:	
 	long now;
 };

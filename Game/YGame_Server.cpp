@@ -8,7 +8,8 @@
 
 
 
-
+#define CARD_COUNT 17
+#define LARD_CARD 3
 #define MAX_EVENTS  1024
 #define BUFLEN 1024
 #define TRUE 1
@@ -351,7 +352,7 @@ int work(struct myevent_s *ev, void *arg)
 	xlist *bufs = NULL;
 	Buf_t *buft = NULL, *obuft = NULL;
 	unsigned short type = 0;
-	unsigned char *buf = NULL;
+	unsigned char *buf = NULL, data[BUFFER_SIZE];
 	User *user = NULL;
 	global_t *master = NULL;
 	
@@ -359,8 +360,10 @@ int work(struct myevent_s *ev, void *arg)
 	xassert(arg);
 	
 	bufs = ev->bufs;
+	user = ev->user;
 	size = xlist_size(ev->bufs);
 	master = (global_t *)arg;
+	buf = data;
 	
 	while (size-- > 0)
 	{
@@ -380,12 +383,13 @@ int work(struct myevent_s *ev, void *arg)
 			case FIRST:
 				{
 					//取名字
-					unsigned char username[USERNAME_LEN] = { 0 }, flag = 0;
-							
+					unsigned char username[USERNAME_LEN] = { 0 }, flag = 0;					
+					User *newuser = NULL;
+					
 					xmemcpy(username, buf, USERNAME_LEN);
-					if ((user = get_user(master->games, username))) {
+					if ((newuser = get_user(master->games, username))) {
 						if (!ev->user)
-							ev->user = user;
+							ev->user = newuser;
 						flag = 1;
 					}
 
@@ -405,7 +409,25 @@ int work(struct myevent_s *ev, void *arg)
 			break;
 			
 			case DEAL:
-				{}
+				{
+					if (!user) {
+						xerror("error");//暂时处理
+						break;
+					}
+					//ok
+					if (user->Card_Count() != 17) {
+						xerror("card count %d\n", user->Card_Count());//暂时处理
+						break;
+					}
+					obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
+					xassert(buft);
+					obuft->buf = (unsigned char *)xmalloc(CARD_COUNT);
+					xassert(obuft->buf);
+					obuft->len = CARD_COUNT;
+					xmemcpy(obuft->buf, user->get_carddata(), CARD_COUNT);
+					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);
+					EVMOD(g_efd, ev, senddata, EPOLLOUT);
+				}
 			break;
 			
 			case DISCARD:

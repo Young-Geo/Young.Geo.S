@@ -221,25 +221,19 @@ int		Game::deal()
 
 #define UDATA 17
 
-int 	Game::data2client()
+int 	Game::data2user()
 {	
 	deque<Card*>::iterator it;
 	User *user= NULL;
 	Card *card = NULL;
-	u8 *d1 = NULL, *d2 = NULL, *d3 = NULL;
+	u8 dd1[UDATA] = { 0 }, dd2[UDATA] = { 0 }, dd3[UDATA] = { 0 };
+	u8 *d1 = dd1, *d2 = dd2, d3 = dd3;
 	
-	XXNULL(this->cards, -1);	
+	XXNULL(this->cards, -1);
 	XXNULL(this->_user_1, -1);
 	XXNULL(this->_user_2, -1);
 	XXNULL(this->_user_3, -1);
 
-	d1 = (u8 *)xmalloc(UDATA);	
-	d2 = (u8 *)xmalloc(UDATA);
-	d3 = (u8 *)xmalloc(UDATA);
-	
-	XXNULL(d1, -1);
-	XXNULL(d2, -1);
-	XXNULL(d3, -1);
 	
 	for (it = this->cards->begin(); it != this->cards->end(); ++it)
 	{
@@ -261,13 +255,10 @@ int 	Game::data2client()
 		}
 	}
 	
-	this->_user_1->send_client(d1, UDATA);
-	this->_user_2->send_client(d2, UDATA);
-	this->_user_3->send_client(d3, UDATA);
+	this->_user_1->set_carddata(dd1);
+	this->_user_2->set_carddata(dd2);
+	this->_user_3->set_carddata(dd3);
 
-	xfree(d1);
-	xfree(d2);
-	xfree(d3);
 	return 0;
 }
 

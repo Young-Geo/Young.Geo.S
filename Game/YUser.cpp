@@ -179,6 +179,7 @@ CharacterType	User::get_chara()
 }
 
 
+/*
 int 			User::send_client(u8 * data, int len)
 {
 	unsigned char *pack = NULL;
@@ -196,17 +197,20 @@ int 			User::send_client(u8 * data, int len)
 	xfree(pack);
 	return 0;
 }
+*/
 
 int &			User::Card_Count()
 {
 	return this->_chad_count;
 }
 
+/*
 void			User::set_clientbuf(p_g buf)
 {
 	XNULL(buf);
 	this->_client_buf = buf;
 }
+*/
 
 long &			User::Time()
 {
@@ -223,4 +227,20 @@ void			User::Destory()
 		xlist_delete(thread_entity->users, (char *)this->get_username());
 	}
 	delete this;
+}
+
+
+void			User::set_carddata(u8 *data)
+{
+	xmemcpy(this->_card_data, data, (CARD_DATA_MAXSIZE - LANDLORD_SIZE));
+}
+
+u8* 			User::get_carddata()
+{
+	return this->_card_data;
+}
+
+void			User::addlandlord(u8 *data)
+{
+	xmemcpy(this->_card_data + (CARD_DATA_MAXSIZE - LANDLORD_SIZE), data, LANDLORD_SIZE);
 }

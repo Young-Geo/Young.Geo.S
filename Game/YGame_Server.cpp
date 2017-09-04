@@ -369,7 +369,7 @@ int work(struct myevent_s *ev, void *arg)
 		//处理业务
 		xassert(buft->buf);
 		buf = buft->buf;
-		type = IN16_LE(buf, type);
+		IN16_LE(buf, type);
 
 		switch (type)//游戏业务处理
 		{

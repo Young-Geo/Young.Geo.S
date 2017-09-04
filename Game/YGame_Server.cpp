@@ -37,7 +37,7 @@ struct myevent_s {
 
 int g_efd;
 /* epoll_create返回的句柄 */
-struct myevent_s g_events[MAX_EVENTS+1];
+struct myevent_s g_events[MAX_EVENTS+1] = { 0 };
 /* +1 最后一个用于 listen fd */
 
 void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void *), void *arg)
@@ -51,7 +51,7 @@ void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void *),
 	ev->call_back = call_back;
     ev->events = 0;
     ev->arg = arg;
-	ev->user = NULL;
+	//ev->user = NULL;
     ev->status = 0;
 	if (!ev->bufs) {
 		ev->bufs = xlist_init();

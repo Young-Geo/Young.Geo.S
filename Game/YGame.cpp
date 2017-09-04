@@ -54,8 +54,7 @@ int 	Game::display()
 		//error
 		return -1;
 	}
-	this->data2client();
-
+	
 	this->_user_1->set_status(IN_GAME);
 	this->_user_2->set_status(IN_GAME);
 	this->_user_3->set_status(IN_GAME);
@@ -227,13 +226,16 @@ int 	Game::data2user()
 	User *user= NULL;
 	Card *card = NULL;
 	u8 dd1[UDATA] = { 0 }, dd2[UDATA] = { 0 }, dd3[UDATA] = { 0 };
-	u8 *d1 = dd1, *d2 = dd2, d3 = dd3;
+	u8 *d1 = NULL, *d2 = NULL, d3 = NULL;
 	
 	XXNULL(this->cards, -1);
 	XXNULL(this->_user_1, -1);
 	XXNULL(this->_user_2, -1);
 	XXNULL(this->_user_3, -1);
 
+	d1 = dd1;
+	d2 = dd2;
+	d3 = dd3;
 	
 	for (it = this->cards->begin(); it != this->cards->end(); ++it)
 	{

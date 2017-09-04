@@ -384,7 +384,9 @@ int work(struct myevent_s *ev, void *arg)
 							ev->user = user;
 						flag = 1;
 					}
+
 					
+					xmessage("GAME rec %s", username);
 					buft = (Buf_t *)xmalloc(sizeof(Buf_t));
 					xassert(buft);
 					buf = buft->buf = (unsigned char *)xmalloc(3);

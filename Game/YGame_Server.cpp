@@ -162,7 +162,7 @@ void recvdata(int fd, int events, void *arg)
 
 	
     len = recv(fd, buf, sizeof(buf), 0);
-    eventdel(g_efd, ev);
+    //eventdel(g_efd, ev);
 
     if (len > 0) {
 		//处理数据

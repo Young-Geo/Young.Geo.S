@@ -373,16 +373,27 @@ int work(struct myevent_s *ev, void *arg)
 
 		switch (type)//游戏业务处理
 		{
-			case first:
+			case FIRST:
 				{
 					//取名字
-					unsigned char username[USERNAME_LEN] = { 0 };
+					unsigned char username[USERNAME_LEN] = { 0 }, flag = 0;
+							
 					xmemcpy(username, buf, USERNAME_LEN);
 					if ((user = get_user(master->games, username))) {
 						if (!ev->user)
 							ev->user = user;
+						flag = 1;
 					}
+					
+					buft = (Buf_t *)xmalloc(sizeof(Buf_t));
+					xassert(buft);
+					buf = buft->buf = (unsigned char *)xmalloc(3);
+					buft->len = 3;
+					OUT16_LE(buf, FIRST);
+					OUT8(buf, flag);
 					//可以选择回发错误信息
+					xlist_add(ev->bufs, NULL, XLIST_PTR, (char *)buft);
+					EVOUT(g_efd, ev, senddata);
 				}
 			break;
 			

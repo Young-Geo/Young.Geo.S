@@ -233,7 +233,7 @@ void senddata(int fd, int events, void *arg)
 	
     if (len > 0) {
 
-        eventdel(g_efd, ev);
+        //eventdel(g_efd, ev);
         eventset(ev, fd, recvdata, ev);
         eventadd(g_efd, EPOLLIN, ev);
 

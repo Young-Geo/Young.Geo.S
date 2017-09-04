@@ -371,6 +371,8 @@ int work(struct myevent_s *ev, void *arg)
 		buf = buft->buf;
 		IN16_LE(buf, type);
 
+		xmessage("in type = %d", type);
+
 		switch (type)//游戏业务处理
 		{
 			case FIRST:
@@ -484,7 +486,6 @@ static void *game_work(void *arg)
             if ((events[i].events & EPOLLOUT) && (ev->events & EPOLLOUT)) {
                 ev->call_back(ev->fd, events[i].events, ev->arg);            
             }
-
 			work(ev, arg);
         }		
     }

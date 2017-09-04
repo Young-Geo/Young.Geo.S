@@ -3,6 +3,7 @@
 
 #include "afx.h"
 #include "YS.h"
+#include "YUser.h"
 
 typedef enum _Game_type {
 	first = 4

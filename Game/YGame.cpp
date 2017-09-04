@@ -271,3 +271,18 @@ int 	Game::data2client()
 	return 0;
 }
 
+
+User *	Game::get_user_by_name(unsigned char *username)
+{
+	if (!this->_user_1 || !_user_2 || !_user_3) {
+		xerror("error usre null");
+		return NULL;
+	}
+
+	if (ZERO == xstrncmp(this->_user_1->get_username(), username, USERNAME_LEN))
+		return this->_user_1;
+	if (ZERO == xstrncmp(this->_user_2->get_username(), username, USERNAME_LEN))
+		return this->_user_2;
+	if (ZERO == xstrncmp(this->_user_3->get_username(), username, USERNAME_LEN))
+		return this->_user_3;
+}

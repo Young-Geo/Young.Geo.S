@@ -29,6 +29,7 @@ struct myevent_s {
 //    unsigned char buf[BUFLEN];
 //    int len;
 	xlist *bufs;
+	xlist *outbufs;
     long last_active;
 	User *user;
 };
@@ -54,6 +55,9 @@ void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void *),
     ev->status = 0;
 	if (!ev->bufs) {
 		ev->bufs = xlist_init();
+	}
+	if (!ev->outbufs) {
+		ev->outbufs = xlist_init();
 	}
     //memset(ev->buf, 0, sizeof(ev->buf));
     //ev->len = 0;
@@ -192,13 +196,41 @@ void recvdata(int fd, int events, void *arg)
 void senddata(int fd, int events, void *arg)
 {
     struct myevent_s *ev = (struct myevent_s *)arg;
-    int len;
+    int len, size = 0, ret = 0, buf_len = 0;
+	xlist *bufs = NULL;
+	Buf_t *buft = NULL;
+	unsigned char *buf = NULL;
     //处理业务，小写转大写    len = send(fd, ev->buf, ev->len, 0);
     /*
        printf("fd=%d\tev->buf=%s\ttev->len=%d\n", fd, ev->buf, ev->len);
        printf("send len = %d\n", len);
      */
      //遍历加协议
+     
+	xassert(ev);
+	
+	bufs = ev->outbufs;
+	size = xlist_size(ev->outbufs);
+	
+	while (size-- > 0)
+	{
+		//解析数据处理相应业务
+		buft = (Buf_t *)xlist_popv(bufs);
+		xassert(buft);
+		xassert(buft->buf);
+		ret = pkt_make_client(buft->buf, buft->len, &buf, &buf_len);
+		if (ret) {
+			xerror("pkt_make_client ");
+			continue;
+		}
+
+		len += send(fd, buf, buf_len, 0);
+
+		xfree(buf);
+		xfree(buft->buf);
+		xfree(buft);
+	}
+	
     if (len > 0) {
 
         eventdel(g_efd, ev);
@@ -209,7 +241,7 @@ void senddata(int fd, int events, void *arg)
 
         close(ev->fd);
         eventdel(g_efd, ev);
-        printf("send[fd=%d] error %s\n", fd, strerror(errno));
+        xerror("send[fd=%d] error %s\n", fd, strerror(errno));
 
     }
 
@@ -236,8 +268,8 @@ void initlistensocket(int efd, short port)
 	
 	xmemset(&sin, 0, sizeof(sin));
     sin.sin_family = AF_INET;	
-    //sin.sin_addr.s_addr = INADDR_ANY;
-	inet_pton(AF_INET, GAME_SER_IP, (void *)(&sin.sin_addr.s_addr));
+    sin.sin_addr.s_addr = INADDR_ANY;
+	//inet_pton(AF_INET, GAME_SER_IP, (void *)(&sin.sin_addr.s_addr));
     sin.sin_port = htons(port);	
 
 	bind(lfd, (struct sockaddr *)&sin, sizeof(sin));
@@ -286,24 +318,90 @@ int		parse_readys(global_t *master)
 	}
 }
 
-int work(struct myevent_s *ev)
+
+User *	 get_user(xlist *games, unsigned char *username)
+{
+	xlist *game_temp = NULL;
+	Game *game = NULL;
+	User *user = NULL;
+	
+	if (!games) {
+		xerror("games  NULL");
+		return NULL;
+	}
+
+	game_temp = games;
+	while (game_temp && game_temp->next)
+	{
+		game = (Game *)game_temp->value;
+		xassert(game);
+		user = game->get_user_by_name(username);
+		if (user)
+			return user;
+	}
+
+	return NULL;
+}
+
+int work(struct myevent_s *ev, void *arg)
 {
 	int i = 0, size = 0;
 	xlist *bufs = NULL;
 	Buf_t *buft = NULL;
+	unsigned short type = 0;
+	unsigned char *buf = NULL;
+	User *user = NULL;
+	global_t *master = NULL;
 	
 	xassert(ev);
+	xassert(arg);
 	
 	bufs = ev->bufs;
 	size = xlist_size(ev->bufs);
+	master = (global_t *)arg;
 	
 	while (size-- > 0)
 	{
 		//解析数据处理相应业务
 		buft = (Buf_t *)xlist_popv(bufs);
-		if (!buft)
+		if (!buft || !buft->buf)
 			continue;
 		//处理业务
+		xassert(buft->buf);
+		buf = buft->buf;
+		type = IN16_LE(buf, type);
+
+		switch (type)//游戏业务处理
+		{
+			case first:
+				{
+					//取名字
+					unsigned char username[USERNAME_LEN] = { 0 };
+					xmemcpy(username, buf, USERNAME_LEN);
+					if ((user = get_user(master->games, username))) {
+						if (!ev->user)
+							ev->user = user;
+					}
+					//可以选择回发错误信息
+				}
+			break;
+			
+			case 2:
+				{}
+			break;
+			
+			case 3:
+				{}
+			break;
+
+			default:
+			break;
+		}
+
+
+		//free buf and Buf_t
+		if (buft && buft->buf) xfree(buft->buf);
+		if (buft) xfree(buft);
 	}
 
 	return 0;
@@ -362,7 +460,7 @@ static void *game_work(void *arg)
         if (nfd < 0) {            
             xerror("epoll_wait error, exit\n");           
             break;        
-        }        
+        }
 
         for (i = 0; i < nfd; i++)
         {
@@ -374,7 +472,7 @@ static void *game_work(void *arg)
                 ev->call_back(ev->fd, events[i].events, ev->arg);            
             }
 
-			work(ev);
+			work(ev, arg);
         }		
     }
 

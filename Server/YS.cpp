@@ -189,7 +189,7 @@ void read_cb(struct bufferevent *bev, void *arg)
 	
 	
     //าตฮ๑
-    thread_entity->master->func.do_work(thread_entity, output, rchain, wchain);
+    thread_entity->master->func.do_work(thread_entity, rchain, wchain);
 
 	
     //evbuffer_add_buffer(output, input);

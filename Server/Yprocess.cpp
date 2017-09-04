@@ -7,7 +7,7 @@ int work(void *arg, xchain *rchain, xchain *wchain)
 	return 0;
 }
 
-p_g login(thread_entity_t *thread_entity, void *client_buf, u8 *username, u8 *password)
+p_g login(thread_entity_t *thread_entity, u8 *username, u8 *password)
 {
 	char sql[1024] = { 0 };
 	int id, solo_f, solo_w, solo_s, lv, money_d, money_z;
@@ -53,7 +53,7 @@ p_g login(thread_entity_t *thread_entity, void *client_buf, u8 *username, u8 *pa
 		xerror("new User error");
   		return NULL;
 	}
-	user->set_clientbuf((p_g)client_buf);
+	//user->set_clientbuf((p_g)client_buf);
 	pthread_mutex_lock(&thread_entity->mutex_users);
 	xlist_add(thread_entity->users, (const char *)user->get_username(), XLIST_PTR, (char *)user);			
 	pthread_mutex_unlock(&thread_entity->mutex_users);
@@ -212,7 +212,7 @@ int	pro_scrap_user(global_t *master)
 	return 0;
 }
 
-int do_work(void *arg, void *U_buf, void *r, void *w)
+int do_work(void *arg, void *r, void *w)
 {
 	thread_entity_t *thread_entity = NULL;
 	xchain *rchain = NULL, *wchain = NULL;
@@ -247,7 +247,7 @@ int do_work(void *arg, void *U_buf, void *r, void *w)
 				xchain_get(rchain, (void *)password, PASSWORD_LEN);
 				xchain_delete(rchain, PASSWORD_LEN);
 
-				if (!(u_buf = (u8 *)login(thread_entity, U_buf, username, password))) {
+				if (!(u_buf = (u8 *)login(thread_entity, username, password))) {
 					xerror("login error\n");					
 					rec_inx = 0;
 				} else {

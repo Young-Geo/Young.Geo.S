@@ -18,7 +18,7 @@ typedef struct _global_t global_t;
 typedef struct _thread_entity_t thread_entity_t;
 
 
-typedef int (*func_work_t)(void *, void *, void *, void *);
+typedef int (*func_work_t)(void *, void *, void *);
 
 typedef struct _func_t {
 	func_work_t do_work;

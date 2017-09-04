@@ -127,7 +127,8 @@ char * xstrdup ( const char * str ) ;
 char * xstrndup ( char * str , int n ) ;
 void * xmemdup ( void * mem , int n ) ;
 int xmemmem ( char * buffer , int len1 ,  char * buf , int len2 ) ;
-#define xmemcpy(dest, src, n) memcpy(dest, src, n)
+#define xmemcpy(dest, src, n) memcpy((dest), (src), (n))
+#define xmemcmp(dest, src, n) memcmp((dest), (src), (n))
 int xstrcmp ( const char * a , const char * b ) ;
 #define xstrncmp(a, b, c) strncmp((a), (b), (c))
 //unsigned int xgetminsecond () ;

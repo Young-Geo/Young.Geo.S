@@ -322,24 +322,34 @@ int		parse_readys(global_t *master)
 }
 
 
-User *	 get_user(xlist *games, unsigned char *username)
+User *	 get_user(xlist *games, xlist *readys, unsigned char *username)
 {
-	xlist *game_temp = NULL;
+	xlist *game_temp = NULL, *readys_temp = NULL;
 	Game *game = NULL;
 	User *user = NULL;
 	
-	if (!games) {
-		xerror("games  NULL");
+	if (!games || !readys) {
+		xerror("games readys NULL");
 		return NULL;
 	}
 
 	game_temp = games;
+	readys_temp = readys;
+	
 	while (game_temp && game_temp->next)
 	{
 		game = (Game *)game_temp->value;
 		xassert(game);
 		user = game->get_user_by_name(username);
 		if (user)
+			return user;
+	}
+
+	while (readys_temp && readys_temp->next)
+	{
+		user = (User *)readys_temp->value;
+		xassert(user);
+		if (!xmemcmp(username, user->get_username(), USERNAME_LEN))
 			return user;
 	}
 
@@ -387,7 +397,7 @@ int work(struct myevent_s *ev, void *arg)
 					User *newuser = NULL;
 					
 					xmemcpy(username, buf, USERNAME_LEN);
-					if ((newuser = get_user(master->games, username))) {
+					if ((newuser = get_user(master->games, master->readys, username))) {
 						if (!ev->user)
 							ev->user = newuser;
 						flag = 1;

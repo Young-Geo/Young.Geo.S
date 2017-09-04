@@ -349,7 +349,7 @@ int work(struct myevent_s *ev, void *arg)
 {
 	int i = 0, size = 0;
 	xlist *bufs = NULL;
-	Buf_t *buft = NULL;
+	Buf_t *buft = NULL, *obuft = NULL;
 	unsigned short type = 0;
 	unsigned char *buf = NULL;
 	User *user = NULL;
@@ -391,14 +391,14 @@ int work(struct myevent_s *ev, void *arg)
 
 					
 					xmessage("GAME rec %s", username);
-					buft = (Buf_t *)xmalloc(sizeof(Buf_t));
+					obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
 					xassert(buft);
-					buf = buft->buf = (unsigned char *)xmalloc(3);
-					buft->len = 3;
+					buf = obuft->buf = (unsigned char *)xmalloc(3);
+					obuft->len = 3;
 					OUT16_LE(buf, FIRST);
 					OUT8(buf, flag);
 					//可以选择回发错误信息
-					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)buft);
+					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);
 					//EVOUT(g_efd, ev, senddata);
 					EVMOD(g_efd, ev, senddata, EPOLLOUT);
 				}

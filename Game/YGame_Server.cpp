@@ -396,7 +396,7 @@ int work(struct myevent_s *ev, void *arg)
 					OUT16_LE(buf, FIRST);
 					OUT8(buf, flag);
 					//可以选择回发错误信息
-					xlist_add(ev->bufs, NULL, XLIST_PTR, (char *)buft);
+					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)buft);
 					EVOUT(g_efd, ev, senddata);
 				}
 			break;

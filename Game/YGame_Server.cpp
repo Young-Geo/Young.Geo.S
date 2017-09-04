@@ -223,6 +223,7 @@ void senddata(int fd, int events, void *arg)
 			xerror("pkt_make_client ");
 			continue;
 		}
+		xmessage("send fd = %d ok", fd);
 
 		len += send(fd, buf, buf_len, 0);
 

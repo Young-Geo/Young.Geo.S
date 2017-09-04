@@ -234,10 +234,10 @@ void senddata(int fd, int events, void *arg)
 	
     if (len > 0) {
 
-        eventdel(g_efd, ev);
-        eventset(ev, fd, recvdata, ev);
-        eventadd(g_efd, EPOLLIN, ev);
-		//EVIN(g_efd, ev, recvdata);
+        //eventdel(g_efd, ev);
+        //eventset(ev, fd, recvdata, ev);
+        //eventadd(g_efd, EPOLLIN, ev);
+		EVIN(g_efd, ev, recvdata);
 
     } else {
 

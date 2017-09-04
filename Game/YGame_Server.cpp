@@ -237,7 +237,7 @@ void senddata(int fd, int events, void *arg)
         //eventdel(g_efd, ev);
         //eventset(ev, fd, recvdata, ev);
         //eventadd(g_efd, EPOLLIN, ev);
-		EVIN(g_efd, ev, recvdata);
+		EVMOD(g_efd, ev, recvdata, EPOLLIN);
 
     } else {
 
@@ -399,7 +399,8 @@ int work(struct myevent_s *ev, void *arg)
 					OUT8(buf, flag);
 					//可以选择回发错误信息
 					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)buft);
-					EVOUT(g_efd, ev, senddata);
+					//EVOUT(g_efd, ev, senddata);
+					EVMOD(g_efd, ev, senddata, EPOLLOUT);
 				}
 			break;
 			

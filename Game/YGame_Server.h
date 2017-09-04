@@ -19,6 +19,13 @@
 			eventadd((g_efd), (EPOLLIN), (ev));	\	
 		} while (0)
 
+#define EVMOD(g_efd, ev, call_back, event)	\ 
+		do {	\
+			eventdel((g_efd), (ev));	\
+			eventset((ev), ((ev)->fd), (call_back), (ev));	\
+			eventadd((g_efd), (event), (ev)); \	
+		} while (0)
+
 
 typedef enum _Game_type {
 	FIRST = 4,

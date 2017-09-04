@@ -401,11 +401,11 @@ int work(struct myevent_s *ev, void *arg)
 				}
 			break;
 			
-			case 2:
+			case DEAL:
 				{}
 			break;
 			
-			case 3:
+			case DISCARD:
 				{}
 			break;
 

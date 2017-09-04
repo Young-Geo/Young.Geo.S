@@ -13,7 +13,9 @@
 
 
 typedef enum _Game_type {
-	FIRST = 4
+	FIRST = 4,
+	DEAL,
+	DISCARD
 } Game_type;
 
 int YS_game_thread_init(global_t *master);

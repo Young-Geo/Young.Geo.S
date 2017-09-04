@@ -226,7 +226,7 @@ int 	Game::data2user()
 	User *user= NULL;
 	Card *card = NULL;
 	u8 dd1[UDATA] = { 0 }, dd2[UDATA] = { 0 }, dd3[UDATA] = { 0 };
-	u8 *d1 = NULL, *d2 = NULL, d3 = NULL;
+	u8 *d1 = NULL, *d2 = NULL, *d3 = NULL;
 	
 	XXNULL(this->cards, -1);
 	XXNULL(this->_user_1, -1);

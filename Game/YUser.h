@@ -76,7 +76,7 @@ private:
 	int				_chad_count;
 	#define CARD_DATA_MAXSIZE 20
 	#define LANDLORD_SIZE 3
-	u8 				_card_data[CARD_DATA_SIZE];
+	u8 				_card_data[CARD_DATA_MAXSIZE];
 private:	
 	long now;
 };

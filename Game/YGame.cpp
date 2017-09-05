@@ -4,31 +4,21 @@
 
 Game::Game(User * user_1,User * user_2,User * user_3)
 {
-#if (GAME_USER_COUNT == 3)
+
 	if (!user_1 || !user_2 || !user_3) {
 		xerror("make Game error");
 		return;
 	}
-#endif
+	
 	this->_user_1 = user_1;
-#if (GAME_USER_COUNT == 3)
 	this->_user_2 = user_2;
 	this->_user_3 = user_3;
-#endif
-	//this->master = arg;
 
 	this->_user_1->set_status(READY);
-#if (GAME_USER_COUNT == 3)
 	this->_user_2->set_status(READY);
 	this->_user_3->set_status(READY);
-#endif
 
-#if (GAME_USER_COUNT == 3)
 	xsprintf((char *)this->name, "%s%s%s", user_1->get_username(), user_2->get_username(), user_3->get_username());
-#else
-	xsprintf((char *)this->name, "%s", user_1->get_username());
-#endif
-
 	
 	this->cards = new deque<Card *>();
 	
@@ -50,12 +40,11 @@ Game::~Game()
 
 int 	Game::display()
 {
-#if (GAME_USER_COUNT == 3)
+
 	if (!this->_user_1 || !this->_user_2 || !this->_user_3) {
 		xerror("error user NULL\n");
 		return -1;
 	}
-#endif
 	//通知发牌等一切事物
 	//改变用户相应状态
 
@@ -69,10 +58,8 @@ int 	Game::display()
 	}
 	
 	this->_user_1->set_status(IN_GAME);
-#if (GAME_USER_COUNT == 3)
 	this->_user_2->set_status(IN_GAME);
 	this->_user_3->set_status(IN_GAME);
-#endif
 
 	return 0;
 }
@@ -198,12 +185,10 @@ int		Game::deal()
 	int i = 0;
 	Card *card = NULL;
 	
-#if (GAME_USER_COUNT == 3)
 	if (!this->cards || !this->_user_1 || !this->_user_2 || !this->_user_3) {
 		xerror("deal error");
 		return -1;
 	}
-#endif
 
 	for (i = 0; i < (CARDCOUNT - LAST_CARD); ++i)
 	{
@@ -219,7 +204,6 @@ int		Game::deal()
 				card->set_user(this->_user_1);
 			break;
 
-#if (GAME_USER_COUNT == 3)
 			case U2:
 				card->set_user(this->_user_2);
 			break;
@@ -227,7 +211,6 @@ int		Game::deal()
 			case U3:
 				card->set_user(this->_user_3);
 			break;
-#endif
 
 			default:
 				//error

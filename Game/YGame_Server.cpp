@@ -284,8 +284,7 @@ void initlistensocket(int efd, short port)
 
 int		parse_readys(global_t *master)
 {
-	//User *users[GAME_USER_COUNT];	
-	User *users[3];
+	User *users[GAME_USER_COUNT];	
 	int i = 0;
 	xlist *u_node = NULL;
 	Game *game = NULL;

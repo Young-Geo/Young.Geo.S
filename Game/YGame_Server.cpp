@@ -362,7 +362,7 @@ int work(struct myevent_s *ev, void *arg)
 	xlist *bufs = NULL;
 	Buf_t *buft = NULL, *obuft = NULL;
 	unsigned short type = 0;
-	unsigned char *buf = NULL, data[BUFFER_SIZE];
+	unsigned char *buf = NULL, data[BUFFER_SIZE], flag = 0;
 	User *user = NULL;
 	global_t *master = NULL;
 	
@@ -393,7 +393,7 @@ int work(struct myevent_s *ev, void *arg)
 			case FIRST:
 				{
 					//取名字
-					unsigned char username[USERNAME_LEN] = { 0 }, flag = 0;					
+					unsigned char username[USERNAME_LEN] = { 0 };					
 					User *newuser = NULL;
 					
 					xmemcpy(username, buf, USERNAME_LEN);
@@ -420,6 +420,7 @@ int work(struct myevent_s *ev, void *arg)
 			
 			case DEAL:
 				{
+					int buf_len = 0;
 					if (!user) {
 						xerror("error");//暂时处理
 						break;
@@ -427,14 +428,24 @@ int work(struct myevent_s *ev, void *arg)
 					//ok
 					if (user->Card_Count() != 17) {
 						xerror("card count %d\n", user->Card_Count());//暂时处理
-						break;
+						buf_len = 3;
+					} else {
+						buf_len = CARD_COUNT + 3;
 					}
+					
 					obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
 					xassert(buft);
-					obuft->buf = (unsigned char *)xmalloc(CARD_COUNT);
+					buf = obuft->buf = (unsigned char *)xmalloc(buf_len);
 					xassert(obuft->buf);
-					obuft->len = CARD_COUNT;
-					xmemcpy(obuft->buf, user->get_carddata(), CARD_COUNT);
+					obuft->len = buf_len;
+					OUT16_LE(buf, DEAL);
+					
+					if (buf_len == 3) {
+						xmemcpy(obuft->buf, &flag, buf_len);
+					} else {
+						xmemcpy(obuft->buf, user->get_carddata(), CARD_COUNT);
+					}
+
 					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);
 					EVMOD(g_efd, ev, senddata, EPOLLOUT);
 				}

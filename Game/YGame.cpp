@@ -20,7 +20,7 @@ Game::Game(User * user_1,User * user_2,User * user_3)
 
 	xsprintf((char *)this->name, "%s%s%s", user_1->get_username(), user_2->get_username(), user_3->get_username());
 	
-	this->cards = new deque<Card *>();
+	this->cards = new deque<Card *>;
 	
 	if (!this->cards) {
 		xerror("new vector error");

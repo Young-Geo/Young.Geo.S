@@ -189,6 +189,7 @@ int		Game::deal()
 		xerror("deal NULL error");
 		return -1;
 	}
+	xmessage("deal card count = %d", this->cards->size());
 
 	for (i = 0; i < (CARDCOUNT - LAST_CARD); ++i)
 	{

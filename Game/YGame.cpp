@@ -48,17 +48,20 @@ int 	Game::display()
 	//通知发牌等一切事物
 	//改变用户相应状态
 
+/*
 	if (this->Shuffle()) {
 		//error
 		return -1;
 	}
-	/*
+*/
+	
+	std::random_shuffle(this->cards->begin(), this->cards->end());
+	
 	if (this->deal()) {
 		//error
 		return -1;
-	}*/
+	}
 
-	std::random_shuffle(this->cards->begin(), this->cards->end());
 	
 	this->_user_1->set_status(IN_GAME);
 	this->_user_2->set_status(IN_GAME);

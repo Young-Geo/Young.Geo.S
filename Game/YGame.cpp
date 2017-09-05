@@ -186,14 +186,14 @@ int		Game::deal()
 	Card *card = NULL;
 	
 	if (!this->cards || !this->_user_1 || !this->_user_2 || !this->_user_3) {
-		xerror("deal error");
+		xerror("deal NULL error");
 		return -1;
 	}
 
 	for (i = 0; i < (CARDCOUNT - LAST_CARD); ++i)
 	{
-		//card = (*this->cards)[i];
-		card = this->cards->at(i);
+		card = (*this->cards)[i];
+		//card = this->cards->at(i);
 		if (!card) {
 			xerror("deal error");
 			return -1;

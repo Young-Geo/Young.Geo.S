@@ -352,7 +352,7 @@ User *	 get_user(xlist *games, xlist *readys, unsigned char *username)
 	{
 		user = (User *)readys_temp->value;
 		xassert(user);
-		if (!xstrncmp(username, user->get_username(), USERNAME_LEN))
+		if (!xstrncmp(username, (char *)user->get_username(), USERNAME_LEN))
 			return user;
 	}
 

@@ -166,6 +166,7 @@ int Game::Shuffle()
 	
 	xmessage("shuffle newque count %d", newque.size());
 	
+    newque.clear();
 	for (it = this->cards->begin(); it != this->cards->end(); ++it)
 	{
 		srand((unsigned)time(NULL));

@@ -14,7 +14,7 @@ using namespace std;
 #include "afx.h"
 
 #define GAME_LEN (USERNAME_LEN * 3)
-#define GAME_USER_COUNT 3
+#define GAME_USER_COUNT 1
 
 
 

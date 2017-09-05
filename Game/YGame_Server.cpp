@@ -284,14 +284,15 @@ void initlistensocket(int efd, short port)
 
 int		parse_readys(global_t *master)
 {
-	User *users[GAME_USER_COUNT];
+	//User *users[GAME_USER_COUNT];	
+	User *users[3];
 	int i = 0;
 	xlist *u_node = NULL;
 	Game *game = NULL;
 	
 	xassert(master);
 
-	while (master->ready_num > GAME_USER_COUNT)
+	while (master->ready_num >= GAME_USER_COUNT)
 	{
 		for (i = 0; i < GAME_USER_COUNT; ++i)
 		{

@@ -301,6 +301,7 @@ int		parse_readys(global_t *master)
 			}
 			users[i] = (User *)u_node->value;
 		}
+		xmessage("get  user ok");
 
 		pthread_mutex_lock(&master->mutex_ready);
 		for (i = 0; i < GAME_USER_COUNT; ++i)
@@ -309,13 +310,17 @@ int		parse_readys(global_t *master)
 			--master->ready_num;
 		}
 		pthread_mutex_unlock(&master->mutex_ready);
+		xmessage("delete  user ok");
 
 		game = new Game(users[0], users[1], users[2]);
 		if (!game) {
 			xerror("new Game error");
 			continue;
 		}		
+		xmessage("new  Game ok");
 		game->display();		
+		
+		xmessage("  Game  display ok");
 		xlist_add(master->games, (char *)game->get_name(), XLIST_PTR, (char *)game);
 		
 	}

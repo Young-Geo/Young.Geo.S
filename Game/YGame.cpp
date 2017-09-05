@@ -192,7 +192,8 @@ int		Game::deal()
 
 	for (i = 0; i < (CARDCOUNT - LAST_CARD); ++i)
 	{
-		card = (*this->cards)[i];
+		//card = (*this->cards)[i];
+		card = this->cards->at(i);
 		if (!card) {
 			xerror("deal error");
 			return -1;

@@ -154,7 +154,7 @@ int Game::get_car_count()
 
 int Game::Shuffle()
 {
-	deque<Card*> newque;
+	deque<Card*> newque(CARDCOUNT);
 	deque<Card*>::iterator it;
 	
     if (CARDCOUNT != this->get_car_count()) {

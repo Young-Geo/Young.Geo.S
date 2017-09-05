@@ -301,7 +301,7 @@ int		parse_readys(global_t *master)
 			}
 			users[i] = (User *)u_node->value;
 		}
-		xmessage("get user ok");
+
 		pthread_mutex_lock(&master->mutex_ready);
 		for (i = 0; i < GAME_USER_COUNT; ++i)
 		{
@@ -309,16 +309,13 @@ int		parse_readys(global_t *master)
 			--master->ready_num;
 		}
 		pthread_mutex_unlock(&master->mutex_ready);
-		xmessage("new Game pre");
 
 		game = new Game(users[0], users[1], users[2]);
 		if (!game) {
 			xerror("new Game error");
 			continue;
 		}		
-		xmessage("new Game ok");
 		game->display();		
-		xmessage(" Game  display ok");
 		xlist_add(master->games, (char *)game->get_name(), XLIST_PTR, (char *)game);
 		
 	}
@@ -346,6 +343,8 @@ User *	 get_user(xlist *games, xlist *readys, unsigned char *username)
 		user = game->get_user_by_name(username);
 		if (user)
 			return user;
+
+		game_temp = game_temp->next;
 	}
 
 	while (readys_temp && readys_temp->next)
@@ -354,6 +353,8 @@ User *	 get_user(xlist *games, xlist *readys, unsigned char *username)
 		xassert(user);
 		if (!xstrncmp((char *)username, (char *)user->get_username(), USERNAME_LEN))
 			return user;
+
+		readys_temp = readys_temp->next;
 	}
 
 	return NULL;
@@ -401,11 +402,9 @@ int work(struct myevent_s *ev, void *arg)
 					
 					xmemcpy(username, buf, USERNAME_LEN);
 					if ((newuser = get_user(master->games, master->readys, username))) {
-						xmessage("find user = pre");
 						if (!ev->user)
 							ev->user = newuser;
 						flag = 1;						
-						xmessage("find user = ok");
 					}
 
 					

@@ -182,6 +182,7 @@ int Game::Shuffle()
 	{
 		this->cards->push_back(*it);
 	}
+	xmessage("shuffle cards count %d", this->cards->size());
 	
     newque.clear();
 

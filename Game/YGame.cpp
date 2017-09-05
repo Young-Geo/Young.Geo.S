@@ -162,6 +162,9 @@ int Game::Shuffle()
 		xerror("Cardcount error");
 		return -1;
     }
+
+	
+	xmessage("shuffle newque count %d", newque.size());
 	
 	for (it = this->cards->begin(); it != this->cards->end(); ++it)
 	{

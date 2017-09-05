@@ -156,6 +156,7 @@ int Game::Shuffle()
 {
 	deque<Card*> newque(CARDCOUNT);
 	deque<Card*>::iterator it;
+	int ran = 0;
 	
     if (CARDCOUNT != this->get_car_count()) {
 		xerror("Cardcount error");
@@ -165,10 +166,17 @@ int Game::Shuffle()
 	for (it = this->cards->begin(); it != this->cards->end(); ++it)
 	{
 		srand((unsigned)time(NULL));
-		newque.insert((newque.begin() + (rand() % CARDCOUNT)), (*it));
+		ran = rand() % CARDCOUNT;
+		xmessage("rand %d", ran);
+		//newque.insert((newque.begin() + (rand() % CARDCOUNT)), (*it));
+		newque.insert((newque.begin() + ran), (*it));
 	}
 
+	xmessage("shuffle newque count %d", newque.size());
+
     this->cards->clear();
+	
+	xmessage("shuffle cards count %d", this->cards->size());
 
     for (it = newque.begin(); it != newque.end(); ++it)
 	{

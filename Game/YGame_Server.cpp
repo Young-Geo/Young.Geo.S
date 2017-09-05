@@ -435,11 +435,13 @@ int work(struct myevent_s *ev, void *arg)
 						break;
 					}
 					//ok
-					if (user->Card_Count() != 17) {
+					if (user->Card_Count() != CARD_COUNT) {
 						xerror("card count %d\n", user->Card_Count());//ÔÝÊ±´¦Àí
 						buf_len = 3;
+						flag = 0;
 					} else {
 						buf_len = CARD_COUNT + 3;
+						flag = 1;
 					}
 					
 					obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
@@ -448,11 +450,10 @@ int work(struct myevent_s *ev, void *arg)
 					xassert(obuft->buf);
 					obuft->len = buf_len;
 					OUT16_LE(buf, DEAL);
-					
-					if (buf_len == 3) {
-						xmemcpy(obuft->buf, &flag, buf_len);
-					} else {
-						xmemcpy(obuft->buf, user->get_carddata(), CARD_COUNT);
+					OUT8(buf, flag);
+
+					if (flag) {
+						xmemcpy(buf, user->get_carddata(), CARD_COUNT);
 					}
 
 					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);

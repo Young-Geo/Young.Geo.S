@@ -29,7 +29,7 @@
 
 typedef enum _Game_type {
 	FIRST = 4,
-	DEAL = 7,
+	DEAL,
 	DISCARD
 } Game_type;
 

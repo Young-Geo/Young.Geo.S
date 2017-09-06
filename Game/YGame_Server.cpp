@@ -232,14 +232,15 @@ void senddata(int fd, int events, void *arg)
 		ret = pkt_make_client(buft->buf, buft->len, &buf, &buf_len);
 		if (ret) {
 			xerror("pkt_make_client ");
-			continue;
+			goto end;
 		}
 
 		len += send(fd, buf, buf_len, 0);
-		
-		xfree(buf);
-		xfree(buft->buf);
-		xfree(buft);
+
+		end:
+		if (buf) 		xfree(buf);
+		if (buft->buf) 	xfree(buft->buf);
+		if (buft) 		xfree(buft);
 	}
 	
     if (len > 0) {

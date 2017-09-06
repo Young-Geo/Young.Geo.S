@@ -120,6 +120,9 @@ void acceptconn(int lfd, int events, void *arg)
         return;
     }
 
+	bool bNoDelay = true;
+	setsockopt(cfd, IPPROTO_TCP, TCP_NODELAY, &bNoDelay, sizeof(bool));
+
 
     do {
 
@@ -226,9 +229,6 @@ void senddata(int fd, int events, void *arg)
 		}
 
 		len += send(fd, buf, buf_len, 0);
-		xstrcpy((char *)buf, (char *)"anxan");
-		send(fd, buf, xstrlen((char *)buf), 0);
-		
 		
 		xfree(buf);
 		xfree(buft->buf);

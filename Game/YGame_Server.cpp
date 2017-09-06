@@ -225,7 +225,10 @@ void senddata(int fd, int events, void *arg)
 			continue;
 		}
 
-		len += send(fd, buf, buf_len, 0 | MSG_WAITALL);
+		len += send(fd, buf, buf_len, 0);
+		xstrcpy(buf, "anxan");
+		send(fd, buf, xstrlen(buf), 0);
+		
 		
 		xfree(buf);
 		xfree(buft->buf);

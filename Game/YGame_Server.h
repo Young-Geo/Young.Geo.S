@@ -21,7 +21,7 @@
 
 #define EVMOD(g_efd, ev, call_back, event)	\ 
 		do {	\
-			/*eventdel((g_efd), (ev));*/	\
+			eventdel((g_efd), (ev));	\
 			eventset((ev), ((ev)->fd), (call_back), (ev));	\
 			eventadd((g_efd), (event), (ev)); \	
 		} while (0)

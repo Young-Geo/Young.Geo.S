@@ -440,7 +440,6 @@ int work(struct myevent_s *ev, void *arg)
 			
 			case DEAL:
 				{
-					/*
 					int buf_len = 0;
 					if (!user) {
 						xerror("DEAL user error");//ÔÝÊ±´¦Àí
@@ -470,26 +469,20 @@ int work(struct myevent_s *ev, void *arg)
 
 					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);
 					EVMOD(g_efd, ev, senddata, EPOLLOUT);
-					*/
-					xmessage("DEAL");
 				}
 			break;
 			
 			case DISCARD:
 				{
-					/*
 					obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
 					xassert(buft);
 					buf = obuft->buf = (unsigned char *)xmalloc(3);
 					xassert(obuft->buf);
 					obuft->len = 3;
-					xmessage("discard");
 					OUT16_LE(buf, DISCARD);
 					OUT8(buf, 1);
 					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);
 					EVMOD(g_efd, ev, senddata, EPOLLOUT);
-					*/
-					xmessage("DISCARD");
 				}
 			break;
 

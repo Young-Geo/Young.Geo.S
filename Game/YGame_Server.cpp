@@ -227,8 +227,6 @@ void senddata(int fd, int events, void *arg)
 
 		len += send(fd, buf, buf_len, 0);
 		
-		xmessage("send fd = %d len = %d ok", fd, len);
-
 		xfree(buf);
 		xfree(buft->buf);
 		xfree(buft);
@@ -239,6 +237,8 @@ void senddata(int fd, int events, void *arg)
         //eventdel(g_efd, ev);
         //eventset(ev, fd, recvdata, ev);
         //eventadd(g_efd, EPOLLIN, ev);
+        
+		xmessage("send fd = %d len = %d ok", fd, len);
 		EVMOD(g_efd, ev, recvdata, EPOLLIN);
 
     } else {
@@ -249,7 +249,7 @@ void senddata(int fd, int events, void *arg)
 
     }
 
-    return;
+	
 }
 
 

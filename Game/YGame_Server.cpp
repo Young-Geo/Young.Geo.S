@@ -356,7 +356,7 @@ User *	 get_user(xlist *games, xlist *readys, unsigned char *username)
 	{
 		user = (User *)readys_temp->value;
 		xassert(user);
-		if (!xstrncmp((char *)username, (char *)user->get_username(), USERNAME_LEN))
+		if (!xstrncmp((char *)username, (char *)user->get_username(), (USERNAME_LEN - 1)))
 			return user;
 
 		readys_temp = readys_temp->next;
@@ -431,7 +431,7 @@ int work(struct myevent_s *ev, void *arg)
 				{
 					int buf_len = 0;
 					if (!user) {
-						xerror("error");//暂时处理
+						xerror("DEAL user error");//暂时处理
 						break;
 					}
 					//ok

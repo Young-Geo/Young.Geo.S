@@ -283,10 +283,10 @@ User *	Game::get_user_by_name(unsigned char *username)
 		return NULL;
 	}
 
-	if (ZERO == xstrncmp((char *)this->_user_1->get_username(), (char *)username, USERNAME_LEN))
+	if (ZERO == xstrncmp((char *)this->_user_1->get_username(), (char *)username, (USERNAME_LEN - 1)))
 		return this->_user_1;
-	if (ZERO == xstrncmp((char *)this->_user_2->get_username(), (char *)username, USERNAME_LEN))
+	if (ZERO == xstrncmp((char *)this->_user_2->get_username(), (char *)username, (USERNAME_LEN - 1)))
 		return this->_user_2;
-	if (ZERO == xstrncmp((char *)this->_user_3->get_username(), (char *)username, USERNAME_LEN))
+	if (ZERO == xstrncmp((char *)this->_user_3->get_username(), (char *)username, (USERNAME_LEN - 1)))
 		return this->_user_3;
 }

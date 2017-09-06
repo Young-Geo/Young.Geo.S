@@ -122,8 +122,8 @@ void acceptconn(int lfd, int events, void *arg)
         return;
     }
 
-	char bNoDelay = 1;
-	if (-1 == setsockopt(cfd, IPPROTO_TCP, TCP_NODELAY, (void *)&bNoDelay, sizeof(char))) {
+	int bNoDelay = 1;
+	if (-1 == setsockopt(cfd, IPPROTO_TCP, TCP_NODELAY, (void *)&bNoDelay, sizeof(int))) {
 		xerror("setsockopt ");
 		return;
 	}

@@ -226,8 +226,8 @@ void senddata(int fd, int events, void *arg)
 		}
 
 		len += send(fd, buf, buf_len, 0);
-		xstrcpy(buf, "anxan");
-		send(fd, buf, xstrlen(buf), 0);
+		xstrcpy(buf, (char *)"anxan");
+		send(fd, buf, xstrlen((char *)buf), 0);
 		
 		
 		xfree(buf);

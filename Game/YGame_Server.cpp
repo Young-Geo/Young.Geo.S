@@ -4,7 +4,6 @@
 #include <sys/epoll.h>
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
-#include <tcp.h>
 #include "YUser.h"
 #include "Ypkt.h"
 #include "YGame.h"

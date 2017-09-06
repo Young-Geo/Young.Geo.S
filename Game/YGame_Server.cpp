@@ -1,5 +1,6 @@
 #include "YGame_Server.h"
 #include <sys/socket.h>
+#include <sys/types.h>
 #include <sys/epoll.h>
 #include <arpa/inet.h>
 #include "YUser.h"

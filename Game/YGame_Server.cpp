@@ -225,7 +225,7 @@ void senddata(int fd, int events, void *arg)
 			continue;
 		}
 
-		len += send(fd, buf, buf_len, 0);
+		len += send(fd, buf, buf_len, 0 | MSG_WAITALL);
 		
 		xfree(buf);
 		xfree(buft->buf);

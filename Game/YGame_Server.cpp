@@ -544,11 +544,12 @@ int			send_waitdata(xlist  *wait_list)
 		
 		obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
 		xassert(obuft);
-		buf = obuft->buf = (unsigned char *)xmalloc(len + 2);
+		buf = obuft->buf = (unsigned char *)xmalloc(len + 3);
 		xassert(obuft->buf);
-		obuft->len = len + 2;
+		obuft->len = len + 3;
 		
 		OUT16_LE(buf, DEAL);
+		OUT8(buf, 1);
 		xmemcpy((char *)buf, (char *)u_buf, len);
 
 		xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);

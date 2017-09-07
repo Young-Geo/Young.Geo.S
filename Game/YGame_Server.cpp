@@ -530,7 +530,8 @@ int			send_waitdata(xlist  *wait_list)
 		xassert(user);
 
 		if (!(ev = (struct myevent_s *)user->get_ev())) {
-			xmessage("user not conn");
+			xmessage("user not conn");			
+			list = list->next;
 			continue;
 		}
 

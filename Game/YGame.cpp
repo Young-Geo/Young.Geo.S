@@ -67,6 +67,8 @@ int 	Game::display()
 	this->_user_2->set_status(IN_GAME);
 	this->_user_3->set_status(IN_GAME);
 
+	this->data2user();
+
 	return 0;
 }
 

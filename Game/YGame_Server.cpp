@@ -513,7 +513,7 @@ int work(struct myevent_s *ev, void *arg)
 
 int			send_waitdata(xlist  *wait_list)
 {
-	xlist *list = NULL, *element = NULL;
+	xlist *list = NULL, *element = NULL, *prev = NULL;
 	User *user = NULL;	
 	Buf_t *obuft = NULL;
 	unsigned char *buf = NULL, *u_buf = NULL;
@@ -554,9 +554,10 @@ int			send_waitdata(xlist  *wait_list)
 
 		xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);
 		EVMOD(g_efd, ev, senddata, EPOLLOUT);
-
+		
+		prev = list;
 		list = list->next;
-		element = xlist_break (wait_list, list->prev);
+		element = xlist_break(wait_list, prev);
   		xlist_clean(&element);
 	}
 	return 0;

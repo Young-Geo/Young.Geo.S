@@ -558,7 +558,7 @@ int			send_waitdata(xlist  *wait_list)
 		prev = list;
 		list = list->next;
 		element = xlist_break(wait_list, prev);
-  		xlist_clean(&element);
+  		xfree(element);
 	}
 	return 0;
 }

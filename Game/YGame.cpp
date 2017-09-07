@@ -250,7 +250,7 @@ int 	Game::data2user()
 	d2 = dd2;
 	d3 = dd3;
 	
-	for (it = this->cards->begin(); it != this->cards->end(); ++it)
+	for (it = this->cards->begin(); it != (this->cards->end() - 3); ++it)
 	{
 		card = (*it);
 		xassert(card);

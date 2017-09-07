@@ -331,7 +331,7 @@ int		parse_readys(global_t *master)
 
 		if (game->display()) {
 			xerror("game display error");
-			return; - 1;
+			return -1;
 		}
 
 		xlist_add(wait_senddata_user, NULL, XLIST_PTR, (char *)users[0]);
@@ -529,7 +529,7 @@ int			send_waitdata(xlist  *wait_list)
 		user = (User *)list->value;
 		xassert(user);
 
-		if (!(ev = user->get_ev())) {
+		if (!(ev = (struct myevent_s *)user->get_ev())) {
 			xmessage("user not conn");
 			continue;
 		}

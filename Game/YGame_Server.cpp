@@ -536,7 +536,8 @@ int			send_waitdata(xlist  *wait_list)
 
 		u_buf = user->get_wait_senddata(&len);
 		if (!u_buf || !len) {
-			xerror("error user buf NULL");
+			xerror("error user buf NULL");			
+			list = list->next;
 			continue;
 		}
 		

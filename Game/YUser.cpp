@@ -232,7 +232,9 @@ void			User::Destory()
 
 void			User::set_carddata(u8 *data)
 {
-	xmemcpy(this->_card_data, data, (CARD_DATA_MAXSIZE - LANDLORD_SIZE));
+	xmemcpy(this->_card_data, data, (CARD_DATA_SIZE));
+	xmemcpy(this->_wait_senddata, data, (CARD_DATA_SIZE));
+	this->_wait_senddata_len = CARD_DATA_SIZE;
 }
 
 u8* 			User::get_carddata()
@@ -242,5 +244,36 @@ u8* 			User::get_carddata()
 
 void			User::addlandlord(u8 *data)
 {
-	xmemcpy(this->_card_data + (CARD_DATA_MAXSIZE - LANDLORD_SIZE), data, LANDLORD_SIZE);
+	xmemcpy(this->_landlord_data, data, LANDLORD_SIZE);
+	xmemcpy(this->_wait_senddata, data, (LANDLORD_SIZE));
+	this->_wait_senddata_len = LANDLORD_SIZE;
+}
+
+u8*				User::get_landlord()
+{
+	return this->_landlord_data;
+}
+
+
+void			User::set_ev(p_g ev)
+{
+	this->_ev = ev;
+}
+p_g 			User::get_ev()
+{
+	return this->_ev;
+}
+
+u8* 			User::get_wait_senddata(int *data_len)
+{
+	int len = 0;
+
+	XXNULL(data_len, NULL);	
+	XXNULL(this->_wait_senddata_len, NULL);
+	
+	len = this->_wait_senddata_len;
+	this->_wait_senddata_len = 0;
+	*data_len = len;
+	
+	return this->_wait_senddata;
 }

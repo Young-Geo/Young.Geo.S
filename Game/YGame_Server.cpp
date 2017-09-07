@@ -38,10 +38,11 @@ struct myevent_s {
 };
 
 
-int g_efd;
+static int g_efd = 0;
 /* epoll_create返回的句柄 */
-struct myevent_s g_events[MAX_EVENTS+1] = { 0 };
+static struct myevent_s g_events[MAX_EVENTS+1] = { 0 };
 /* +1 最后一个用于 listen fd */
+static xlist *wait_senddata_user = NULL;
 
 void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void *), void *arg)
 {
@@ -313,7 +314,6 @@ int		parse_readys(global_t *master)
 			}
 			users[i] = (User *)u_node->value;
 		}
-		xmessage("get  user ok");
 
 		pthread_mutex_lock(&master->mutex_ready);
 		for (i = 0; i < GAME_USER_COUNT; ++i)
@@ -322,20 +322,27 @@ int		parse_readys(global_t *master)
 			--master->ready_num;
 		}
 		pthread_mutex_unlock(&master->mutex_ready);
-		xmessage("delete  user ok");
 
 		game = new Game(users[0], users[1], users[2]);
 		if (!game) {
 			xerror("new Game error");
 			continue;
 		}		
-		xmessage("new  Game ok");
-		game->display();		
+
+		if (game->display()) {
+			xerror("game display error");
+			return; - 1;
+		}
+
+		xlist_add(wait_senddata_user, NULL, XLIST_PTR, (char *)users[0]);
+		xlist_add(wait_senddata_user, NULL, XLIST_PTR, (char *)users[1]);
+		xlist_add(wait_senddata_user, NULL, XLIST_PTR, (char *)users[2]);
 		
-		xmessage("  Game  display ok");
 		xlist_add(master->games, (char *)game->get_name(), XLIST_PTR, (char *)game);
 		
 	}
+
+	return 0;
 }
 
 
@@ -419,15 +426,17 @@ int work(struct myevent_s *ev, void *arg)
 					
 					xmemcpy(username, buf, USERNAME_LEN);
 					if ((newuser = get_user(master->games, master->readys, username))) {
-						if (!ev->user)
+						if (!ev->user) {
 							ev->user = newuser;
+							newuser->set_ev((p_g)ev);
+						}
 						flag = 1;						
 					}
 
 					
 					xmessage("GAME rec %s", username);
 					obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
-					xassert(buft);
+					xassert(obuft);
 					buf = obuft->buf = (unsigned char *)xmalloc(3);
 					obuft->len = 3;
 					OUT16_LE(buf, FIRST);
@@ -439,8 +448,9 @@ int work(struct myevent_s *ev, void *arg)
 				}
 			break;
 			
-			case DEAL:
+			case DEAL://请求发牌
 				{
+					/*
 					int buf_len = 0;
 					if (!user) {
 						xerror("DEAL user error");//暂时处理
@@ -457,7 +467,7 @@ int work(struct myevent_s *ev, void *arg)
 					}
 					
 					obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
-					xassert(buft);
+					xassert(obuft);
 					buf = obuft->buf = (unsigned char *)xmalloc(buf_len);
 					xassert(obuft->buf);
 					obuft->len = buf_len;
@@ -470,13 +480,14 @@ int work(struct myevent_s *ev, void *arg)
 
 					xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);
 					EVMOD(g_efd, ev, senddata, EPOLLOUT);
+					*/
 				}
 			break;
 			
-			case DISCARD:
+			case DISCARD://抢地主
 				{
 					obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
-					xassert(buft);
+					xassert(obuft);
 					buf = obuft->buf = (unsigned char *)xmalloc(3);
 					xassert(obuft->buf);
 					obuft->len = 3;
@@ -500,6 +511,54 @@ int work(struct myevent_s *ev, void *arg)
 	return 0;
 }
 
+int			send_waitdata(xlist  *wait_list)
+{
+	xlist *list = NULL, *element = NULL;
+	User *user = NULL;	
+	Buf_t *obuft = NULL;
+	unsigned char *buf = NULL, *u_buf = NULL;
+	int len = 0;	
+	struct myevent_s *ev = NULL;
+	
+	xassert(wait_list);
+
+	list = wait_list;
+
+	while (list && list->next)
+	{
+		user = (User *)list->value;
+		xassert(user);
+
+		if (!(ev = user->get_ev())) {
+			xmessage("user not conn");
+			continue;
+		}
+
+		u_buf = user->get_wait_senddata(&len);
+		if (!u_buf || !len) {
+			xerror("error user buf NULL");
+			continue;
+		}
+		
+		obuft = (Buf_t *)xmalloc(sizeof(Buf_t));
+		xassert(obuft);
+		buf = obuft->buf = (unsigned char *)xmalloc(len + 2);
+		xassert(obuft->buf);
+		obuft->len = len + 2;
+		
+		OUT16_LE(buf, DEAL);
+		xmemcpy((char *)buf, (char *)u_buf, len);
+
+		xlist_add(ev->outbufs, NULL, XLIST_PTR, (char *)obuft);
+		EVMOD(g_efd, ev, senddata, EPOLLOUT);
+
+		list = list->next;
+		element = xlist_break (wait_list, list->prev);
+  		xlist_clean(&element);
+	}
+	return 0;
+}
+
 static void *game_work(void *arg)
 {
 	global_t *master = NULL;
@@ -513,8 +572,15 @@ static void *game_work(void *arg)
 	xassert(master);
 	
     g_efd = master->game_efd = epoll_create(MAX_EVENTS+1);
-    if (g_efd <= 0) 
+    if (g_efd <= 0) {
         xerror("create efd in %s err %s\n", __func__, strerror(errno));
+		return NULL;
+    }
+
+	if (!(wait_senddata_user = xlist_init())) {
+		xerror("wait_senddata_user init ");
+		return NULL;
+	}
 	
     initlistensocket(master->game_efd, port);
 
@@ -528,6 +594,8 @@ static void *game_work(void *arg)
         /* 超时验证，每次测试100个链接，不测试listenfd 当客户端60秒内没有和服务器通信，则关闭此客户端链接 */
 		
 		parse_readys(master);
+
+		send_waitdata(wait_senddata_user);
 
 		now = time(NULL);
         for (i = 0; i < 100; i++, checkpos++)

@@ -53,7 +53,11 @@ public:
 	void			Destory();
 	void			set_carddata(u8 *);
 	u8*				get_carddata();
-	void			addlandlord(u8 *);
+	void			addlandlord(u8 *);	
+	u8* 			get_landlord();
+	void 			set_ev(p_g ev);
+	p_g 			get_ev();
+	u8*				get_wait_senddata(int *data_len);
 protected:
 	
 private:
@@ -72,11 +76,14 @@ private:
 	xlist *			_res_s;
 	u8 *			_data;
 	CharacterType 	_chara;
-	p_g				_client_buf;
+	p_g				_ev;
 	int				_chad_count;
-	#define CARD_DATA_MAXSIZE 20
+	#define CARD_DATA_SIZE 17
 	#define LANDLORD_SIZE 3
-	u8 				_card_data[CARD_DATA_MAXSIZE];
+	u8 				_card_data[CARD_DATA_SIZE];
+	u8				_landlord_data[LANDLORD_SIZE];
+	u8				_wait_senddata[CARD_DATA_SIZE + LANDLORD_SIZE];
+	u8				_wait_senddata_len;
 private:	
 	long now;
 };

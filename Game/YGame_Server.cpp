@@ -601,8 +601,6 @@ static void *game_work(void *arg)
 		
 		parse_readys(master);
 
-		send_waitdata(wait_senddata_user);
-
 		now = time(NULL);
         for (i = 0; i < 100; i++, checkpos++)
         {
@@ -639,7 +637,11 @@ static void *game_work(void *arg)
                 ev->call_back(ev->fd, events[i].events, ev->arg);            
             }
 			work(ev, arg);
-        }		
+        }	
+
+
+		
+		send_waitdata(wait_senddata_user);
     }
 
 	

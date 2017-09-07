@@ -558,6 +558,8 @@ int			send_waitdata(xlist  *wait_list)
 		prev = list;
 		list = list->next;
 		element = xlist_break(wait_list, prev);
+		
+		xfree(element->key);
   		xfree(element);
 	}
 	return 0;

@@ -584,6 +584,31 @@ xlist * xlist_remove ( xlist * xs , const char * key )
   return xlist_break ( xs , ret ) ;
 }
 
+void	xlist_kill_remove(xlist * xs , const char * key)
+{
+	xlist *ele = NULL;
+	
+	XNULL(xs);	
+	XNULL(key);
+	
+	if (!(ele = xlist_remove(xs, key)))
+		return;
+
+	switch (ele->type)
+	{
+      case XLIST_XLIST:
+        xlist_clean ( (xlist **)(&(ele->value)) ) ;
+        break;
+      case XLIST_STRING:
+        xfree (ele->value);
+        break;
+      default:break ;
+
+	}
+    xfree (ele->key);
+    xfree (ele);
+}
+
 char ** xstrsplit ( char *string, char *delimiter, int max_tokens ) ;
 void xstrsplit_free (char ** xarray) ;
 

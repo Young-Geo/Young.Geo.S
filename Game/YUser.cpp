@@ -223,8 +223,8 @@ void			User::Destory()
 	
 	thread_entity = (thread_entity_t *)this->_thread_entity;
 	if (thread_entity) {
-		xlist_delete(thread_entity->master->readys, (char *)this->get_username());
-		xlist_delete(thread_entity->users, (char *)this->get_username());
+		xlist_kill_remove(thread_entity->master->readys, (char *)this->get_username());
+		xlist_kill_remove(thread_entity->users, (char *)this->get_username());
 	}
 	delete this;
 }

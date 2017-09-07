@@ -318,7 +318,7 @@ int		parse_readys(global_t *master)
 		pthread_mutex_lock(&master->mutex_ready);
 		for (i = 0; i < GAME_USER_COUNT; ++i)
 		{
-			xlist_delete(master->readys, (char *)users[i]->get_username());
+			xlist_kill_remove(master->readys, (char *)users[i]->get_username());
 			--master->ready_num;
 		}
 		pthread_mutex_unlock(&master->mutex_ready);

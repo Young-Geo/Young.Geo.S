@@ -80,7 +80,7 @@ void Game::stop()
 		
 		this->destory();
 		//((global_t *)this->master)->;
-		xlist_delete(((global_t *)this->master)->games, (char *)this->get_name());
+		xlist_kill_remove(((global_t *)this->master)->games, (char *)this->get_name());
 		//直接销毁游戏
 		delete this;
 		return;

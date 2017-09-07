@@ -74,6 +74,7 @@ char * xlist_popv ( xlist * xs ) ;
 char * xlist_popv_notzero ( xlist * xs ) ;
 xlist * xlist_cut ( xlist * xs ) ;
 xlist * xlist_remove ( xlist * xs , const char * key ) ;
+void	xlist_kill_remove(xlist * xs , const char * key);
 #define xlist_first(xs) (xs)
 #define xlist_firstv(xs) ((xs)->value)
 #define xlist_last(xs)  (xs->prev->prev)

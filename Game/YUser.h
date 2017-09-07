@@ -78,11 +78,11 @@ private:
 	CharacterType 	_chara;
 	p_g				_ev;
 	int				_chad_count;
-	#define CARD_DATA_SIZE 17
+	#define UCARD_DATA_SIZE 17
 	#define LANDLORD_SIZE 3
-	u8 				_card_data[CARD_DATA_SIZE];
+	u8 				_card_data[UCARD_DATA_SIZE];
 	u8				_landlord_data[LANDLORD_SIZE];
-	u8				_wait_senddata[CARD_DATA_SIZE + LANDLORD_SIZE];
+	u8				_wait_senddata[UCARD_DATA_SIZE + LANDLORD_SIZE];
 	u8				_wait_senddata_len;
 private:	
 	long now;

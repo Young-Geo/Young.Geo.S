@@ -232,9 +232,9 @@ void			User::Destory()
 
 void			User::set_carddata(u8 *data)
 {
-	xmemcpy(this->_card_data, data, (CARD_DATA_SIZE));
-	xmemcpy(this->_wait_senddata, data, (CARD_DATA_SIZE));
-	this->_wait_senddata_len = CARD_DATA_SIZE;
+	xmemcpy(this->_card_data, data, (UCARD_DATA_SIZE));
+	xmemcpy(this->_wait_senddata, data, (UCARD_DATA_SIZE));
+	this->_wait_senddata_len = UCARD_DATA_SIZE;
 }
 
 u8* 			User::get_carddata()

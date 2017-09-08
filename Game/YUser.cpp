@@ -53,6 +53,8 @@ User::User(u32 id, u8 *username, u8 *password, u32 money_z, u32 money_d, u32 sol
 	this->_lv = lv;
 	this->_user_status = ON_LINE;
 	this->_thread_entity = thread_entity;
+
+	this->_ev = NULL;
 	
 	this->ress_init();
 

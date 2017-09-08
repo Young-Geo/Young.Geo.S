@@ -430,10 +430,10 @@ int work(struct myevent_s *ev, void *arg)
 					
 					xmemcpy(username, buf, USERNAME_LEN);
 					if ((newuser = get_user(master->games, master->readys, username))) {
-//						if (!ev->user) {
+						if (!ev->user) {
 							ev->user = newuser;
 							newuser->set_ev((p_g)ev);
-//						}
+						}
 						flag = 1;						
 					}
 

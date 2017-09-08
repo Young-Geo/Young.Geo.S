@@ -334,9 +334,10 @@ int		parse_readys(global_t *master)
 			return -1;
 		}
 
-		xlist_add(wait_senddata_user, NULL, XLIST_PTR, (char *)users[0]);
-		xlist_add(wait_senddata_user, NULL, XLIST_PTR, (char *)users[1]);
-		xlist_add(wait_senddata_user, NULL, XLIST_PTR, (char *)users[2]);
+		for (i = 0; i < GAME_USER_COUNT; ++i)
+		{		
+			xlist_add(wait_senddata_user, NULL, XLIST_PTR, (char *)users[i]);
+		}
 		
 		xlist_add(master->games, (char *)game->get_name(), XLIST_PTR, (char *)game);
 		

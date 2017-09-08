@@ -22,6 +22,7 @@ typedef struct _BUF_T {
 } Buf_t;
 
 typedef enum _ev_status {
+	NONE,
 	ADD,
 	DEL,
 	OFF
@@ -62,7 +63,7 @@ void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void *),
     ev->events = 0;
     ev->arg = arg;
 	//ev->user = NULL;
-    ev->status = 0;
+    ev->status = NONE;
 	if (!ev->bufs) {
 		ev->bufs = xlist_init();
 		xmessage("init in bufs");
@@ -87,11 +88,11 @@ void eventadd(int efd, int events, struct myevent_s *ev)
     epv.data.ptr = ev;
     epv.events = ev->events = events;
 
-    if (ev->status == 1) {
+    if (ev->status == ADD) {
         op = EPOLL_CTL_MOD;
     } else {
         op = EPOLL_CTL_ADD;
-        ev->status = 1;
+        ev->status = ADD;
     }
 
 
@@ -109,7 +110,7 @@ void eventdel(int efd, struct myevent_s *ev)
     if (ev->status != 1)
         return;
     epv.data.ptr = ev;
-    ev->status = 0;
+    ev->status = DEL;
     epoll_ctl(efd, EPOLL_CTL_DEL, ev->fd, &epv);
 }
 

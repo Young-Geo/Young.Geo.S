@@ -247,7 +247,6 @@ void senddata(int fd, int events, void *arg)
 		}
 
 		len += send(fd, buf, buf_len, 0);		
-		xmessage("send fd = %d ++len = %d ok", fd, len);
 
 		end:
 		if (buf) 		xfree(buf);

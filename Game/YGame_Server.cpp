@@ -21,6 +21,12 @@ typedef struct _BUF_T {
 	int len;
 } Buf_t;
 
+typedef enum _ev_status {
+	ADD,
+	DEL,
+	OFF
+} ev_status;
+
 
 /* * status:1表示在监听事件中，0表示不在  * last_active:记录最后一次响应时间,做超时处理 */
 struct myevent_s {
@@ -621,6 +627,7 @@ static void *game_work(void *arg)
                 xerror("[fd=%d] timeout\n", g_events[checkpos].fd);                
                 eventdel(g_efd, &g_events[checkpos]);
 				//处理断开连接的逻辑
+				ev->status = OFF;
             }
         }
 		

@@ -236,7 +236,7 @@ int do_work(void *arg, void *r, void *w)
 	
 	switch (type)//各种业务处理
 	{
-		case LOGIN:
+		case LOGIN://不能重复登录
 			{
 				#define REC_LEN  3
 				u8 rec[REC_LEN + USER_DATA_SIZE] = {0}, *buf = NULL, *u_buf = NULL;

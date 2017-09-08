@@ -256,10 +256,6 @@ void senddata(int fd, int events, void *arg)
 	}
 	
     if (len > 0) {
-
-        //eventdel(g_efd, ev);
-        //eventset(ev, fd, recvdata, ev);
-        //eventadd(g_efd, EPOLLIN, ev);
         
 		xmessage("send fd = %d count len = %d ok", fd, len);
 		EVMOD(g_efd, ev, recvdata, EPOLLIN);

@@ -108,7 +108,7 @@ void eventadd(int efd, int events, struct myevent_s *ev)
 void eventdel(int efd, struct myevent_s *ev)
 {
     struct epoll_event epv = {0,  { 0 }};
-    if (ev->status != 1)
+    if (ev->status != ADD)
         return;
     epv.data.ptr = ev;
     ev->status = DEL;

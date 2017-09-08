@@ -615,7 +615,7 @@ static void *game_work(void *arg)
         
             if (checkpos == MAX_EVENTS)
                 checkpos = 0;
-            if (g_events[checkpos].status != 1)
+            if (g_events[checkpos].status != ADD)
                 continue;
 			
             duration = now - g_events[checkpos].last_active;

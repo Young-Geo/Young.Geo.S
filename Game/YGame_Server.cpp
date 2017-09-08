@@ -137,7 +137,7 @@ void acceptconn(int lfd, int events, void *arg)
 		xerror("setsockopt ");
 		return;
 	}
-	*/
+*/
 
 
     do {

@@ -23,6 +23,7 @@ typedef struct _BUF_T {
 
 typedef enum _ev_status {
 	NONE,
+	INIT,
 	ADD,
 	DEL,
 	OFF
@@ -63,7 +64,7 @@ void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void *),
     ev->events = 0;
     ev->arg = arg;
 	//ev->user = NULL;
-    ev->status = NONE;
+    ev->status = INIT;
 	if (!ev->bufs) {
 		ev->bufs = xlist_init();
 		xmessage("init in bufs");
@@ -145,7 +146,7 @@ void acceptconn(int lfd, int events, void *arg)
 
         for (i = 0; i < MAX_EVENTS; i++)
         {
-            if (g_events[i].status == 0)
+            if (g_events[i].status == NONE)
                 break;
         }
 

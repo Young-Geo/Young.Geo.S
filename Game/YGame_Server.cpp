@@ -430,10 +430,10 @@ int work(struct myevent_s *ev, void *arg)
 					
 					xmemcpy(username, buf, USERNAME_LEN);
 					if ((newuser = get_user(master->games, master->readys, username))) {
-						if (!ev->user) {
+//						if (!ev->user) {
 							ev->user = newuser;
 							newuser->set_ev((p_g)ev);
-						}
+//						}
 						flag = 1;						
 					}
 
@@ -534,7 +534,7 @@ int			send_waitdata(xlist  *wait_list)
 		xassert(user);
 
 		if (!(ev = (struct myevent_s *)user->get_ev())) {
-			xmessage("user not conn");			
+			xmessage("user not conn");
 			list = list->next;
 			continue;
 		}

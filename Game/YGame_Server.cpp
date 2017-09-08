@@ -59,9 +59,11 @@ void eventset(struct myevent_s *ev, int fd, void (*call_back)(int, int, void *),
     ev->status = 0;
 	if (!ev->bufs) {
 		ev->bufs = xlist_init();
+		xmessage("init in bufs");
 	}
 	if (!ev->outbufs) {
-		ev->outbufs = xlist_init();
+		ev->outbufs = xlist_init();		
+		xmessage("init out bufs");
 	}
     //memset(ev->buf, 0, sizeof(ev->buf));
     //ev->len = 0;
